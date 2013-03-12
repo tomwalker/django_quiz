@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% load quiz_tags %}
+
+{% block title %} Exam Paper Result {% endblock %}
+{% block description %} Exam Results {% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+{% if previous %}
+	
+        <p class="muted"><small>The previous question:</small></p> 
+        <p>{{ previous.previous_question }}</p>
+        <p>Your answer was <em>{{ previous.previous_answer }}</em> which is <strong>{{ previous.previous_outcome }}</strong></p>
+		{% correct_answer previous %}
+        <p><strong>Explanation:</strong></p>
+        <div class="well " style="background-color: #fcf8e3;">
+        	<p>{{ previous.previous_question.explanation }}</p>
+        </div>
+<hr>
+	
+{% endif %}
+
+{% if score %}
+    	
+    	<div>
+	    	<h2>Exam results</h2>
+	    	<p><small class="muted">Exam title:</small> <strong>{{ quiz.title }}</strong></p>
+	    	
+	        <p class="lead">You answered {{ score }} questions correctly out of {{ max_score }}, giving you {{ percent }} percent correct</p>
+	        
+	        <p>Review the questions below and try the exam again in the future.</p>
+	        
+	        {% if user.is_authenticated %}
+	        	
+	        	<p>The result of this exam will be stored in your progress section so you can review and monitor your progression.</p>
+	        
+	        {% endif %}
+        </div>
+        
+		    	    
+{% endif %}
+
+    
+    <hr>
+    
+{% if session and possible %}
+    
+    <p class="lead">Your session score is {{ session }} out of a possible {{ possible }}</p>
+        
+    <hr>
+    
+{% endif %}
+    
+{% if questions %}
+    
+    	{% for question in questions %}
+    	
+    		<p class="lead">{{ question.content }}</p>
+    		{% correct_answer_for_all_with_users_incorrect question incorrect_questions %}
+    		    	
+    	{% endfor %}
+    
+{% endif %}
+
+
+
+</div>
+
+{% endblock %}

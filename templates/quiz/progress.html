@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% load quiz_tags %}
+
+{% block title %} Progress Page {% endblock %}
+{% block description %} User Progress Page {% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+{% if new_user %}
+
+		<div class="alert alert-block">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<ul class="unstyled">
+			<li>
+				<h4>Thank you for joining this website. Welcome to your progress page.</h4>
+			</li>
+		</ul>
+		</div>
+
+{% endif %}
+
+
+
+	
+{% if cat_scores %}
+
+<h1>Question Category Scores</h1>
+<p class="lead">
+	Below are the categories of questions that you have attempted. Blue is the percentage that are correct.
+</p>
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load('visualization', '1', {packages: ['corechart']});
+</script>
+						
+		{% for cat, value in cat_scores.items %}
+				
+			{% ifnotequal cat "empty" %}
+				
+				{% if forloop.first %}
+					<div class="row">
+						<ul class="thumbnails">
+				{% endif %}
+				
+				{% ifequal forloop.counter 5 %}
+						</ul>
+					</div>
+					<div class="row">
+						<ul class="thumbnails">
+				{% endifequal %}
+				
+				{% ifequal forloop.counter 9 %}
+						</ul>
+					</div>
+					<div class="row">
+						<ul class="thumbnails">
+				{% endifequal %}
+				
+				{% ifequal forloop.counter 13 %}
+						</ul>
+					</div>
+					<div class="row">
+						<ul class="thumbnails">
+				{% endifequal %}
+				
+				{% ifequal forloop.counter 17 %}
+						</ul>
+					</div>
+					<div class="row">
+						<ul class="thumbnails">
+				{% endifequal %}
+							
+							<li class="span3">
+								<div class="thumbnail">
+															    <script type="text/javascript">
+						      function drawVisualization() {
+						        // Create and populate the data table.
+						        var difference = {{ value.1 }} - {{ value.0 }};
+						        var correct = {{ value.0 }};
+						        var data = google.visualization.arrayToDataTable([
+						          ["",""],
+						          ['Correct',  correct],
+						          ['Incorrect', difference]						          
+						        ]);
+						        
+						        var options = {
+						        	legend:{position:'none'},
+						        	title:"{{ cat }}",
+						        	fontSize: 16
+						        	};
+						      
+						        // Create and draw the visualization.
+						        new google.visualization.PieChart(document.getElementById('visualization{{ cat }}')).
+						            draw(data, options);
+						      }
+						      
+						
+						      google.setOnLoadCallback(drawVisualization);
+						    </script>
+					    	
+					    	<div id="visualization{{ cat }}" ></div>
+								</div>
+							</li>
+				
+			{% endifnotequal %}
+		
+        
+        {% endfor %}
+						</ul>
+					</div>
+	
+{% endif %}
+    
+{% if exams %}
+
+<hr>
+
+<h1>Previous exam papers</h1>
+<p class="lead">
+	Below are the results of exams that you have sat.
+</p>
+    
+<table class="table table-bordered table-striped">
+	
+	<thead>
+		<tr>
+			<th>Quiz Title</th>
+			<th>Score</th>
+			<th>Possible Score</th>
+			<th>%</th>
+        </tr>
+    </thead>
+    
+    <tbody>
+
+	    {% for exam in exams %}
+	    	
+	    	<tr>
+	    		{% user_previous_exam exam %}
+	    	</tr>
+	    		
+	    {% endfor %}
+    
+    </tbody>
+    
+</table>
+    
+{% endif %}
+
+</div>
+
+{% endblock %}
