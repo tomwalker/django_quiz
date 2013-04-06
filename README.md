@@ -24,6 +24,9 @@ Multiple choice questions
 * Success rate for each category can be monitored on a progress page
 * Explanation for each question result can be given
 
+
+It was developed using Django 1.4.1. 
+
 This is my first open source project so please forgive any problems and/or dreadful code!
 
 MIT License (MIT)
