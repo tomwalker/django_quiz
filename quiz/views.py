@@ -1,11 +1,12 @@
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib import auth
-from django.core.context_processors import csrf
-from django.http import HttpResponseRedirect
-from django.template import RequestContext
+import random
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.context_processors import csrf
+from django.contrib import auth
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 
 from quiz.models import Quiz, Category, Progress, Sitting
@@ -18,24 +19,24 @@ Views related directly to the quiz
 
 ***********************************
 
-
-used by anon only:
+used by anonymous (non-logged in) users only:
 
     request.session[q_list] is a list of the remaining question IDs in order. "q_list" = quiz_id + "q_list"
     request.session[quiz_id + "_score"] is current score. Best possible score is number of questions. 
     
 used by both user and anon:
 
-    request.session['page_count'] is a counter used for displaying adverts every X number of pages
+    request.session['page_count'] is a counter used for displaying message every X number of pages
 
-question.answer_set.all() is all the answers for question
-quiz.question_set.all() is all the questions in a quiz
+useful query sets:
+
+    question.answer_set.all() is all the answers for question
+    quiz.question_set.all() is all the questions in a quiz
 
 To do: 
         variable scores per question
-        seperate the login portion so that other django apps are compatible
         if a user does some questions as anon, then logs in, remove these questions from remaining q list for logged in user
-        allow the page count to be set in admin
+        allow the page count before a message is shown to be set in admin
 """
 
 
@@ -64,6 +65,7 @@ def quiz_take(request, quiz_name):
                                                       quiz=quiz,
                                                       complete=False,
                                                       )[0]  #  use the first one
+            
             return user_load_next_question(request, previous_sitting, quiz)
             
         else:
@@ -83,32 +85,29 @@ def quiz_take(request, quiz_name):
 
 def new_anon_quiz_session(request, quiz):
     """
-    Sets the session variables when starting a quiz for the first time
-    
-    to do:
-            include a cron job to clear the expired sessions daily
+    Sets the session variables when starting a quiz for the first time when not logged in
     """
-
+    
     request.session.set_expiry(259200)  #  set the session to expire after 3 days
     
     questions = quiz.question_set.all()
     question_list = []
     for question in questions:
         question_list.append(question.id)  #  question_list is a list of question IDs, which are integers
-
+    
     if quiz.random_order == True:
-        import random
         random.shuffle(question_list)
     
     quiz_id = str(quiz.id)
-
+    
     score = quiz_id + "_score" 
     request.session[score] = int(0)  #  session score for anon users
     
     q_list = quiz_id + "_q_list"
     request.session[q_list] = question_list  #  session list of questions
     
-    request.session['page_count'] = int(0)  #  session page count for adverts
+    if 'page_count' not in request.session:
+        request.session['page_count'] = int(0)  #  session page count for adverts
     
     return load_anon_next_question(request, quiz)
 
@@ -118,7 +117,8 @@ def user_new_quiz_session(request, quiz):
     """
     sitting = Sitting.objects.new_sitting(request.user, quiz)
     
-    request.session['page_count'] = int(0)  #  session page count for adverts
+    if 'page_count' not in request.session:
+        request.session['page_count'] = int(0)  #  session page count for adverts
     
     return user_load_next_question(request, sitting, quiz)
     
@@ -141,9 +141,7 @@ def load_anon_next_question(request, quiz):
         request.session[q_list] = question_list
         
         counter = request.session['page_count']
-        request.session['page_count'] = counter + 1  #  add 1 to the page counter
-        
-        
+        request.session['page_count'] = counter + 1  #  add 1 to the page counter     
     
     if not request.session[q_list]:
         #  no questions left!
@@ -163,8 +161,7 @@ def load_anon_next_question(request, quiz):
     
     next_question_id = question_list[0]
     question = Question.objects.get(id=next_question_id)
-
-        
+    
     return render_to_response('question.html', 
                               {'quiz': quiz, 
                                'question': question, 
@@ -188,9 +185,9 @@ def user_load_next_question(request, sitting, quiz):
         counter = request.session['page_count']
         request.session['page_count'] = counter + 1  #  add 1 to the page counter
     
-    qID = sitting.get_next_question()
+    question_ID = sitting.get_next_question()
     
-    if qID == False:
+    if question_ID == False:
         #  no questions left
         return final_result_user(request, sitting, previous)
 
@@ -207,7 +204,7 @@ def user_load_next_question(request, sitting, quiz):
         request.session['page_count'] = int(0)  #  since one hasnt been started, make it now
     
 
-    next_question = Question.objects.get(id=qID)
+    next_question = Question.objects.get(id=question_ID)
     
     return render_to_response('question.html', 
                               {'quiz': quiz,
@@ -229,14 +226,14 @@ def final_result_anon(request, quiz, previous):
     quiz_id = str(quiz.id)
     score = quiz_id + "_score"
     score = request.session[score]
+    percent = int(round((float(score) / float(max_score)) * 100))
     if score == 0:
         score = "nil points"
     max_score = quiz.question_set.all().count()
-    percent = int(round((float(score) / float(max_score)) * 100))
     
     session_score, session_possible = anon_session_score(request)
     
-    if quiz.answers_at_end != True:  #  answer was shown after each question
+    if quiz.answers_at_end != True:  #  if answer was shown after each question
         return render_to_response('result.html',
                                   {
                                    'score': score, 
@@ -270,7 +267,7 @@ def final_result_user(request, sitting, previous):
     score = sitting.get_current_score()
     incorrect = sitting.get_incorrect_questions()
     max_score = quiz.question_set.all().count()
-    percent = int(round((float(score) / float(max_score)) * 100))
+    percent = sitting.get_percent_correct()
 
     sitting.mark_quiz_complete()  #  mark as complete    
     
@@ -323,8 +320,7 @@ def question_check_anon(request, quiz):
     else:
         outcome = "incorrect"
         anon_session_score(request, 0, 1)
-    
-    #  to do - allow explanations
+        
     if quiz.answers_at_end != True:  #  display answer after each question
         return {'previous_answer': answer, 'previous_outcome': outcome, 'previous_question': question, }
     else:  #  display all answers at end
@@ -348,7 +344,6 @@ def question_check_user(request, quiz, sitting):
         sitting.add_incorrect_question(question)
         user_progress_score_update(request, question.category, 0, 1)
     
-    #  to do - allow explanations
     if quiz.answers_at_end != True:  #  display answer after each question
         return {'previous_answer': answer, 'previous_outcome': outcome, 'previous_question': question, }
     else:  #  display all answers at end
