@@ -174,7 +174,10 @@ class Progress(models.Model):
             if match:
                 score = int(match.group(1))
                 possible = int(match.group(2))
-                percent = int(round((float(score) / float(possible)) * 100))
+                try:
+                    percent = int(round((float(score) / float(possible)) * 100))
+                except:
+                    percent = 0
                 score_list = [score, possible, percent]
                 output[cat.category] = score_list
             
@@ -272,12 +275,10 @@ class Progress(models.Model):
         """
         finds the previous exams marked as 'exam papers'
         
-        returns a queryset of the exams
+        returns a queryset of complete exams
         """
-        
-        exams = Sitting.objects.filter(user=self.user).filter(complete=True)  #  list of exam objects from user that are complete
-        return exams
-
+        #  list of exam objects from user that are complete
+        return Sitting.objects.filter(user=self.user).filter(complete=True)
 
 
 class SittingManager(models.Manager):

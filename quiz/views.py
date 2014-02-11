@@ -47,7 +47,8 @@ def quiz_take(request, quiz_name):
     2. Decides whether this is the start of a new quiz. 
     """
     
-    quiz = Quiz.objects.get(url=quiz_name.lower())  #  url refers to the SEO friendly url specified in model.quiz
+    quiz = Quiz.objects.get(url=quiz_name.lower())
+    #  url refers to the SEO friendly url specified in model.quiz
     
     if request.user.is_authenticated() == True:  #  logged in user
         try:
@@ -76,8 +77,9 @@ def quiz_take(request, quiz_name):
     else:  #  anon user
         quiz_id = str(quiz.id)
         q_list = quiz_id + "_q_list"
-        
-        if q_list in request.session:  #  check if anon user has a recent session for this quiz
+
+        #  check if anon user has a recent session for this quiz
+        if q_list in request.session:  
             return load_anon_next_question(request, quiz)  #  load up previous session
         else:
             return new_anon_quiz_session(request, quiz)  #  new session for anon user
@@ -93,7 +95,8 @@ def new_anon_quiz_session(request, quiz):
     questions = quiz.question_set.all()
     question_list = []
     for question in questions:
-        question_list.append(question.id)  #  question_list is a list of question IDs, which are integers
+        #  question_list is a list of question IDs, which are integers        
+        question_list.append(question.id)
     
     if quiz.random_order == True:
         random.shuffle(question_list)
@@ -111,6 +114,7 @@ def new_anon_quiz_session(request, quiz):
     
     return load_anon_next_question(request, quiz)
 
+
 def user_new_quiz_session(request, quiz):
     """
     initialise the Sitting class
@@ -121,9 +125,8 @@ def user_new_quiz_session(request, quiz):
         request.session['page_count'] = int(0)  #  session page count for adverts
     
     return user_load_next_question(request, sitting, quiz)
-    
-    
 
+    
 def load_anon_next_question(request, quiz):
     """
     load up the next question, including the outcome of the previous question
@@ -135,13 +138,14 @@ def load_anon_next_question(request, quiz):
     
     if 'guess' in request.GET and request.GET['guess']:
         #  if there has been a previous question
-        previous = question_check_anon(request, quiz)  #  returns a dictionary with previous question details
-        
+        #  returns a dictionary with previous question details
+        previous = question_check_anon(request, quiz)
+
         question_list = question_list[1:]  #  move onto next question
         request.session[q_list] = question_list
         
         counter = request.session['page_count']
-        request.session['page_count'] = counter + 1  #  add 1 to the page counter     
+        request.session['page_count'] = counter + 1  #  add 1 to the page counter
     
     if not request.session[q_list]:
         #  no questions left!
@@ -149,15 +153,21 @@ def load_anon_next_question(request, quiz):
 
     show_advert = False
     
-    try:
-        if request.session['page_count'] > 0 and request.session['page_count'] % 10 == 0:
-            #  advert page every 10 questions
-            counter = request.session['page_count']
-            request.session['page_count'] = counter + 1  #  add 1 to the page counter
-            show_advert = True
+    """
+    This is a counter that allows you to add something into the template every
+    X amount of pages. In my original site, I used this to show a full page
+    advert every 10 pages.
+    """
+
+    # try:
+    #     if request.session['page_count'] > 0 and request.session['page_count'] % 10 == 0:
+    #         #  advert page every 10 questions
+    #         counter = request.session['page_count']
+    #         request.session['page_count'] = counter + 1  #  add 1 to the page counter
+    #         show_advert = True
     
-    except KeyError:
-        request.session['page_count'] = int(0)  #  since one hasnt been started, make it now
+    # except KeyError:
+    #     request.session['page_count'] = int(0)  #  since one hasnt been started, make it now
     
     next_question_id = question_list[0]
     question = Question.objects.get(id=next_question_id)
@@ -169,7 +179,7 @@ def load_anon_next_question(request, quiz):
                                'show_advert': show_advert,
                                }, 
                               context_instance=RequestContext(request))
-    
+
 
 def user_load_next_question(request, sitting, quiz):
     """
@@ -179,33 +189,34 @@ def user_load_next_question(request, sitting, quiz):
     
     if 'guess' in request.GET and request.GET['guess']:
         #  if there has been a previous question
-        previous = question_check_user(request, quiz, sitting)  #  returns a dictionary with previous question details
+        #  returns a dictionary with previous question details
+        previous = question_check_user(request, quiz, sitting)  
         sitting.remove_first_question()  #  remove the first question
         
         counter = request.session['page_count']
         request.session['page_count'] = counter + 1  #  add 1 to the page counter
-    
+
     question_ID = sitting.get_next_question()
-    
+
     if question_ID == False:
         #  no questions left
         return final_result_user(request, sitting, previous)
 
     show_advert = False
     
-    try:
-        if request.session['page_count'] > 0 and request.session['page_count'] % 10 == 0:
-            #  advert page every 10 questions
-            counter = request.session['page_count']
-            request.session['page_count'] = counter + 1  #  add 1 to the page counter
-            show_advert = True
+    # try:
+    #     if request.session['page_count'] > 0 and request.session['page_count'] % 10 == 0:
+    #         #  advert page every 10 questions
+    #         counter = request.session['page_count']
+    #         request.session['page_count'] = counter + 1  #  add 1 to the page counter
+    #         show_advert = True
     
-    except KeyError:
-        request.session['page_count'] = int(0)  #  since one hasnt been started, make it now
-    
+    # except KeyError:
+    #     request.session['page_count'] = int(0)  #  since one hasnt been started, make it now
+
 
     next_question = Question.objects.get(id=question_ID)
-    
+
     return render_to_response('question.html', 
                               {'quiz': quiz,
                                'question': next_question,
@@ -214,7 +225,7 @@ def user_load_next_question(request, sitting, quiz):
                                }, 
                               context_instance=RequestContext(request)
                               )
-    
+
 
 def final_result_anon(request, quiz, previous):
     """
@@ -233,7 +244,7 @@ def final_result_anon(request, quiz, previous):
     
     session_score, session_possible = anon_session_score(request)
     
-    if quiz.answers_at_end != True:  #  if answer was shown after each question
+    if quiz.answers_at_end == False:  #  if answer was shown after each question
         return render_to_response('result.html',
                                   {
                                    'score': score, 
@@ -259,6 +270,7 @@ def final_result_anon(request, quiz, previous):
                                   context_instance=RequestContext(request)
                                   )
 
+
 def final_result_user(request, sitting, previous):
     """
     The result page for a logged in user
@@ -274,7 +286,7 @@ def final_result_user(request, sitting, previous):
     if quiz.exam_paper == False:  #  if we do not plan to store the outcome
         sitting.delete()  #  delete the sitting to free up DB space
     
-    if quiz.answers_at_end != True:  #  answer was shown after each question
+    if quiz.answers_at_end == False:  #  answer was shown after each question
         return render_to_response('result.html',
                                   {
                                    'quiz': quiz,
@@ -302,7 +314,8 @@ def final_result_user(request, sitting, previous):
 
 def question_check_anon(request, quiz):
     """
-    check if a question is correct, adds to score if needed and return the previous questions details
+    check if a question is correct, adds to score if needed
+    and return the previous questions details
     """
     quiz_id = str(quiz.id)
     guess = request.GET['guess']
@@ -322,22 +335,26 @@ def question_check_anon(request, quiz):
         anon_session_score(request, 0, 1)
         
     if quiz.answers_at_end != True:  #  display answer after each question
-        return {'previous_answer': answer, 'previous_outcome': outcome, 'previous_question': question, }
+        return {'previous_answer': answer,
+                'previous_outcome': outcome, 'previous_question': question, }
+    
     else:  #  display all answers at end
         return {}
 
+
 def question_check_user(request, quiz, sitting):
     """
-    check if a question is correct, adds to score if needed and return the previous questions details
+    check if a question is correct, adds to score if needed
+    and return the previous questions details
     """
     quiz_id = str(quiz.id)
     guess = request.GET['guess']  #  id of the guessed answer
     answer = Answer.objects.get(id=guess)
-    question = answer.question  #  the question object (only 1 question related to an answer)
+    question = answer.question  #  question object (only question related to an answer)
     
     if answer.correct == True:
         outcome = "correct"
-        sitting.add_to_score(1)  #  add 1 to sitting score.  to do: allow variable point values
+        sitting.add_to_score(1)  #  add 1 to sitting score.
         user_progress_score_update(request, question.category, 1, 1)
     else:
         outcome = "incorrect"
@@ -345,9 +362,11 @@ def question_check_user(request, quiz, sitting):
         user_progress_score_update(request, question.category, 0, 1)
     
     if quiz.answers_at_end != True:  #  display answer after each question
-        return {'previous_answer': answer, 'previous_outcome': outcome, 'previous_question': question, }
+        return {'previous_answer': answer,
+                'previous_outcome': outcome, 'previous_question': question, }
     else:  #  display all answers at end
-        return {}    
+        return {}
+
 
 def user_progress_score_update(request, category, score, possible):
     """
@@ -361,7 +380,7 @@ def user_progress_score_update(request, category, score, possible):
         progress = Progress.objects.new_progress(request.user)
         
     progress.update_score(category, score, possible)
-    
+
 
 def anon_session_score(request, add=0, possible=0):
     """
@@ -411,15 +430,17 @@ def progress(request):
         
         
     except Progress.DoesNotExist:
-        #  viewing progress for first time. Most likely just signed up as redirect to progress after signup
-        #  no current progress object, make one
+        # viewing progress for first time.
+        # Most likely just signed up as redirect to progress after signup
+        # no current progress object, make one
         progress = Progress.objects.new_progress(request.user)
         return render_to_response('progress.html',
                               {'new_user': True,},
                               context_instance=RequestContext(request)
                               )
         
-    cat_scores = progress.list_all_cat_scores()  #  dict {category name: list of three integers [score, possible, percent]}
+    cat_scores = progress.list_all_cat_scores()
+    # dict {category name: list of three integers [score, possible, percent]}
     
     exams = progress.show_exams()  #  queryset of the exams a user has sat
     
