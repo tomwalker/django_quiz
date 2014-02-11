@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django_quiz.quiz.models import Quiz, Category, Progress
-from django_quiz.multichoice.models import Question, Answer
+from quiz.models import Quiz, Category, Progress
+from multichoice.models import Question, Answer
 
 class QuestionInline(admin.TabularInline):
     model = Question.quiz.through
