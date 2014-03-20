@@ -1,6 +1,11 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
+    # quiz base url    
+    url(r'^$', 'quiz.views.index'),   
+
+    # quiz category list    
+    url(r'^category/(?P<slug>[^\.]+)', 'quiz.views.view_category', name='view_quiz_category'),
                        
     #  progress 
     url(r'^progress/$', 'quiz.views.progress'),
