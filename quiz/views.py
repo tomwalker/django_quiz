@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 
 
 from quiz.models import Quiz, Category, Progress, Sitting
@@ -39,6 +40,18 @@ To do:
         allow the page count before a message is shown to be set in admin
 """
 
+def index(request):
+  return render(request, 'quiz_index.html', {
+                'categories': Category.objects.all(),
+    })
+
+def view_category(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    quizzes = Quiz.objects.filter(category=category)
+    return render(request, 'view_quiz_category.html', {
+                'category': category,
+                'quizzes': quizzes
+        })
 
 def quiz_take(request, quiz_name):
     """
