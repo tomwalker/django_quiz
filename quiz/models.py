@@ -94,23 +94,30 @@ class Quiz(models.Model):
     
     random_order = models.BooleanField(blank=False,
                                        default=False,
-                                       help_text="Display the questions in a random order or as they are set?",
+                                       help_text="Display the questions in a\
+                                                  random order or as they are set?",
                                        )
     
     answers_at_end = models.BooleanField(blank=False,
                                          default=False,
-                                         help_text="Correct answer is NOT shown after question. Answers displayed at end",
+                                         help_text="Correct answer is NOT shown\
+                                                    after question. Answers displayed at end",
                                         )
     
     exam_paper = models.BooleanField(blank=False,
                                      default=False,
-                                     help_text="If yes, the result of each attempt by a user will be stored",
+                                     help_text="If yes, the result of each\
+                                                attempt by a user will be stored",
                                      )
 
 
     def save(self, force_insert=False, force_update=False):   
-        self.url = self.url.replace(' ', '-').lower()  #  automatically converts url to lowercase, replace space with dash
-        self.url = ''.join(letter for letter in self.url if letter.isalnum() or letter == '-')  #  removes non-alphanumerics
+        self.url = self.url.replace(' ', '-').lower()
+        #  automatically converts url to lowercase, replace space with dash
+        
+        self.url = ''.join(letter for letter in self.url if letter.isalnum()
+                           or letter == '-')  #  removes non-alphanumerics
+        
         super(Quiz, self).save(force_insert, force_update)
 
 

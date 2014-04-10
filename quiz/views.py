@@ -10,8 +10,8 @@ from django.template import RequestContext
 from django.shortcuts import render, get_object_or_404
 
 
-from quiz.models import Quiz, Category, Progress, Sitting
-from multichoice.models import Question, Answer
+from django_quiz.quiz.models import Quiz, Category, Progress, Sitting
+from django_quiz.multichoice.models import Question, Answer
 
 
 """
@@ -331,6 +331,7 @@ def question_check_anon(request, quiz):
     and return the previous questions details
     """
     quiz_id = str(quiz.id)
+    question_list = request.session[q_list] # list of ints, each is question id
     guess = request.GET['guess']
     answer = Answer.objects.get(id=guess)
     question = answer.question  #  the id of the question
