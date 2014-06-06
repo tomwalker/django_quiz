@@ -1,1 +1,3 @@
 /mysite/
+*.pyc
+manage.py
