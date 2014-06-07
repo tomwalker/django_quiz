@@ -1,17 +1,17 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
-    # quiz base url    
-    url(r'^$', 'quiz.views.index'),   
+    # quiz base url
+    url(r'^$', 'quiz.views.index'),
 
-    # quiz category list    
+    # quiz category list
     url(r'^category/(?P<slug>[^\.]+)', 'quiz.views.view_category', name='view_quiz_category'),
-                       
-    #  progress 
+
+    #  progress
     url(r'^progress/$', 'quiz.views.progress'),
     url(r'^progress$', 'quiz.views.progress'),
 
-    
+
     #  passes variable 'quiz_name' to quiz_take view
     url(r'^(?P<quiz_name>[\w-]+)/$',
         'quiz.views.quiz_take'),  #  quiz/

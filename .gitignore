@@ -1,3 +1,4 @@
 /mysite/
 *.pyc
 manage.py
+/db.sqlite3

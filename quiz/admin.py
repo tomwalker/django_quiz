@@ -14,7 +14,8 @@ class AnswerInline(admin.TabularInline):
 
 """
 below is from
-http://stackoverflow.com/questions/11657682/django-admin-interface-using-horizontal-filter-with-inline-manytomany-field
+http://stackoverflow.com/questions/11657682/django-admin-interface-using-horizontal-filter-with-
+inline-manytomany-field
 """
 
 class QuizAdminForm(forms.ModelForm):
@@ -22,12 +23,10 @@ class QuizAdminForm(forms.ModelForm):
         model = Quiz
 
     questions = forms.ModelMultipleChoiceField(
-                                               queryset=Question.objects.all(),
-                                               required=False,
-                                               widget=FilteredSelectMultiple(verbose_name=('Questions'),
-                                                                             is_stacked=False
-                                                                             )
-                                               )
+                          queryset=Question.objects.all(),
+                          required=False,
+                          widget=FilteredSelectMultiple(verbose_name=('Questions'),
+                                                        is_stacked=False))
 
     def __init__(self, *args, **kwargs):
         super(QuizAdminForm, self).__init__(*args, **kwargs)
