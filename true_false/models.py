@@ -1,29 +1,22 @@
 from django.db import models
-from django_quiz.quiz.models import Quiz, Category
+from quiz.models import Quiz, Category
+from multichoice.models import Question
 
-class TF_Question(models.Model):
+class TF_Question(Question):
+    """
+    Using the multichoice question as the base class, inheriting properties:
+    quiz - quiz that it belongs to
+    category
+    content - question text
+    explanation - shown afterwards
+    """
 
-    quiz = models.ManyToManyField(Quiz, blank=True, )
-    
-    category = models.ForeignKey(Category, blank=True, null=True, )
-    
-    content = models.CharField(max_length=1000, 
-                               blank=False, 
-                               help_text="Enter the question text that you want displayed",
-                               verbose_name='Question',
-                               )
-    
-    explanation = models.TextField(max_length=2000,
-                                   blank=True,
-                                   help_text="Explanation to be shown after the question has been answered.",
-                                   verbose_name='Explanation',
-                               )
-    
-    correct = models.BooleanField(blank=False, 
+    correct = models.BooleanField(blank=False,
                                   default=False,
-                                  help_text="Is this question true or false?"
+                                  help_text="Tick this if the question is true."+
+                                  " Leave it blank for false."
                                   )
-    
+
     class Meta:
         verbose_name = "Question"
         verbose_name_plural = "Questions"
@@ -32,4 +25,3 @@ class TF_Question(models.Model):
 
     def __unicode__(self):
         return self.content
-    

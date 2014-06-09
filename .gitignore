@@ -1,4 +1,7 @@
-/mysite/
+*.*~
+*.*~
 *.pyc
-manage.py
 /db.sqlite3
+/manage.py
+/mysite*
+/plan.txt

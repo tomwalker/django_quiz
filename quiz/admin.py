@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from quiz.models import Quiz, Category, Progress
 from multichoice.models import Question, Answer
+from true_false.models import TF_Question
 
 class QuestionInline(admin.TabularInline):
     model = Question.quiz.through
@@ -73,7 +74,16 @@ class ProgressAdmin(admin.ModelAdmin):
     """
     search_fields = ('user', 'score', )
 
+class TFQuestionAdmin(admin.ModelAdmin):
+    list_display = ('content', 'category', )
+    list_filter = ('category',)
+    fields = ('content', 'category', 'quiz', 'explanation' )
+
+    search_fields = ('content', 'explanation')
+    filter_horizontal = ('quiz',)
+
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Progress, ProgressAdmin)
+admin.site.register(TF_Question, TFQuestionAdmin)
