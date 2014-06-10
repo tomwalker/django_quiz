@@ -18,10 +18,10 @@ class TF_Question(Question):
                                   )
 
     class Meta:
-        verbose_name = "Question"
-        verbose_name_plural = "Questions"
+        verbose_name = "True/False Question"
+        verbose_name_plural = "True/False Questions"
         ordering = ['category']
 
 
     def __unicode__(self):
-        return self.content
+        return self.content[:50]

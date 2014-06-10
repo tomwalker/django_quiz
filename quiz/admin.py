@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from quiz.models import Quiz, Category, Progress
-from multichoice.models import Question, Answer
+
+from quiz.models import Quiz, Category, Progress, Question
+from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
 class QuestionInline(admin.TabularInline):
@@ -24,10 +25,10 @@ class QuizAdminForm(forms.ModelForm):
         model = Quiz
 
     questions = forms.ModelMultipleChoiceField(
-                          queryset=Question.objects.all(),
-                          required=False,
-                          widget=FilteredSelectMultiple(verbose_name=('Questions'),
-                                                        is_stacked=False))
+                          queryset = Question.objects.all().select_subclasses(),
+                          required = False,
+                          widget = FilteredSelectMultiple(verbose_name = ('Questions'),
+                                                          is_stacked = False))
 
     def __init__(self, *args, **kwargs):
         super(QuizAdminForm, self).__init__(*args, **kwargs)
@@ -55,7 +56,7 @@ class QuizAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('category', )
 
-class QuestionAdmin(admin.ModelAdmin):
+class MCQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
     fields = ('content', 'category', 'quiz', 'explanation' )
@@ -77,13 +78,13 @@ class ProgressAdmin(admin.ModelAdmin):
 class TFQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'quiz', 'explanation' )
+    fields = ('content', 'category', 'quiz', 'explanation', 'correct',)
 
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Question, QuestionAdmin)
+admin.site.register(MCQuestion, MCQuestionAdmin)
 admin.site.register(Progress, ProgressAdmin)
 admin.site.register(TF_Question, TFQuestionAdmin)
