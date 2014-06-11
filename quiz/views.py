@@ -41,12 +41,18 @@ To do:
 """
 
 def index(request):
-  return render(request, 'quiz_index.html', {
+    return render(request, 'quiz_index.html', {
                 'categories': Category.objects.all(),
     })
 
+def list_categories(request):
+    return render(request, 'quiz_index.html', {
+                'categories': Category.objects.all(),
+    })
+
+
 def view_category(request, slug):
-    category = get_object_or_404(Category, slug=slug)
+    category = get_object_or_404(Category, category = slug.replace(' ', '-').lower())
     quizzes = Quiz.objects.filter(category=category)
     return render(request, 'view_quiz_category.html', {
                 'category': category,

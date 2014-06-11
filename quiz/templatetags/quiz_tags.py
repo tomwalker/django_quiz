@@ -1,5 +1,5 @@
 from django import template
-from django_quiz.multichoice.models import Question, Answer
+from multichoice.models import Answer
 
 register = template.Library()
 

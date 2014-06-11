@@ -1,30 +1,32 @@
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
-    # quiz base url
-    url(r'^$', 'quiz.views.index'),
+                       # quiz base url
+                       url(r'^$',
+                           'quiz.views.index',
+                           name = 'quiz_index'),
 
-    # quiz category list
-    url(r'^category/(?P<slug>[^\.]+)', 'quiz.views.view_category', name='view_quiz_category'),
+                       url(r'^category/$',
+                           'quiz.views.list_categories',
+                           name = 'quiz_category_list_all'),
 
-    #  progress
-    url(r'^progress/$', 'quiz.views.progress'),
-    url(r'^progress$', 'quiz.views.progress'),
+                       # quiz category: list quizzes
+                       url(r'^category/(?P<slug>[\w.-]+)/$',
+                           'quiz.views.view_category',
+                           name='quiz_category_list_matching'),
 
+                       #  progress
+                       url(r'^progress/$',
+                           'quiz.views.progress',
+                           name = 'quiz_progress'),
 
-    #  passes variable 'quiz_name' to quiz_take view
-    url(r'^(?P<quiz_name>[\w-]+)/$',
-        'quiz.views.quiz_take'),  #  quiz/
+                       #  passes variable 'quiz_name' to quiz_take view
+                       url(r'^(?P<quiz_name>[\w-]+)/$',
+                           'quiz.views.quiz_take',
+                           name = 'quiz_start_page'),
 
-    url(r'^(?P<quiz_name>[\w-]+)$',
-        'quiz.views.quiz_take'),  #  quiz
-
-    url(r'^(?P<quiz_name>[\w-]+)/take/$',
-        'quiz.views.quiz_take'),  #  quiz/take/
-
-    url(r'^(?P<quiz_name>[\w-]+)take$',
-        'quiz.views.quiz_take')  #  quiz/take
-
-
+                       url(r'^(?P<quiz_name>[\w-]+)/take/$',
+                           'quiz.views.quiz_take',
+                           name = 'quiz_question'),
 
 )

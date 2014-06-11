@@ -49,10 +49,12 @@ class CategoryManager(models.Manager):
     """
     def new_category(self, category):
         """
-        add a new category
+        add a new category, replacing spaces and making lowercase
         """
-        new_category = self.create(category=category)
+        new_category = self.create(category =
+                                   category.replace(' ', '-').lower())
         new_category.save()
+
 
 class Category(models.Model):
 
