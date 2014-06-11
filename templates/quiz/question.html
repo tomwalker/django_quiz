@@ -11,10 +11,10 @@
 
 
 {% if previous %}
-	
-        <p class="muted"><small>The previous question:</small></p> 
+
+        <p class="muted"><small>The previous question:</small></p>
         <p>{{ previous.previous_question }}</p>
-        
+
         {% ifequal previous.previous_outcome 'correct' %}
 			<div class="alert alert-success">
 		{% else %}
@@ -23,17 +23,19 @@
 
 		    	<p><small>Your answer was </small><em>{{ previous.previous_answer }}</em><small> which is </small><strong>{{ previous.previous_outcome }}</strong></p>
 		    </div>
-		    
+
 			{% correct_answer previous %}
 		    <p><strong>Explanation:</strong></p>
 		    <div class="well " style="background-color: #fcf8e3;">
 		     	<p>{{ previous.previous_question.explanation }}</p>
 		    </div>
-		        
-		    
+
+
 <hr>
-	
-{% endif %}<br />
+
+{% endif %}
+
+<br />
 
 
 {% if question %}
@@ -41,11 +43,11 @@
     	<p><small class="muted">Question category:</small> <strong>{{ question.category }}</strong></p>
         <p class="lead">{{ question.content }}</p>
 		{% answers_for_question question quiz %}
-		
+
 {% endif %}
-    
+
     <hr>
-    
+
 
 
 </div>
