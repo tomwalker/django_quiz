@@ -9,10 +9,9 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.shortcuts import render, get_object_or_404
 
-
-from quiz.models import Quiz, Category, Progress, Sitting
-from multichoice.models import Question, Answer
-
+from quiz.models import Quiz, Category, Progress, Sitting, Question
+from multichoice.models import MCQuestion, Answer
+from true_false.models import TF_Question
 
 """
 
@@ -41,23 +40,21 @@ To do:
 """
 
 def index(request):
-    return render(request, 'quiz_index.html', {
-                'categories': Category.objects.all(),
-    })
+    all_quizzes = Quiz.objects.all()
+    return render(request, 'quiz_index.html',
+                  {'quiz_list': all_quizzes,})
 
 def list_categories(request):
-    return render(request, 'quiz_index.html', {
-                'categories': Category.objects.all(),
-    })
+    return render(request, 'quiz_index.html',
+                  {'categories': Category.objects.all(),})
 
 
 def view_category(request, slug):
     category = get_object_or_404(Category, category = slug.replace(' ', '-').lower())
     quizzes = Quiz.objects.filter(category=category)
-    return render(request, 'view_quiz_category.html', {
-                'category': category,
-                'quizzes': quizzes
-        })
+    return render(request, 'view_quiz_category.html',
+                  {'category': category,
+                   'quizzes': quizzes,})
 
 def quiz_take(request, quiz_name):
     """

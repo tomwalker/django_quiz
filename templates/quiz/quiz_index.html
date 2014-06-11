@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-{% block title %}All Quiz{% endblock %}
+{% block title %}All Quizzes{% endblock %}
 
 {% block content %}
-<h2>Categories</h2>
-    {% if categories %}
+<h2>Quiz list</h2>
+    {% if quiz_list %}
         <ul>
-        {% for category in categories %}
-            <li><a href="{{ category.get_absolute_url }}">{{ category.category }}</a></li>
+        {% for quiz in quiz_list %}
+            <li><a href="{% url 'quiz.views.quiz_take' quiz_name=quiz.url %}">{{ quiz.title }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
-        <p>There are no categories.</p>
+        <p>There are no available quizzes.</p>
     {% endif %}
 {% endblock %}
 
