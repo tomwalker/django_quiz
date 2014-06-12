@@ -41,6 +41,8 @@
 {% if question %}
 
     	<p><small class="muted">Question category:</small> <strong>{{ question.category }}</strong></p>
+		<p>{{ question.id }}</p>
+		<p>{{ question_type }}</p>
         <p class="lead">{{ question.content }}</p>
 		{% answers_for_question question quiz %}
 

@@ -186,12 +186,12 @@ def load_anon_next_question(request, quiz):
     #     request.session['page_count'] = int(0)  #  since one hasnt been started, make it now
 
     next_question_id = question_list[0]
-    question = Question.objects.get(id=next_question_id)
+    next_question = Question.objects.get_subclass(id = next_question_id)
     question_type = next_question.__class__.__name__
 
     return render_to_response('question.html',
                               {'quiz': quiz,
-                               'question': question,
+                               'question': next_question,
                                'question_type': question_type,
                                'previous': previous,
                                'show_advert': show_advert,
@@ -233,7 +233,7 @@ def user_load_next_question(request, sitting, quiz):
     #     request.session['page_count'] = int(0)  #  since one hasnt been started, make it now
 
 
-    next_question = Question.objects.get(id=question_ID)
+    next_question = Question.objects.get_subclass(id = next_question_id)
     question_type = next_question.__class__.__name__
 
     return render_to_response('question.html',
