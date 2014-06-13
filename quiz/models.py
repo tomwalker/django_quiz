@@ -126,7 +126,7 @@ class Quiz(models.Model):
 
 
     def __unicode__(self):
-        return self.title[:25]
+        return self.title
 
 
 """
@@ -418,8 +418,6 @@ class Question(models.Model):
     """
     Base class for all question types.
     Shared properties placed here.
-    Was originally going to be an abstract class but limits the use
-    of managers as one isn't created.
     """
 
     quiz = models.ManyToManyField(Quiz, blank = True, )
@@ -428,22 +426,21 @@ class Question(models.Model):
 
     content = models.CharField(max_length = 1000,
                                blank = False,
-                               help_text = "Enter the question text that you want displayed",
-                               verbose_name = 'Question',
-                               )
+                               help_text = ("Enter the question text that " +
+                                            "you want displayed"),
+                               verbose_name = 'Question',)
 
     explanation = models.TextField(max_length = 2000,
                                    blank = True,
-                                   help_text = "Explanation to be shown after the question has been answered.",
-                                   verbose_name = 'Explanation',
-                               )
+                                   help_text = ("Explanation to be shown " +
+                                                "after the question has " +
+                                                "been answered."),
+                                   verbose_name = 'Explanation',)
 
     objects = InheritanceManager()
 
     class Meta:
         ordering = ['category']
-
-
 
     def __unicode__(self):
         return self.content

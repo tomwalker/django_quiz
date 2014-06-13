@@ -1,48 +1,19 @@
 import random
 
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.context_processors import csrf
 from django.contrib import auth
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render, render_to_response
 
 from quiz.models import Quiz, Category, Progress, Sitting, Question
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
-"""
-
-Views related directly to the quiz
-
-***********************************
-
-used by anonymous (non-logged in) users only:
-
-    request.session[q_list] is a list of the remaining question IDs in order. "q_list" = quiz_id + "q_list"
-    request.session[quiz_id + "_score"] is current score. Best possible score is number of questions.
-
-used by both user and anon:
-
-    request.session['page_count'] is a counter used for displaying message every X number of pages
-
-useful query sets:
-
-    question.answer_set.all() is all the answers for question
-    quiz.question_set.all() is all the questions in a quiz
-
-To do:
-        variable scores per question
-        if a user does some questions as anon, then logs in, remove these questions from remaining q list for logged in user
-        allow the page count before a message is shown to be set in admin
-"""
-
 def index(request):
     all_quizzes = Quiz.objects.all()
     return render(request, 'quiz_index.html',
                   {'quiz_list': all_quizzes,})
+
 
 def list_categories(request):
     return render(request, 'quiz_index.html',
@@ -50,37 +21,29 @@ def list_categories(request):
 
 
 def view_category(request, slug):
-    category = get_object_or_404(Category, category = slug.replace(' ', '-').lower())
-    quizzes = Quiz.objects.filter(category=category)
+    category = get_object_or_404(Category,
+                                 category = slug.replace(' ', '-').lower())
+    quizzes = Quiz.objects.filter(category = category)
     return render(request, 'view_quiz_category.html',
                   {'category': category,
                    'quizzes': quizzes,})
 
 def quiz_take(request, quiz_name):
-    """
-    Initial handler for the quiz.
-    1. Tests if user is logged in.
-    2. Decides whether this is the start of a new quiz.
-    """
+    quiz = Quiz.objects.get(url = quiz_name.lower())
 
-    quiz = Quiz.objects.get(url=quiz_name.lower())
-    #  url refers to the SEO friendly url specified in model.quiz
-
-    if request.user.is_authenticated() == True:  #  logged in user
+    if request.user.is_authenticated() == True:
         try:
-            previous_sitting = Sitting.objects.get(user=request.user,
-                                                      quiz=quiz,
-                                                      complete=False,
-                                                      )
+            previous_sitting = Sitting.objects.get(user = request.user,
+                                                   quiz = quiz,
+                                                   complete = False,)
+
         except Sitting.DoesNotExist:
-            #  start new quiz
             return user_new_quiz_session(request, quiz)
 
         except Sitting.MultipleObjectsReturned:
-            #  if more than one sitting found
-            previous_sitting = Sitting.objects.filter(user=request.user,
-                                                      quiz=quiz,
-                                                      complete=False,
+            previous_sitting = Sitting.objects.filter(user = request.user,
+                                                      quiz = quiz,
+                                                      complete = False,
                                                       )[0]  #  use the first one
 
             return user_load_next_question(request, previous_sitting, quiz)
@@ -196,7 +159,7 @@ def load_anon_next_question(request, quiz):
                                'previous': previous,
                                'show_advert': show_advert,
                                },
-                              context_instance=RequestContext(request))
+                              context_instance = RequestContext(request))
 
 
 def user_load_next_question(request, sitting, quiz):
@@ -243,7 +206,7 @@ def user_load_next_question(request, sitting, quiz):
                                'previous': previous,
                                'show_advert': show_advert,
                                },
-                              context_instance=RequestContext(request)
+                              context_instance = RequestContext(request)
                               )
 
 
@@ -274,7 +237,7 @@ def final_result_anon(request, quiz, previous):
                                    'session': session_score,
                                    'possible': session_possible,
                                    },
-                                  context_instance=RequestContext(request)
+                                  context_instance = RequestContext(request)
                                   )
     else:  #  show all questions and answers
         questions = quiz.question_set.all()
@@ -287,7 +250,7 @@ def final_result_anon(request, quiz, previous):
                                    'session': session_score,
                                    'possible': session_possible,
                                    },
-                                  context_instance=RequestContext(request)
+                                  context_instance = RequestContext(request)
                                   )
 
 
@@ -315,7 +278,7 @@ def final_result_user(request, sitting, previous):
                                    'percent': percent,
                                    'previous': previous,
                                    },
-                                  context_instance=RequestContext(request)
+                                  context_instance = RequestContext(request)
                                   )
     else:  #  show all questions and answers
         questions = quiz.question_set.all()
@@ -328,7 +291,7 @@ def final_result_user(request, sitting, previous):
                                    'questions': questions,
                                    'incorrect_questions': incorrect,
                                    },
-                                  context_instance=RequestContext(request)
+                                  context_instance = RequestContext(request)
                                   )
 
 
@@ -340,7 +303,7 @@ def question_check_anon(request, quiz):
     quiz_id = str(quiz.id)
     question_list = request.session[q_list] # list of ints, each is question id
     guess = request.GET['guess']
-    answer = Answer.objects.get(id=guess)
+    answer = Answer.objects.get(id = guess)
     question = answer.question  #  the id of the question
 
     if answer.correct == True:
@@ -370,7 +333,7 @@ def question_check_user(request, quiz, sitting):
     """
     quiz_id = str(quiz.id)
     guess = request.GET['guess']  #  id of the guessed answer
-    answer = Answer.objects.get(id=guess)
+    answer = Answer.objects.get(id = guess)
     question = answer.question  #  question object (only question related to an answer)
 
     if answer.correct == True:
@@ -394,7 +357,7 @@ def user_progress_score_update(request, category, score, possible):
     update the overall category score for the progress section
     """
     try:
-        progress = Progress.objects.get(user=request.user)
+        progress = Progress.objects.get(user = request.user)
 
     except Progress.DoesNotExist:
         #  no current progress object, make one
@@ -403,7 +366,7 @@ def user_progress_score_update(request, category, score, possible):
     progress.update_score(category, score, possible)
 
 
-def anon_session_score(request, add=0, possible=0):
+def anon_session_score(request, add = 0, possible = 0):
     """
     returns the session score
     if number passed in then add this to the running total and then return session score
@@ -443,11 +406,11 @@ def progress(request):
         score, possible = anon_session_score(request)
         return render_to_response('signup.html',
                                   {'anon_score': score, 'anon_possible': possible, },
-                                  context_instance=RequestContext(request)
+                                  context_instance = RequestContext(request)
                                   )
 
     try:
-        progress = Progress.objects.get(user=request.user)
+        progress = Progress.objects.get(user = request.user)
 
 
     except Progress.DoesNotExist:
@@ -457,7 +420,7 @@ def progress(request):
         progress = Progress.objects.new_progress(request.user)
         return render_to_response('progress.html',
                               {'new_user': True,},
-                              context_instance=RequestContext(request)
+                              context_instance = RequestContext(request)
                               )
 
     cat_scores = progress.list_all_cat_scores()
@@ -467,5 +430,5 @@ def progress(request):
 
     return render_to_response('progress.html',
                               {'cat_scores': cat_scores, 'exams': exams},
-                              context_instance=RequestContext(request)
+                              context_instance = RequestContext(request)
                               )
