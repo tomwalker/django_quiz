@@ -6,7 +6,18 @@ class TF_Question(Question):
                                   default = False,
                                   help_text = ("Tick this if the question " +
                                                "is true. Leave it blank for" +
-                                               "false."),)
+                                               " false."),)
+
+    def check_if_correct(self, guess):
+        if guess == "T":
+            guess_bool = True
+        else:
+            guess_bool = False
+
+        if guess_bool == self.correct:
+            return True
+        else:
+            return False
 
     class Meta:
         verbose_name = "True/False Question"

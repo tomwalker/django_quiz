@@ -44,7 +44,27 @@
 		<p>{{ question.id }}</p>
 		<p>{{ question_type }}</p>
         <p class="lead">{{ question.content }}</p>
-		{% answers_for_question question quiz %}
+
+		<form action="{% url 'quiz_question' quiz.url %}" method="get">
+		  <p>quid {{ question.id }}</p>
+		  <input type=hidden name="question_id" value="{{ question.id }}">
+
+		  <table class="table table-hover table-bordered" id="answerchoice">
+			<tbody>
+
+			  {% ifequal question_type 'TF_Question' %}
+			      {% include 'answers_for_tf_question.html' %}
+			  {% endifequal %}
+
+			  {% ifequal question_type 'MCQuestion' %}
+		          {% answers_for_mc_question question quiz %}
+			  {% endifequal %}
+
+			</tbody>
+		  </table>
+		  <input type="submit" value="Check" class="btn btn-large btn-block btn-warning" >
+		</form>
+
 
 {% endif %}
 

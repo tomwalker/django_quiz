@@ -109,8 +109,8 @@ def load_anon_next_question(request, quiz):
         #  if there has been a previous question
         #  returns a dictionary with previous question details
         previous = question_check_anon(request, quiz)
-
-        request.session[str(quiz.id)+ "_q_list"] = question_list[1:]
+        question_list = question_list[1:]
+        request.session[str(quiz.id)+ "_q_list"] = question_list
         request.session['page_count'] = request.session['page_count'] + 1
 
     if not request.session[str(quiz.id)+ "_q_list"]:
@@ -172,7 +172,7 @@ def user_load_next_question(request, sitting, quiz):
     # except KeyError:
     #     request.session['page_count'] = 0
 
-    next_question = Question.objects.get_subclass(id = next_question_id)
+    next_question = Question.objects.get_subclass(id = question_ID)
     question_type = next_question.__class__.__name__
 
     return render_to_response('question.html',
@@ -250,10 +250,11 @@ def final_result_user(request, sitting, previous):
 
 def question_check_anon(request, quiz):
     guess = request.GET['guess']
-    answer = Answer.objects.get(id = guess)
-    question = answer.question  #  the id of the question
+    question_id = request.GET['question_id']
+    question = Question.objects.get_subclass(id = question_id)
+    is_correct = question.check_if_correct(guess)
 
-    if answer.correct == True:
+    if is_correct == True:
         outcome = "correct"
         current = request.session[str(quiz.id) + "_score"]
         request.session[str(quiz.id) + "_score"] = int(current) + 1
@@ -264,7 +265,7 @@ def question_check_anon(request, quiz):
         anon_session_score(request, 0, 1)
 
     if quiz.answers_at_end != True:
-        return {'previous_answer': answer,
+        return {'previous_answer': guess,
                 'previous_outcome': outcome,
                 'previous_question': question,}
 
@@ -274,10 +275,11 @@ def question_check_anon(request, quiz):
 
 def question_check_user(request, quiz, sitting):
     guess = request.GET['guess']
-    answer = Answer.objects.get(id = guess)
-    question = answer.question
+    question_id = request.GET['question_id']
+    question = Question.objects.get_subclass(id = question_id)
+    is_correct = question.check_if_correct(guess)
 
-    if answer.correct == True:
+    if is_correct == True:
         outcome = "correct"
         sitting.add_to_score(1)
         user_progress_score_update(request, question.category, 1, 1)
@@ -287,7 +289,7 @@ def question_check_user(request, quiz, sitting):
         user_progress_score_update(request, question.category, 0, 1)
 
     if quiz.answers_at_end != True:
-        return {'previous_answer': answer,
+        return {'previous_answer': guess,
                 'previous_outcome': outcome,
                 'previous_question': question,}
     else:

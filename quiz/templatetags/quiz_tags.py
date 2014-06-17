@@ -3,13 +3,10 @@ from multichoice.models import Answer
 
 register = template.Library()
 
-@register.inclusion_tag('answers_for_question.html', takes_context=True)
-def answers_for_question(context, question, quiz):
-    """
-    Displays the possible answers to a question
-    """
+@register.inclusion_tag('answers_for_mc_question.html', takes_context=True)
+def answers_for_mc_question(context, question, quiz):
     answers = Answer.objects.filter(question__id=question.id).order_by('?')
-    return {'answers': answers, 'quiz': quiz}
+    return {'answers': answers,}
 
 @register.inclusion_tag('correct_answer.html', takes_context=True)
 def correct_answer(context, previous):

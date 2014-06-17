@@ -245,8 +245,8 @@ class Progress(models.Model):
 
     def update_score(self, category_queried, score_to_add, possible_to_add):
         """
-        Pass in category, amount to increase score and max possible
-        increase if all were correct.
+        Pass in category, amount to increase score and max possible.
+        Increase if all were correct.
 
         Does not return anything.
         """
@@ -372,7 +372,7 @@ class Sitting(models.Model):
             self.save()
 
     def add_to_score(self, points):
-        present_score = self.get_current_score()
+        present_score = int(self.get_current_score())
         updated_score = present_score + int(points)
         self.current_score = updated_score
         self.save()
