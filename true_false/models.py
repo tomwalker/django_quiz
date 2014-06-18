@@ -11,8 +11,10 @@ class TF_Question(Question):
     def check_if_correct(self, guess):
         if guess == "T":
             guess_bool = True
-        else:
+        elif guess == "F":
             guess_bool = False
+        else:
+            return False
 
         if guess_bool == self.correct:
             return True

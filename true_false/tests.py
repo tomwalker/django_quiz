@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from django_quiz.true_false.models import TF_Question
+from true_false.models import TF_Question
 
 
 class TestTrueFalseQuestionModel(TestCase):
@@ -15,7 +15,12 @@ class TestTrueFalseQuestionModel(TestCase):
     def test_true_q(self):
         red = TF_Question.objects.get(explanation = "it is")
         self.assertEqual(red.correct, True)
+        self.assertEqual(red.check_if_correct("T"), True)
+        self.assertEqual(red.check_if_correct("F"), False)
+        self.assertEqual(red.check_if_correct("4"), False)
 
     def test_false_q(self):
-        red = TF_Question.objects.get(explanation = "it is not")
-        self.assertEqual(red.correct, False)
+        blue = TF_Question.objects.get(explanation = "it is not")
+        self.assertEqual(blue.correct, False)
+        self.assertEqual(blue.check_if_correct("T"), False)
+        self.assertEqual(blue.check_if_correct("F"), True)

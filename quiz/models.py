@@ -64,6 +64,7 @@ class Category(models.Model):
                                 unique = True,
                                 null = True,)
 
+    objects = CategoryManager()
 
     class Meta:
         verbose_name = "Category"
@@ -362,7 +363,7 @@ class Sitting(models.Model):
         if first_comma == -1 or first_comma == 0:
             return False
 
-        return self.question_list[:first_comma]
+        return int(self.question_list[:first_comma])
 
 
     def remove_first_question(self):
