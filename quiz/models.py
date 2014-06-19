@@ -161,7 +161,6 @@ class Progress(models.Model):
         the third is the percentage correct.
 
         The dict will have one key for every category that you have defined
-        BUT
         """
 
         categories = Category.objects.all()
@@ -238,13 +237,17 @@ class Progress(models.Model):
         Increase if all were correct.
 
         Does not return anything.
+
+        TO DO: Raise error when necessary
         """
 
         category_test = Category.objects.filter(category = category_queried) \
                                         .exists()
 
-        if category_test == False:
-            return "error",  "category does not exist"
+        if category_test == False or score_to_add == False or \
+           possible_to_add == False or str(score_to_add).isdigit() == False or \
+           str(possible_to_add).isdigit() == False:
+            return "error",  "category does not exist or invalid score"
 
         to_find = re.escape(str(category_queried)) + r",(\d+),(\d+),"
 
