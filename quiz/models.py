@@ -39,20 +39,12 @@ CATEGORY_CHOICES = ( ('Endocrinology', 'Endocrinology'),
                     )
 
 
-"""
-Category used to define a category for either a quiz or question
-"""
-
 class CategoryManager(models.Manager):
-    """
-    custom manager for Progress class
-    """
+
     def new_category(self, category):
-        """
-        add a new category, replacing spaces and making lowercase
-        """
         new_category = self.create(category =
-                                   category.replace(' ', '-').lower())
+                                   re.sub('\s+', '-', category).lower())
+
         new_category.save()
 
 
@@ -73,10 +65,6 @@ class Category(models.Model):
     def __unicode__(self):
         return self.category
 
-
-"""
-Quiz is a container that can be filled with various different question types.
-"""
 
 class Quiz(models.Model):
 
@@ -112,13 +100,13 @@ class Quiz(models.Model):
                                      attempt by a user will be stored",)
 
 
-    def save(self, force_insert = False, force_update = False):
-        self.url = self.url.replace(' ', '-').lower()
+    def save(self, force_insert = False, force_update = False, *args, **kwargs):
+        self.url = re.sub('\s+', '-', self.url).lower()
 
-        self.url = ''.join(letter for letter in self.url if letter.isalnum()
-                           or letter == '-')  #  removes non-alphanumerics
+        self.url = ''.join(letter for letter in self.url if
+                           letter.isalnum() or letter == '-')
 
-        super(Quiz, self).save(force_insert, force_update)
+        super(Quiz, self).save(force_insert, force_update, *args, **kwargs)
 
 
     class Meta:

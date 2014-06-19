@@ -4,8 +4,9 @@ from multichoice.models import Answer
 register = template.Library()
 
 @register.inclusion_tag('answers_for_mc_question.html', takes_context=True)
-def answers_for_mc_question(context, question, quiz):
+def answers_for_mc_question(context, question):
     answers = Answer.objects.filter(question__id=question.id).order_by('?')
+    print answers
     return {'answers': answers,}
 
 @register.inclusion_tag('correct_answer.html', takes_context=True)
