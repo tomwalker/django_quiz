@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from quiz.models import Category, Quiz, Progress, Sitting, Question
+from multichoice.models import MCQuestion
+from true_false.models import TF_Question
 
 class TestCategory(TestCase):
     def setUp(self):
@@ -142,25 +144,112 @@ class TestProgress(TestCase):
 
 class TestSitting(TestCase):
     def setUp(self):
-        q1 = Quiz.objects.create(id = 1,
+        quiz1 = Quiz.objects.create(id = 1,
                                  title = "test quiz 1",
                                  description = "d1",
                                  url = "tq1",)
 
-        Question.objects.create(id = 1,
-                                quiz = q1,
-                                content = "squawk",)
+        question1 = MCQuestion.objects.create(id = 1,
+                                              content = "squawk",)
+        question1.quiz.add(quiz1)
 
-        Question.objects.create(id = 2,
-                                quiz = q1,
-                                content = "squeek",)
+        question2 = MCQuestion.objects.create(id = 2,
+                                              content = "squeek",)
+        question2.quiz.add(quiz1)
 
         self.user = User.objects.create_user(username = "jacob",
-                                 email = "jacob@jacob.com",
-                                 password = "top_secret")
+                                             email = "jacob@jacob.com",
+                                             password = "top_secret")
 
-        Sitting.objects.new_sitting(self.user, q1)
+        Sitting.objects.new_sitting(self.user, quiz1)
 
-    def test_get_next(self):
+    def test_get_next_remove_first(self):
         s1 = Sitting.objects.get(id = 1)
-        print s1.question_list
+        self.assertEqual(s1.get_next_question(), 1)
+
+        s1.remove_first_question()
+        self.assertEqual(s1.get_next_question(), 2)
+
+        s1.remove_first_question()
+        self.assertEqual(s1.get_next_question(), False)
+
+        s1.remove_first_question()
+        self.assertEqual(s1.get_next_question(), False)
+
+    def test_scoring(self):
+        s1 = Sitting.objects.get(id = 1)
+        self.assertEqual(s1.get_current_score(), 0)
+
+        s1.add_to_score(1)
+        self.assertEqual(s1.get_current_score(), 1)
+        self.assertEqual(s1.get_percent_correct(), 50)
+
+        s1.add_to_score(1)
+        self.assertEqual(s1.get_current_score(), 2)
+        self.assertEqual(s1.get_percent_correct(), 100)
+
+        s1.add_to_score(1)
+        self.assertEqual(s1.get_current_score(), 3)
+        self.assertEqual(s1.get_percent_correct(), 100)
+
+    def test_incorrect_and_complete(self):
+        s1 = Sitting.objects.get(id = 1)
+        self.assertEqual(s1.get_incorrect_questions(), [])
+
+        question1 = MCQuestion.objects.get(id = 1)
+        s1.add_incorrect_question(question1)
+        self.assertIn("1", s1.get_incorrect_questions())
+
+        question3 = TF_Question.objects.create(id = 3,
+                                               content = "oink",)
+        s1.add_incorrect_question(question3)
+        self.assertIn("3", s1.get_incorrect_questions())
+
+        quiz = Quiz.objects.get(id = 1)
+        f_test = s1.add_incorrect_question(quiz)
+        self.assertEqual(f_test, False)
+        self.assertNotIn("test", s1.get_incorrect_questions())
+
+        self.assertEqual(s1.complete, False)
+        s1.mark_quiz_complete()
+        self.assertEqual(s1.complete, True)
+
+"""
+Tests relating to views
+"""
+
+class TestNonQuestionViews(TestCase):
+    def setUp(self):
+        Category.objects.new_category(category = "elderberries")
+        c1 = Category.objects.get(id = 1)
+        Category.objects.new_category(category = "straw.berries")
+        Category.objects.new_category(category = "black berries")
+
+        Quiz.objects.create(id = 1,
+                            title = "test quiz 1",
+                            description = "d1",
+                            url = "tq1",
+                            category = c1)
+        Quiz.objects.create(id = 2,
+                            title = "test quiz 2",
+                            description = "d2",
+                            url = "t q2",)
+
+
+    def test_index(self):
+        response = self.client.get('/q/')
+
+        self.assertContains(response, 'test quiz 1')
+
+    def test_list_categories(self):
+        response = self.client.get('/q/category/')
+
+        self.assertContains(response, 'elderberries')
+        self.assertContains(response, 'straw.berries')
+        self.assertContains(response, 'black-berries')
+
+    def test_view_cat(self):
+        response = self.client.get('/q/category/elderberries/')
+
+        self.assertContains(response, 'test quiz 1')
+        self.assertNotContains(response, 'test quiz 2')

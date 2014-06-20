@@ -16,7 +16,7 @@ def index(request):
 
 
 def list_categories(request):
-    return render(request, 'quiz_index.html',
+    return render(request, 'list_categories.html',
                   {'categories': Category.objects.all(),})
 
 
@@ -24,6 +24,7 @@ def view_category(request, slug):
     category = get_object_or_404(Category,
                                  category = slug.replace(' ', '-').lower())
     quizzes = Quiz.objects.filter(category = category)
+
     return render(request, 'view_quiz_category.html',
                   {'category': category,
                    'quizzes': quizzes,})
@@ -309,11 +310,14 @@ def user_progress_score_update(request, category, score, possible):
 def anon_session_score(request, add = 0, possible = 0):
     """
     Returns the session score for non-signed in users.
-    If number passed in then add this to the running total and then return session score
+    If number passed in then add this to the running total and
+    return session score
+
     examples:
         x, y = anon_session_score(1, 1) will add 1 out of a possible 1
         x, y = anon_session_score(0, 2) will add 0 out of a possible 2
-        x, y = anon_session_score() will return the session score without modification
+        x, y = anon_session_score()     will return the session score
+                                        without modification
     """
     if "session_score" not in request.session:
         request.session["session_score"] = 0

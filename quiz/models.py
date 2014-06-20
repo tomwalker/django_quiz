@@ -378,6 +378,9 @@ class Sitting(models.Model):
         if divisor < 1:
             return 0            # prevent divide by zero error
 
+        if dividend > divisor:
+            return 100
+
         correct = int(round((dividend / divisor) * 100))
 
         if correct >= 1:
@@ -394,6 +397,8 @@ class Sitting(models.Model):
         Adds uid of incorrect question to the list.
         The question object must be passed in.
         """
+        if isinstance(question, Question) == False:
+            return False
         current_incorrect = self.incorrect_questions
         question_id = question.id
 
@@ -402,7 +407,7 @@ class Sitting(models.Model):
 
     def get_incorrect_questions(self):
         question_list = self.incorrect_questions
-        split_questions = question_list.split(',')
+        split_questions = filter(None, question_list.split(','))
         return split_questions
 
 

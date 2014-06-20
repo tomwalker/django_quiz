@@ -2,14 +2,19 @@
 {% block title %}Quizzes related to {{ category.category }}{% endblock %}
 
 {% block content %}
+<h1>Quizzes in {{ category.category }}</h1>
+
     {% if quizzes %}
-    <h1>Quizzes in {{ category.category }}</h1>
         <ul>
         {% for quiz in quizzes %}
-            <li><a href="{{ BASE_URL }}/quiz/{{ quiz.url }}">{{ quiz.title }}</a></li>
+            <li>
+			  <a href="{% url 'quiz_question' quiz_name=quiz.url %}">
+				{{ quiz.title }}
+			  </a>
+			</li>
         {% endfor %}
         </ul>
     {% else %}
-        <p>There are no quizzes.</p>
+        <p>There are no quizzes</p>
     {% endif %}
 {% endblock %}
