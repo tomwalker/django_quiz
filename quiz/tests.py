@@ -2,6 +2,7 @@
 
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test.client import Client
 
 from quiz.models import Category, Quiz, Progress, Sitting, Question
 from multichoice.models import MCQuestion
@@ -219,6 +220,9 @@ Tests relating to views
 """
 
 class TestNonQuestionViews(TestCase):
+    """
+    Starting on questions not directly involved with questions.
+    """
     def setUp(self):
         Category.objects.new_category(category = "elderberries")
         c1 = Category.objects.get(id = 1)
@@ -253,3 +257,79 @@ class TestNonQuestionViews(TestCase):
 
         self.assertContains(response, 'test quiz 1')
         self.assertNotContains(response, 'test quiz 2')
+
+    def test_progress_anon(self):
+        response = self.client.get('/q/progress/')
+        self.assertContains(response, 'Sign up')
+
+        session = self.client.session
+        session["session_score"] = 1
+        session["session_score_possible"] = 2
+        session.save()
+
+        response = self.client.get('/q/progress/')
+        self.assertContains(response, '1 out of 2')
+
+    def test_progress_user(self):
+        self.user = User.objects.create_user(username = "jacob",
+                                             email = "jacob@jacob.com",
+                                             password = "top_secret")
+
+        c = Client()
+        c.login(username='jacob', password='top_secret')
+        p1 = Progress.objects.new_progress(self.user)
+        p1.update_score("elderberries", 1, 2)
+
+        response = c.get('/q/progress/')
+
+        self.assertContains(response, "elderberries")
+
+
+class TestQuestionViewsAnon(TestCase):
+
+    def setUp(self):
+        Category.objects.new_category(category = "elderberries")
+        c1 = Category.objects.get(id = 1)
+
+        quiz1 = Quiz.objects.create(id = 1,
+                                    title = "test quiz 1",
+                                    description = "d1",
+                                    url = "tq1",
+                                    category = c1)
+
+        self.user = User.objects.create_user(username = "jacob",
+                                             email = "jacob@jacob.com",
+                                             password = "top_secret")
+
+        question1 = MCQuestion.objects.create(id = 1,
+                                              content = "squawk",)
+        question1.quiz.add(quiz1)
+
+        question2 = MCQuestion.objects.create(id = 2,
+                                              content = "squeek",)
+        question2.quiz.add(quiz1)
+
+
+class TestQuestionViewsAnon(TestCase):
+
+    def setUp(self):
+        Category.objects.new_category(category = "elderberries")
+        c1 = Category.objects.get(id = 1)
+
+        quiz1 = Quiz.objects.create(id = 1,
+                                    title = "test quiz 1",
+                                    description = "d1",
+                                    url = "tq1",
+                                    category = c1)
+
+        self.user = User.objects.create_user(username = "jacob",
+                                             email = "jacob@jacob.com",
+                                             password = "top_secret")
+
+        question1 = MCQuestion.objects.create(id = 1,
+                                              content = "squawk",)
+        question1.quiz.add(quiz1)
+
+        question2 = MCQuestion.objects.create(id = 2,
+                                              content = "squeek",)
+        question2.quiz.add(quiz1)

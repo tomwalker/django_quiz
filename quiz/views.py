@@ -121,9 +121,10 @@ def load_anon_next_question(request, quiz):
     show_advert = False
 
     """
-    This is a counter that allows you to add something into the template every
-    X amount of pages. In my original site, I used this to show a full page
-    advert every 10 pages.
+    This is a counter that allows you to add something into the
+    template every X amount of pages.
+    In my original site, I used this to show a full page advert
+    every 10 pages.
     """
 
     # try:
