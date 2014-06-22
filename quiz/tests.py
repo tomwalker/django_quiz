@@ -1,10 +1,11 @@
 # -*- coding: iso-8859-15 -*-
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.test import TestCase
-from django.test.client import Client
+from django.test.client import Client, RequestFactory
 
 from quiz.models import Category, Quiz, Progress, Sitting, Question
+from quiz.views import quiz_take
 from multichoice.models import MCQuestion
 from true_false.models import TF_Question
 
@@ -309,8 +310,20 @@ class TestQuestionViewsAnon(TestCase):
                                               content = "squeek",)
         question2.quiz.add(quiz1)
 
+        self.factory = RequestFactory()
 
-class TestQuestionViewsAnon(TestCase):
+    def test_quiz_take_anon(self):
+        request = self.client.get('/q/tq1/')
+        request.user = AnonymousUser()
+        request.session = self.client.session
+        request.session['set_expiry'] = 0
+
+        print request
+
+        self.assertContains(response, 'Sign up')
+
+
+class TestQuestionViewsUser(TestCase):
 
     def setUp(self):
         Category.objects.new_category(category = "elderberries")
