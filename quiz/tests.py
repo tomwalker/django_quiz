@@ -1,8 +1,11 @@
 # -*- coding: iso-8859-15 -*-
 
 from django.contrib.auth.models import User, AnonymousUser
+from django.core.urlresolvers import resolve
+from django.http import HttpRequest
 from django.test import TestCase
 from django.test.client import Client, RequestFactory
+
 
 from quiz.models import Category, Quiz, Progress, Sitting, Question
 from quiz.views import quiz_take
@@ -312,15 +315,39 @@ class TestQuestionViewsAnon(TestCase):
 
         self.factory = RequestFactory()
 
-    def test_quiz_take_anon(self):
-        request = self.client.get('/q/tq1/')
-        request.user = AnonymousUser()
-        request.session = self.client.session
-        request.session['set_expiry'] = 0
+    def test_quiz_take_anon_view_only(self):
+        found = resolve('/q/tq1/')
 
-        print request
+        self.assertEqual(found.func, quiz_take)
+        self.assertEqual(found.kwargs, {'quiz_name': 'tq1'})
+        self.assertEqual(found.url_name, 'quiz_start_page')
 
-        self.assertContains(response, 'Sign up')
+        response = self.client.get('/q/tq1/')
+
+        self.assertContains(response, 'squawk', status_code = 200)
+        self.assertEqual(self.client.session.get_expiry_age(), 259200)
+        self.assertEqual(self.client.session['1_q_list'], [1, 2])
+        self.assertEqual(self.client.session['1_score'], 0)
+        self.assertEqual(self.client.session['page_count'], 0)
+        self.assertEqual(response.context['quiz'].id, 1)
+        self.assertEqual(response.context['question'].content, "squawk")
+        self.assertEqual(response.context['question_type'], "MCQuestion")
+        self.assertEqual(response.context['previous'], {})
+        self.assertEqual(response.context['show_advert'], False)
+        self.assertTemplateUsed('question.html')
+
+        session = self.client.session
+        session.set_expiry(1) # session is set when user first
+        session.save()        # accesses a quiz
+
+        response2 = self.client.get('/q/tq1/')
+        self.assertEqual(self.client.session.get_expiry_age(), 1)
+        self.assertEqual(self.client.session['1_q_list'], [1, 2])
+        self.assertEqual(self.client.session['1_score'], 0)
+        self.assertEqual(self.client.session['page_count'], 0)
+
+    def test_quiz_take_anon_submit(self):
+        response = self.client.get('/q/tq1/')
 
 
 class TestQuestionViewsUser(TestCase):
