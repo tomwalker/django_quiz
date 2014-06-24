@@ -9,7 +9,7 @@ from django.test.client import Client, RequestFactory
 
 from quiz.models import Category, Quiz, Progress, Sitting, Question
 from quiz.views import quiz_take
-from multichoice.models import MCQuestion
+from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
 class TestCategory(TestCase):
@@ -313,7 +313,15 @@ class TestQuestionViewsAnon(TestCase):
                                               content = "squeek",)
         question2.quiz.add(quiz1)
 
-        self.factory = RequestFactory()
+        Answer.objects.create(id = 123,
+                              question = question1,
+                              content = "bing",
+                              correct = False,)
+
+        Answer.objects.create(id = 456,
+                              question = question2,
+                              content = "bong",
+                              correct = True,)
 
     def test_quiz_take_anon_view_only(self):
         found = resolve('/q/tq1/')
@@ -337,8 +345,8 @@ class TestQuestionViewsAnon(TestCase):
         self.assertTemplateUsed('question.html')
 
         session = self.client.session
-        session.set_expiry(1) # session is set when user first
-        session.save()        # accesses a quiz
+        session.set_expiry(1) # session is set when user first starts a
+        session.save()        # quiz, not on subsequent visits
 
         response2 = self.client.get('/q/tq1/')
         self.assertEqual(self.client.session.get_expiry_age(), 1)
@@ -347,8 +355,64 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(self.client.session['page_count'], 0)
 
     def test_quiz_take_anon_submit(self):
+        # show first question
         response = self.client.get('/q/tq1/')
+        self.assertNotContains(response, 'previous question')
+        first_question = response.context['question']
 
+        # submit first answer
+        response = self.client.get('/q/tq1/',
+                                   {'guess': '123',
+                                    'question_id':
+                                    self.client.session['1_q_list'][0],})
+
+        self.assertContains(response, 'previous question', status_code = 200)
+        self.assertContains(response, 'incorrect')
+        self.assertContains(response, 'Explanation:')
+        self.assertContains(response, 'squeek')
+        self.assertEqual(self.client.session['1_q_list'], [2])
+        self.assertEqual(self.client.session['session_score'], 0)
+        self.assertEqual(self.client.session['session_score_possible'], 1)
+        self.assertEqual(response.context['previous'],
+                         {'previous_answer': '123',
+                          'previous_outcome': 'incorrect',
+                          'previous_question': first_question,})
+        self.assertTemplateUsed('question.html')
+        second_question = response.context['question']
+
+        # submit second and final answer of quiz, show final result page
+        response = self.client.get('/q/tq1/',
+                                   {'guess': '456',
+                                    'question_id':
+                                    self.client.session['1_q_list'][0],})
+
+        self.assertContains(response, 'previous question', status_code = 200)
+        self.assertNotContains(response, 'incorrect')
+        self.assertContains(response, 'Explanation:')
+        self.assertContains(response, 'results')
+        self.assertNotIn('1_q_list', self.client.session)
+        self.assertEqual(response.context['score'], 1)
+        self.assertEqual(response.context['max_score'], 2)
+        self.assertEqual(response.context['percent'], 50)
+        self.assertEqual(response.context['session'], 1)
+        self.assertEqual(response.context['possible'], 2)
+        self.assertEqual(response.context['previous'],
+                         {'previous_answer': '456',
+                          'previous_outcome': 'correct',
+                          'previous_question': second_question,})
+        self.assertTemplateUsed('result.html')
+
+        # quiz restarts
+        response = self.client.get('/q/tq1/')
+        self.assertNotContains(response, 'previous question')
+
+        # session score continues to increase
+        response = self.client.get('/q/tq1/',
+                                   {'guess': '123',
+                                    'question_id':
+                                    self.client.session['1_q_list'][0],})
+        self.assertEqual(self.client.session['session_score'], 1)
+        self.assertEqual(self.client.session['session_score_possible'], 3)
 
 class TestQuestionViewsUser(TestCase):
 

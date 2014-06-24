@@ -188,14 +188,14 @@ def user_load_next_question(request, sitting, quiz):
 
 def final_result_anon(request, quiz, previous):
     quiz_id = str(quiz.id)
-    score = quiz_id + "_score"
-    score = request.session[score]
+    score = request.session[quiz_id + "_score"]
     max_score = quiz.question_set.all().select_subclasses().count()
     percent = int(round((float(score) / max_score) * 100))
     if score == 0:
         score = "nil points"
 
     session_score, session_possible = anon_session_score(request)
+    del request.session[quiz_id + "_q_list"]
 
     if quiz.answers_at_end == False:
         return render_to_response('result.html',
