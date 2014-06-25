@@ -279,12 +279,12 @@ class TestNonQuestionViews(TestCase):
                                              email = "jacob@jacob.com",
                                              password = "top_secret")
 
-        c = Client()
-        c.login(username='jacob', password='top_secret')
+
+        self.client.login(username='jacob', password='top_secret')
         p1 = Progress.objects.new_progress(self.user)
         p1.update_score("elderberries", 1, 2)
 
-        response = c.get('/q/progress/')
+        response = self.client.get('/q/progress/')
 
         self.assertContains(response, "elderberries")
 
@@ -300,10 +300,6 @@ class TestQuestionViewsAnon(TestCase):
                                     description = "d1",
                                     url = "tq1",
                                     category = c1)
-
-        self.user = User.objects.create_user(username = "jacob",
-                                             email = "jacob@jacob.com",
-                                             password = "top_secret")
 
         question1 = MCQuestion.objects.create(id = 1,
                                               content = "squawk",)
@@ -426,14 +422,142 @@ class TestQuestionViewsUser(TestCase):
                                     url = "tq1",
                                     category = c1)
 
+        quiz2 = Quiz.objects.create(id = 2,
+                                    title = "test quiz 2",
+                                    description = "d2",
+                                    url = "tq2",
+                                    category = c1,
+                                    answers_at_end = True,
+                                    exam_paper = True)
+
         self.user = User.objects.create_user(username = "jacob",
                                              email = "jacob@jacob.com",
                                              password = "top_secret")
 
         question1 = MCQuestion.objects.create(id = 1,
-                                              content = "squawk",)
+                                              content = "squawk")
         question1.quiz.add(quiz1)
+        question1.quiz.add(quiz2)
 
         question2 = MCQuestion.objects.create(id = 2,
-                                              content = "squeek",)
+                                              content = "squeek")
         question2.quiz.add(quiz1)
+        question2.quiz.add(quiz2)
+
+        Answer.objects.create(id = 123,
+                              question = question1,
+                              content = "bing",
+                              correct = False,)
+
+        Answer.objects.create(id = 456,
+                              question = question2,
+                              content = "bong",
+                              correct = True,)
+
+    def test_quiz_take_user_view_only(self):
+        sittings_before = Sitting.objects.count()
+        self.assertEqual(sittings_before, 0)
+
+        self.client.login(username='jacob', password='top_secret')
+        response = self.client.get('/q/tq1/')
+        quiz1 = Quiz.objects.get(id = 1)
+        sitting = Sitting.objects.get(quiz = quiz1)
+        sittings_after = Sitting.objects.count()
+
+        self.assertEqual(sittings_after, 1)
+        self.assertEqual(sitting.user.username, 'jacob')
+        self.assertEqual(sitting.question_list, '1,2,')
+        self.assertEqual(sitting.current_score, 0)
+        self.assertEqual(self.client.session['page_count'], 0)
+        self.assertEqual(response.context['quiz'].id, 1)
+        self.assertEqual(response.context['question'].content, "squawk")
+        self.assertEqual(response.context['question_type'], "MCQuestion")
+        self.assertEqual(response.context['previous'], {})
+        self.assertEqual(response.context['show_advert'], False)
+        self.assertTemplateUsed('question.html')
+
+        response = self.client.get('/q/tq1/')
+        sittings_after = Sitting.objects.count()
+
+        self.assertEqual(sittings_after, 1) # new sitting not made
+
+        Sitting.objects.new_sitting(sitting.user, quiz1)
+
+        sittings_after_doubled = Sitting.objects.count()
+        self.assertEqual(Sitting.objects.count(), 2)
+
+        response = self.client.get('/q/tq1/')
+        sitting = Sitting.objects.filter(quiz = quiz1)[0]
+        self.assertEqual(sitting.question_list, '1,2,')
+
+
+    def test_quiz_take_user_submit(self):
+        self.client.login(username='jacob', password='top_secret')
+        response = self.client.get('/q/tq1/')
+        progress_count = Progress.objects.count()
+
+        self.assertNotContains(response, 'previous question')
+        self.assertEqual(progress_count, 0)
+
+        quiz1 = Quiz.objects.get(id = 1)
+        next_question = Sitting.objects.get(quiz = quiz1).get_next_question()
+
+        response = self.client.get('/q/tq1/',
+                                   {'guess': '123',
+                                    'question_id':
+                                    next_question,})
+
+        sitting = Sitting.objects.get(quiz = quiz1)
+        progress_count = Progress.objects.count()
+        progress = Progress.objects.get(user = sitting.user).list_all_cat_scores()
+
+        self.assertContains(response, 'previous question', status_code = 200)
+        self.assertEqual(sitting.current_score, 0)
+        self.assertEqual(sitting.incorrect_questions, '1,')
+        self.assertEqual(sitting.complete, False)
+        self.assertEqual(progress_count, 1)
+        self.assertIn('elderberries', progress)
+        self.assertEqual(sitting.question_list, '2,')
+        self.assertEqual(self.client.session['page_count'], 1)
+        self.assertIn('123', response.context['previous']['previous_answer'])
+        self.assertEqual(response.context['question'].content, "squeek")
+        self.assertTemplateUsed('question.html')
+
+        response = self.client.get('/q/tq1/',
+                                   {'guess': '456',
+                                    'question_id': 2})
+
+        self.assertEqual(Sitting.objects.count(), 0)
+        self.assertTemplateUsed('result.html')
+        self.assertEqual(response.context['score'], 1)
+
+    def test_quiz_take_user_answer_end(self):
+        self.client.login(username='jacob', password='top_secret')
+        response = self.client.get('/q/tq2/',
+                                   {'guess': '123',
+                                    'question_id': 1})
+
+        self.assertNotContains(response, 'previous question')
+        self.assertEqual(response.context['previous'], {})
+
+        response = self.client.get('/q/tq2/',
+                                   {'guess': 456,
+                                    'question_id': 2})
+        question1 = Question.objects.get_subclass(id = 1)
+        question2 = Question.objects.get_subclass(id = 2)
+
+        self.assertEqual(response.context['score'], 1)
+        self.assertEqual(response.context['max_score'], 2)
+        self.assertEqual(response.context['percent'], 50)
+        self.assertIn(question1, response.context['questions'])
+        self.assertIn(question2, response.context['questions'])
+
+
+        sitting = Sitting.objects.get(quiz = Quiz.objects.get(id = 2),
+                                      user = self.user)
+        progress = Progress.objects.get(user = self.user)
+
+        # test that exam_paper = True prevents sitting deletion
+        self.assertEqual(Sitting.objects.count(), 1)
+        # test that exam result can be recalled later
+        self.assertIn(sitting, progress.show_exams())
