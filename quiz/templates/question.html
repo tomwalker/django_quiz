@@ -21,7 +21,7 @@
 			<div class="alert alert-error">
 		{% endifequal %}
 
-		    	<p><small>Your answer was </small><em>{{ previous.previous_answer }}</em><small> which is </small><strong>{{ previous.previous_outcome }}</strong></p>
+		    	<p><small>Your answer was </small><strong>{{ previous.previous_outcome }}</strong></p>
 		    </div>
 
 			{% correct_answer previous %}
@@ -41,12 +41,9 @@
 {% if question %}
 
     	<p><small class="muted">Question category:</small> <strong>{{ question.category }}</strong></p>
-		<p>{{ question.id }}</p>
-		<p>{{ question_type }}</p>
         <p class="lead">{{ question.content }}</p>
 
 		<form action="{% url 'quiz_question' quiz.url %}" method="get">
-		  <p>quid {{ question.id }}</p>
 		  <input type=hidden name="question_id" value="{{ question.id }}">
 
 		  <table class="table table-hover table-bordered" id="answerchoice">

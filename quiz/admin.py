@@ -44,13 +44,13 @@ class QuizAdminForm(forms.ModelForm):
             self.save_m2m()
         return quiz
 
+
 class QuizAdmin(admin.ModelAdmin):
     form = QuizAdminForm
 
     list_display = ('title', 'category', )
     list_filter = ('category',)
     search_fields = ('description', 'category', )
-
 
 
 class CategoryAdmin(admin.ModelAdmin):

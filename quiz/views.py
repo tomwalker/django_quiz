@@ -192,7 +192,7 @@ def final_result_anon(request, quiz, previous):
     max_score = quiz.question_set.all().select_subclasses().count()
     percent = int(round((float(score) / max_score) * 100))
     if score == 0:
-        score = "nil points"
+        score = "0"
 
     session_score, session_possible = anon_session_score(request)
     del request.session[quiz_id + "_q_list"]

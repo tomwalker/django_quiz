@@ -442,7 +442,11 @@ class TestQuestionViewsUser(TestCase):
         question2 = MCQuestion.objects.create(id = 2,
                                               content = "squeek")
         question2.quiz.add(quiz1)
-        question2.quiz.add(quiz2)
+
+        question3 = TF_Question.objects.create(id = 3,
+                                               content = "oink",
+                                               correct = True)
+        question3.quiz.add(quiz2)
 
         Answer.objects.create(id = 123,
                               question = question1,
@@ -544,13 +548,16 @@ class TestQuestionViewsUser(TestCase):
                                    {'guess': 456,
                                     'question_id': 2})
         question1 = Question.objects.get_subclass(id = 1)
-        question2 = Question.objects.get_subclass(id = 2)
+        question2 = Question.objects.get_subclass(id = 3)
 
         self.assertEqual(response.context['score'], 1)
         self.assertEqual(response.context['max_score'], 2)
         self.assertEqual(response.context['percent'], 50)
         self.assertIn(question1, response.context['questions'])
         self.assertIn(question2, response.context['questions'])
+        self.assertContains(response, 'correctly')
+        self.assertContains(response, 'incorrectly')
+        self.assertContains(response, 'True')
 
 
         sitting = Sitting.objects.get(quiz = Quiz.objects.get(id = 2),
