@@ -18,7 +18,7 @@
         {% ifequal previous.previous_outcome 'correct' %}
 			<div class="alert alert-success">
 		{% else %}
-			<div class="alert alert-error">
+			<div class="alert alert-warning">
 		{% endifequal %}
 
 		    	<p><small>Your answer was </small><strong>{{ previous.previous_outcome }}</strong></p>
