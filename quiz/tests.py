@@ -15,65 +15,55 @@ from true_false.models import TF_Question
 
 class TestCategory(TestCase):
     def setUp(self):
-        Category.objects.new_category(category = 'elderberries')
-        Category.objects.new_category(category = 'straw.berries')
-        Category.objects.new_category(category = 'black berries')
-        Category.objects.new_category(category = 'squishy   berries')
+        self.c1 = Category.objects.new_category(category = 'elderberries')
+        self.c2 = Category.objects.new_category(category = 'straw.berries')
+        self.c3 = Category.objects.new_category(category = 'black berries')
+        self.c4 = Category.objects.new_category(category = 'squishy   berries')
 
     def test_categories(self):
-        c1 = Category.objects.get(id = 1)
-        c2 = Category.objects.get(id = 2)
-        c3 = Category.objects.get(id = 3)
-        c4 = Category.objects.get(id = 4)
 
-        self.assertEqual(c1.category, 'elderberries')
-        self.assertEqual(c2.category, 'straw.berries')
-        self.assertEqual(c3.category, 'black-berries')
-        self.assertEqual(c4.category, 'squishy-berries')
+        self.assertEqual(self.c1.category, 'elderberries')
+        self.assertEqual(self.c2.category, 'straw.berries')
+        self.assertEqual(self.c3.category, 'black-berries')
+        self.assertEqual(self.c4.category, 'squishy-berries')
 
 class TestQuiz(TestCase):
     def setUp(self):
-        Category.objects.new_category(category = 'elderberries')
-        Quiz.objects.create(id = 1,
-                            title = 'test quiz 1',
-                            description = 'd1',
-                            url = 'tq1',)
-        Quiz.objects.create(id = 2,
-                            title = 'test quiz 2',
-                            description = 'd2',
-                            url = 't q2',)
-        Quiz.objects.create(id = 3,
-                            title = 'test quiz 3',
-                            description = 'd3',
-                            url = 't   q3',)
-        Quiz.objects.create(id = 4,
-                            title = 'test quiz 4',
-                            description = 'd4',
-                            url = 't-!£$%^&*q4',)
+        self.c1 = Category.objects.new_category(category = 'elderberries')
+
+        self.quiz1 = Quiz.objects.create(id = 1,
+                                         title = 'test quiz 1',
+                                         description = 'd1',
+                                         url = 'tq1',)
+        self.quiz2 = Quiz.objects.create(id = 2,
+                                         title = 'test quiz 2',
+                                         description = 'd2',
+                                         url = 't q2',)
+        self.quiz3 = Quiz.objects.create(id = 3,
+                                         title = 'test quiz 3',
+                                         description = 'd3',
+                                         url = 't   q3',)
+        self.quiz4 = Quiz.objects.create(id = 4,
+                                         title = 'test quiz 4',
+                                         description = 'd4',
+                                         url = 't-!£$%^&*q4',)
 
 
     def test_quiz_url(self):
-        q1 = Quiz.objects.get(id = 1)
-        q2 = Quiz.objects.get(id = 2)
-        q3 = Quiz.objects.get(id = 3)
-        q4 = Quiz.objects.get(id = 4)
-
-        self.assertEqual(q1.url, 'tq1')
-        self.assertEqual(q2.url, 't-q2')
-        self.assertEqual(q3.url, 't-q3')
-        self.assertEqual(q4.url, 't-q4')
+        self.assertEqual(self.quiz1.url, 'tq1')
+        self.assertEqual(self.quiz2.url, 't-q2')
+        self.assertEqual(self.quiz3.url, 't-q3')
+        self.assertEqual(self.quiz4.url, 't-q4')
 
     def test_quiz_options(self):
-        c1 = Category.objects.get(id = 1)
-
         q5 = Quiz.objects.create(id = 5,
                                  title = 'test quiz 5',
                                  description = 'd5',
                                  url = 'tq5',
-                                 category = c1,
+                                 category = self.c1,
                                  exam_paper = True,)
 
-        self.assertEqual(q5.category.category, c1.category)
+        self.assertEqual(q5.category.category, self.c1.category)
         self.assertEqual(q5.random_order, False)
         self.assertEqual(q5.answers_at_end, False)
         self.assertEqual(q5.exam_paper, True)
@@ -81,12 +71,12 @@ class TestQuiz(TestCase):
 
 class TestProgress(TestCase):
     def setUp(self):
-        Category.objects.new_category(category = 'elderberries')
+        self.c1 = Category.objects.new_category(category = 'elderberries')
 
-        Quiz.objects.create(id = 1,
-                            title = 'test quiz 1',
-                            description = 'd1',
-                            url = 'tq1',)
+        self.quiz1 = Quiz.objects.create(id = 1,
+                                         title = 'test quiz 1',
+                                         description = 'd1',
+                                         url = 'tq1',)
 
         self.user = User.objects.create_user(username = 'jacob',
                                              email = 'jacob@jacob.com',
@@ -101,13 +91,11 @@ class TestProgress(TestCase):
 
         self.assertIn(str(category_dict.keys()[0]), p1.score)
 
-        category_dict = p1.list_all_cat_scores()
-
-        self.assertIn('elderberries', p1.score)
+        self.assertIn(self.c1.category, p1.score)
 
         Category.objects.new_category(category = 'cheese')
 
-        category_dict = p1.list_all_cat_scores()
+        p1.list_all_cat_scores()
 
         self.assertIn('cheese', p1.score)
 
@@ -144,81 +132,76 @@ class TestProgress(TestCase):
         fake_cat = p1.update_score('hamster', 3, 4)
         self.assertIn('error', str(fake_cat))
 
-        non_int = p1.update_score('hamster', '1', 'a')
+        non_int = p1.update_score('cheese', '1', 'a')
         self.assertIn('error', str(non_int))
 
 
 class TestSitting(TestCase):
     def setUp(self):
-        quiz1 = Quiz.objects.create(id = 1,
-                                 title = 'test quiz 1',
-                                 description = 'd1',
-                                 url = 'tq1',)
+        self.quiz1 = Quiz.objects.create(id = 1,
+                                         title = 'test quiz 1',
+                                         description = 'd1',
+                                         url = 'tq1',)
 
-        question1 = MCQuestion.objects.create(id = 1,
-                                              content = 'squawk',)
-        question1.quiz.add(quiz1)
+        self.question1 = MCQuestion.objects.create(id = 1,
+                                                   content = 'squawk',)
+        self.question1.quiz.add(self.quiz1)
 
-        question2 = MCQuestion.objects.create(id = 2,
-                                              content = 'squeek',)
-        question2.quiz.add(quiz1)
+        self.question2 = MCQuestion.objects.create(id = 2,
+                                                   content = 'squeek',)
+        self.question2.quiz.add(self.quiz1)
 
         self.user = User.objects.create_user(username = 'jacob',
                                              email = 'jacob@jacob.com',
                                              password = 'top_secret')
 
-        Sitting.objects.new_sitting(self.user, quiz1)
+        self.sitting = Sitting.objects.new_sitting(self.user, self.quiz1)
 
     def test_get_next_remove_first(self):
-        s1 = Sitting.objects.get(id = 1)
-        self.assertEqual(s1.get_next_question(), 1)
+        self.assertEqual(self.sitting.get_next_question(), 1)
 
-        s1.remove_first_question()
-        self.assertEqual(s1.get_next_question(), 2)
+        self.sitting.remove_first_question()
+        self.assertEqual(self.sitting.get_next_question(), 2)
 
-        s1.remove_first_question()
-        self.assertEqual(s1.get_next_question(), False)
+        self.sitting.remove_first_question()
+        self.assertEqual(self.sitting.get_next_question(), False)
 
-        s1.remove_first_question()
-        self.assertEqual(s1.get_next_question(), False)
+        self.sitting.remove_first_question()
+        self.assertEqual(self.sitting.get_next_question(), False)
 
     def test_scoring(self):
-        s1 = Sitting.objects.get(id = 1)
-        self.assertEqual(s1.get_current_score(), 0)
+        self.assertEqual(self.sitting.get_current_score(), 0)
 
-        s1.add_to_score(1)
-        self.assertEqual(s1.get_current_score(), 1)
-        self.assertEqual(s1.get_percent_correct(), 50)
+        self.sitting.add_to_score(1)
+        self.assertEqual(self.sitting.get_current_score(), 1)
+        self.assertEqual(self.sitting.get_percent_correct(), 50)
 
-        s1.add_to_score(1)
-        self.assertEqual(s1.get_current_score(), 2)
-        self.assertEqual(s1.get_percent_correct(), 100)
+        self.sitting.add_to_score(1)
+        self.assertEqual(self.sitting.get_current_score(), 2)
+        self.assertEqual(self.sitting.get_percent_correct(), 100)
 
-        s1.add_to_score(1)
-        self.assertEqual(s1.get_current_score(), 3)
-        self.assertEqual(s1.get_percent_correct(), 100)
+        self.sitting.add_to_score(1)
+        self.assertEqual(self.sitting.get_current_score(), 3)
+        self.assertEqual(self.sitting.get_percent_correct(), 100)
 
     def test_incorrect_and_complete(self):
-        s1 = Sitting.objects.get(id = 1)
-        self.assertEqual(s1.get_incorrect_questions(), [])
+        self.assertEqual(self.sitting.get_incorrect_questions(), [])
 
-        question1 = MCQuestion.objects.get(id = 1)
-        s1.add_incorrect_question(question1)
-        self.assertIn('1', s1.get_incorrect_questions())
+        self.sitting.add_incorrect_question(self.question1)
+        self.assertIn('1', self.sitting.get_incorrect_questions())
 
         question3 = TF_Question.objects.create(id = 3,
                                                content = 'oink',)
-        s1.add_incorrect_question(question3)
-        self.assertIn('3', s1.get_incorrect_questions())
+        self.sitting.add_incorrect_question(question3)
+        self.assertIn('3', self.sitting.get_incorrect_questions())
 
-        quiz = Quiz.objects.get(id = 1)
-        f_test = s1.add_incorrect_question(quiz)
+        f_test = self.sitting.add_incorrect_question(self.quiz1)
         self.assertEqual(f_test, False)
-        self.assertNotIn('test', s1.get_incorrect_questions())
+        self.assertNotIn('test', self.sitting.get_incorrect_questions())
 
-        self.assertEqual(s1.complete, False)
-        s1.mark_quiz_complete()
-        self.assertEqual(s1.complete, True)
+        self.assertEqual(self.sitting.complete, False)
+        self.sitting.mark_quiz_complete()
+        self.assertEqual(self.sitting.complete, True)
 
 '''
 Tests relating to views
@@ -229,25 +212,23 @@ class TestNonQuestionViews(TestCase):
     Starting on questions not directly involved with questions.
     '''
     def setUp(self):
-        Category.objects.new_category(category = 'elderberries')
-        c1 = Category.objects.get(id = 1)
-        Category.objects.new_category(category = 'straw.berries')
-        Category.objects.new_category(category = 'black berries')
+        self.c1 = Category.objects.new_category(category = 'elderberries')
+        self.c2 = Category.objects.new_category(category = 'straw.berries')
+        self.c3 = Category.objects.new_category(category = 'black berries')
 
-        Quiz.objects.create(id = 1,
-                            title = 'test quiz 1',
-                            description = 'd1',
-                            url = 'tq1',
-                            category = c1)
-        Quiz.objects.create(id = 2,
-                            title = 'test quiz 2',
-                            description = 'd2',
-                            url = 't q2',)
+        self.quiz1 = Quiz.objects.create(id = 1,
+                                         title = 'test quiz 1',
+                                         description = 'd1',
+                                         url = 'tq1',
+                                         category = self.c1)
+        self.quiz2 = Quiz.objects.create(id = 2,
+                                         title = 'test quiz 2',
+                                         description = 'd2',
+                                         url = 't q2',)
 
 
     def test_index(self):
         response = self.client.get('/q/')
-
         self.assertContains(response, 'test quiz 1')
 
     def test_list_categories(self):
@@ -280,45 +261,45 @@ class TestNonQuestionViews(TestCase):
                                              email = 'jacob@jacob.com',
                                              password = 'top_secret')
 
-
         self.client.login(username='jacob', password='top_secret')
         p1 = Progress.objects.new_progress(self.user)
-        p1.update_score('elderberries', 1, 2)
-
+        p1.update_score(self.c1.category, 1, 2)
         response = self.client.get('/q/progress/')
 
         self.assertContains(response, 'elderberries')
-
+        self.assertIn('straw.berries', response.context['cat_scores'])
+        self.assertEqual([1, 2, 50], response.context['cat_scores']['elderberries'])
+        self.assertContains(response, 'var difference = 2 - 1;')
+        self.assertContains(response, 'var correct = 1;')
 
 class TestQuestionViewsAnon(TestCase):
 
     def setUp(self):
-        Category.objects.new_category(category = 'elderberries')
-        c1 = Category.objects.get(id = 1)
+        self.c1 = Category.objects.new_category(category = 'elderberries')
 
-        quiz1 = Quiz.objects.create(id = 1,
-                                    title = 'test quiz 1',
-                                    description = 'd1',
-                                    url = 'tq1',
-                                    category = c1)
+        self.quiz1 = Quiz.objects.create(id = 1,
+                                         title = 'test quiz 1',
+                                         description = 'd1',
+                                         url = 'tq1',
+                                         category = self.c1)
 
-        question1 = MCQuestion.objects.create(id = 1,
-                                              content = 'squawk',)
-        question1.quiz.add(quiz1)
+        self.question1 = MCQuestion.objects.create(id = 1,
+                                                   content = 'squawk',)
+        self.question1.quiz.add(self.quiz1)
 
-        question2 = MCQuestion.objects.create(id = 2,
-                                              content = 'squeek',)
-        question2.quiz.add(quiz1)
+        self.question2 = MCQuestion.objects.create(id = 2,
+                                                   content = 'squeek',)
+        self.question2.quiz.add(self.quiz1)
 
-        Answer.objects.create(id = 123,
-                              question = question1,
-                              content = 'bing',
-                              correct = False,)
+        self.answer1 = Answer.objects.create(id = 123,
+                                             question = self.question1,
+                                             content = 'bing',
+                                             correct = False,)
 
-        Answer.objects.create(id = 456,
-                              question = question2,
-                              content = 'bong',
-                              correct = True,)
+        self.answer2 = Answer.objects.create(id = 456,
+                                             question = self.question2,
+                                             content = 'bong',
+                                             correct = True,)
 
     def test_quiz_take_anon_view_only(self):
         found = resolve('/q/tq1/')
@@ -334,9 +315,11 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(self.client.session['1_q_list'], [1, 2])
         self.assertEqual(self.client.session['1_score'], 0)
         self.assertEqual(self.client.session['page_count'], 0)
-        self.assertEqual(response.context['quiz'].id, 1)
-        self.assertEqual(response.context['question'].content, 'squawk')
-        self.assertEqual(response.context['question_type'], 'MCQuestion')
+        self.assertEqual(response.context['quiz'].id, self.quiz1.id)
+        self.assertEqual(response.context['question'].content,
+                         self.question1.content)
+        self.assertEqual(response.context['question_type'],
+                         self.question1.__class__.__name__)
         self.assertEqual(response.context['previous'], {})
         self.assertEqual(response.context['show_advert'], False)
         self.assertTemplateUsed('question.html')
@@ -414,50 +397,49 @@ class TestQuestionViewsAnon(TestCase):
 class TestQuestionViewsUser(TestCase):
 
     def setUp(self):
-        Category.objects.new_category(category = 'elderberries')
-        c1 = Category.objects.get(id = 1)
+        self.c1 = Category.objects.new_category(category = 'elderberries')
 
-        quiz1 = Quiz.objects.create(id = 1,
-                                    title = 'test quiz 1',
-                                    description = 'd1',
-                                    url = 'tq1',
-                                    category = c1)
+        self.quiz1 = Quiz.objects.create(id = 1,
+                                         title = 'test quiz 1',
+                                         description = 'd1',
+                                         url = 'tq1',
+                                         category = self.c1)
 
-        quiz2 = Quiz.objects.create(id = 2,
-                                    title = 'test quiz 2',
-                                    description = 'd2',
-                                    url = 'tq2',
-                                    category = c1,
-                                    answers_at_end = True,
-                                    exam_paper = True)
+        self.quiz2 = Quiz.objects.create(id = 2,
+                                         title = 'test quiz 2',
+                                         description = 'd2',
+                                         url = 'tq2',
+                                         category = self.c1,
+                                         answers_at_end = True,
+                                         exam_paper = True)
 
         self.user = User.objects.create_user(username = 'jacob',
                                              email = 'jacob@jacob.com',
                                              password = 'top_secret')
 
-        question1 = MCQuestion.objects.create(id = 1,
-                                              content = 'squawk')
-        question1.quiz.add(quiz1)
-        question1.quiz.add(quiz2)
+        self.question1 = MCQuestion.objects.create(id = 1,
+                                                   content = 'squawk')
+        self.question1.quiz.add(self.quiz1)
+        self.question1.quiz.add(self.quiz2)
 
-        question2 = MCQuestion.objects.create(id = 2,
-                                              content = 'squeek')
-        question2.quiz.add(quiz1)
+        self.question2 = MCQuestion.objects.create(id = 2,
+                                                   content = 'squeek')
+        self.question2.quiz.add(self.quiz1)
 
-        question3 = TF_Question.objects.create(id = 3,
-                                               content = 'oink',
-                                               correct = True)
-        question3.quiz.add(quiz2)
+        self.question3 = TF_Question.objects.create(id = 3,
+                                                    content = 'oink',
+                                                    correct = True)
+        self.question3.quiz.add(self.quiz2)
 
-        Answer.objects.create(id = 123,
-                              question = question1,
-                              content = 'bing',
-                              correct = False,)
+        self.answer1 = Answer.objects.create(id = 123,
+                                             question = self.question1,
+                                             content = 'bing',
+                                             correct = False,)
 
-        Answer.objects.create(id = 456,
-                              question = question2,
-                              content = 'bong',
-                              correct = True,)
+        self.answer2 = Answer.objects.create(id = 456,
+                                             question = self.question2,
+                                             content = 'bong',
+                                             correct = True,)
 
     def test_quiz_take_user_view_only(self):
         sittings_before = Sitting.objects.count()
@@ -465,8 +447,7 @@ class TestQuestionViewsUser(TestCase):
 
         self.client.login(username='jacob', password='top_secret')
         response = self.client.get('/q/tq1/')
-        quiz1 = Quiz.objects.get(id = 1)
-        sitting = Sitting.objects.get(quiz = quiz1)
+        sitting = Sitting.objects.get(quiz = self.quiz1)
         sittings_after = Sitting.objects.count()
 
         self.assertEqual(sittings_after, 1)
@@ -474,9 +455,9 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(sitting.question_list, '1,2,')
         self.assertEqual(sitting.current_score, 0)
         self.assertEqual(self.client.session['page_count'], 0)
-        self.assertEqual(response.context['quiz'].id, 1)
-        self.assertEqual(response.context['question'].content, 'squawk')
-        self.assertEqual(response.context['question_type'], 'MCQuestion')
+        self.assertEqual(response.context['quiz'].id, self.quiz1.id)
+        self.assertEqual(response.context['question'].content, self.question1.content)
+        self.assertEqual(response.context['question_type'], self.question1.__class__.__name__)
         self.assertEqual(response.context['previous'], {})
         self.assertEqual(response.context['show_advert'], False)
         self.assertTemplateUsed('question.html')
@@ -486,13 +467,13 @@ class TestQuestionViewsUser(TestCase):
 
         self.assertEqual(sittings_after, 1) # new sitting not made
 
-        Sitting.objects.new_sitting(sitting.user, quiz1)
+        Sitting.objects.new_sitting(sitting.user, self.quiz1)
 
         sittings_after_doubled = Sitting.objects.count()
         self.assertEqual(Sitting.objects.count(), 2)
 
         response = self.client.get('/q/tq1/')
-        sitting = Sitting.objects.filter(quiz = quiz1)[0]
+        sitting = Sitting.objects.filter(quiz = self.quiz1)[0]
         self.assertEqual(sitting.question_list, '1,2,')
 
 
@@ -504,15 +485,14 @@ class TestQuestionViewsUser(TestCase):
         self.assertNotContains(response, 'previous question')
         self.assertEqual(progress_count, 0)
 
-        quiz1 = Quiz.objects.get(id = 1)
-        next_question = Sitting.objects.get(quiz = quiz1).get_next_question()
+        next_question = Sitting.objects.get(quiz = self.quiz1).get_next_question()
 
         response = self.client.get('/q/tq1/',
                                    {'guess': '123',
                                     'question_id':
                                     next_question,})
 
-        sitting = Sitting.objects.get(quiz = quiz1)
+        sitting = Sitting.objects.get(quiz = self.quiz1)
         progress_count = Progress.objects.count()
         progress = Progress.objects.get(user = sitting.user).list_all_cat_scores()
 
@@ -521,11 +501,11 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(sitting.incorrect_questions, '1,')
         self.assertEqual(sitting.complete, False)
         self.assertEqual(progress_count, 1)
-        self.assertIn('elderberries', progress)
+        self.assertIn(self.c1.category, progress)
         self.assertEqual(sitting.question_list, '2,')
         self.assertEqual(self.client.session['page_count'], 1)
         self.assertIn('123', response.context['previous']['previous_answer'])
-        self.assertEqual(response.context['question'].content, 'squeek')
+        self.assertEqual(response.context['question'].content, self.question2.content)
         self.assertTemplateUsed('question.html')
 
         response = self.client.get('/q/tq1/',
@@ -548,20 +528,17 @@ class TestQuestionViewsUser(TestCase):
         response = self.client.get('/q/tq2/',
                                    {'guess': 456,
                                     'question_id': 2})
-        question1 = Question.objects.get_subclass(id = 1)
-        question2 = Question.objects.get_subclass(id = 3)
 
         self.assertEqual(response.context['score'], 1)
         self.assertEqual(response.context['max_score'], 2)
         self.assertEqual(response.context['percent'], 50)
-        self.assertIn(question1, response.context['questions'])
-        self.assertIn(question2, response.context['questions'])
-        self.assertContains(response, 'correctly')
-        self.assertNotContains(response, 'incorrectly')
+        self.assertIn(self.question1, response.context['questions'])
+        self.assertIn(self.question3, response.context['questions'])
+        self.assertContains(response, 'above question incorrectly')
         self.assertContains(response, 'True')
 
 
-        sitting = Sitting.objects.get(quiz = Quiz.objects.get(id = 2),
+        sitting = Sitting.objects.get(quiz = self.quiz2,
                                       user = self.user)
         progress = Progress.objects.get(user = self.user)
 
@@ -589,6 +566,20 @@ class TestTemplateTags(TestCase):
         self.question2 = TF_Question.objects.create(id = 3,
                                                     content = 'oink',
                                                     correct = True)
+        self.quiz1 = Quiz.objects.create(id = 1,
+                                         title = 'test quiz 1',
+                                         description = 'd1',
+                                         url = 'tq1',)
+
+        self.question1.quiz.add(self.quiz1)
+        self.question2.quiz.add(self.quiz1)
+
+        self.user = User.objects.create_user(username = 'jacob',
+                                             email = 'jacob@jacob.com',
+                                             password = 'top_secret')
+
+        self.sitting = Sitting.objects.new_sitting(self.user, self.quiz1)
+        self.sitting.current_score = 1
 
     def test_answers_mc(self):
         template = Template( '{% load quiz_tags %}' +
@@ -627,3 +618,38 @@ class TestTemplateTags(TestCase):
         self.assertIn('True', template.render(context))
         self.assertIn('False', template.render(context))
         self.assertNotIn('your answer', template.render(context))
+
+    def test_correct_answer_all_anon(self):
+        template = Template( '{% load quiz_tags %}' +
+                             '{% correct_answer_for_all_with_users_incorrect ' +
+                             'question  incorrect_questions %}')
+
+        context = Context({'question': self.question1,})
+
+        self.assertTemplateUsed('correct_answer.html')
+        self.assertIn('bing', template.render(context))
+        self.assertNotIn('incorrectly', template.render(context))
+
+    def test_correct_answer_all_user(self):
+        template = Template( '{% load quiz_tags %}' +
+                             '{% correct_answer_for_all_with_users_incorrect ' +
+                             'question  incorrect_questions %}')
+
+        context = Context({'question': self.question1,
+                            'incorrect_questions': '1,'})
+
+        self.assertTemplateUsed('correct_answer.html')
+        self.assertIn('bing', template.render(context))
+        self.assertIn('incorrectly', template.render(context))
+
+    def test_previous_exam(self):
+        template = Template( '{% load quiz_tags %}' +
+                             '{% user_previous_exam exam %}')
+
+        context = Context({'exam': self.sitting})
+
+        self.assertTemplateUsed('user_previous_exam.html')
+        self.assertIn('test quiz 1', template.render(context))
+        self.assertIn('<td>1</td>', template.render(context))
+        self.assertIn('<td>2</td>', template.render(context))
+        self.assertIn('<td>50</td>', template.render(context))

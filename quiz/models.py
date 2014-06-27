@@ -46,6 +46,7 @@ class CategoryManager(models.Manager):
                                    re.sub('\s+', '-', category).lower())
 
         new_category.save()
+        return new_category
 
 
 class Category(models.Model):

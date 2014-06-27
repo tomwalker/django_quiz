@@ -5,30 +5,29 @@ from multichoice.models import MCQuestion, Answer
 
 class TestMCQuestionModel(TestCase):
     def setUp(self):
-        q = MCQuestion.objects.create(id = 1,
+        self.q = MCQuestion.objects.create(id = 1,
                                       content = ("WHAT is the airspeed" +
                                                  "velocity of an unladen" +
                                                  "swallow?"),
                                       explanation = "I, I don't know that!",)
 
-        Answer.objects.create(id = 123,
-                              question = q,
+        self.answer1 = Answer.objects.create(id = 123,
+                              question = self.q,
                               content = "African",
                               correct = False,)
 
-        Answer.objects.create(id = 456,
-                              question = q,
+        self.answer2 = Answer.objects.create(id = 456,
+                              question = self.q,
                               content = "European",
                               correct = True)
 
 
     def test_answers(self):
-        q = MCQuestion.objects.get(id = 1)
-        answers = Answer.objects.filter(question__id = q.id)
-        correct_a = Answer.objects.get(question__id = q.id,
+        answers = Answer.objects.filter(question__id = self.q.id)
+        correct_a = Answer.objects.get(question__id = self.q.id,
                                           correct = True,)
 
         self.assertEqual(answers.count(), 2)
         self.assertEqual(correct_a.content, "European")
-        self.assertEqual(q.check_if_correct(123), False)
-        self.assertEqual(q.check_if_correct(456), True)
+        self.assertEqual(self.q.check_if_correct(123), False)
+        self.assertEqual(self.q.check_if_correct(456), True)
