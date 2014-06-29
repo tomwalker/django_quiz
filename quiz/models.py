@@ -143,8 +143,9 @@ class Progress(models.Model):
 
     user = models.OneToOneField('auth.User')  #  one user per progress class
 
-    score = models.TextField()  #  The god awful csv.
-                                #  Always end this with a comma,
+    #  The god awful csv. Always end with a comma
+    score = models.CommaSeparatedIntegerField(max_length = 1024)
+
 
     objects = ProgressManager()
 
@@ -335,9 +336,10 @@ class Sitting(models.Model):
 
     quiz = models.ForeignKey(Quiz)
 
-    question_list = models.TextField()
+    question_list = models.CommaSeparatedIntegerField(max_length = 1024)
 
-    incorrect_questions = models.TextField(blank = True)
+    incorrect_questions = models.CommaSeparatedIntegerField(max_length = 1024,
+                                                            blank = True)
 
     current_score = models.IntegerField()
 
