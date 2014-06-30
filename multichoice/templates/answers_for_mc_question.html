@@ -1,0 +1,10 @@
+{% for answer in answers %}
+<tr>
+  <td>
+	<label>
+	  <input type="radio" name="guess" value="{{ answer.id }}" class="form-radio">
+	  {{ answer.content }}
+	</label>
+  </td>
+</tr>
+{% endfor %}

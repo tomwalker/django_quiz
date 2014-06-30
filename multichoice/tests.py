@@ -1,16 +1,33 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
 
+from multichoice.models import MCQuestion, Answer
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+
+class TestMCQuestionModel(TestCase):
+    def setUp(self):
+        self.q = MCQuestion.objects.create(id = 1,
+                                      content = ("WHAT is the airspeed" +
+                                                 "velocity of an unladen" +
+                                                 "swallow?"),
+                                      explanation = "I, I don't know that!",)
+
+        self.answer1 = Answer.objects.create(id = 123,
+                              question = self.q,
+                              content = "African",
+                              correct = False,)
+
+        self.answer2 = Answer.objects.create(id = 456,
+                              question = self.q,
+                              content = "European",
+                              correct = True)
+
+
+    def test_answers(self):
+        answers = Answer.objects.filter(question__id = self.q.id)
+        correct_a = Answer.objects.get(question__id = self.q.id,
+                                          correct = True,)
+
+        self.assertEqual(answers.count(), 2)
+        self.assertEqual(correct_a.content, "European")
+        self.assertEqual(self.q.check_if_correct(123), False)
+        self.assertEqual(self.q.check_if_correct(456), True)

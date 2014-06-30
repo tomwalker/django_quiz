@@ -1,1 +1,6 @@
 *.*~
+*.pyc
+/db.sqlite3
+/manage.py
+/mysite*
+/plan.txt

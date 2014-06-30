@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}All Quizzes{% endblock %}
+
+{% block content %}
+<h2>Category list</h2>
+
+<ul>
+  {% for cat in categories %}
+  <li>
+	<a href="{% url 'quiz.views.view_category' slug=cat.category %}">
+	  {{ cat.category }}
+	</a>
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
+
+{% block right-sidebar %}
+<h2>Sponsored Advertisements</h2>
+{% endblock %}

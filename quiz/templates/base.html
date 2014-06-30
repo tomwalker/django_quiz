@@ -6,19 +6,13 @@
 <title>Example Quiz Website | {% block title %}{% endblock %}</title>
 <meta name="description" content="{% block description %}{% endblock %}">
 
-<link rel="author" href="https://plus.google.com/u/0/XXXXXX"/>
-	
-<link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />
-
 <!-- styles -->
-<link href="{{STATIC_URL}}css/XXX.css" rel="stylesheet">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
 <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
-
-
 
 </head>
 
@@ -27,14 +21,11 @@
 
 <!-- Before the quiz content -->
 
+{% block content %}
 
-
-{% block content %}{% endblock %}
+{% endblock %}
 
 <!-- After the quiz content -->
-
-
-
 
 
 </body>
