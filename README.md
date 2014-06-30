@@ -8,6 +8,8 @@ I use it to run a few medical revision websites. Here is an [example website](ht
 My websites have used twitter bootstrap for the front end and I have tried to strip out anything from
 the template files that are dependant on bootstrap.
 
+![Questions](http://i.imgur.com/VRYx3OV.png "Question picture hosted by Imgur")
+
 Current features
 ----------------
 Features of each quiz:
@@ -23,12 +25,35 @@ Features of each quiz:
 * Multiple choice question type
 * True/False question type
 
+![Result page](http://i.imgur.com/UJtRZxo.png "Result picture hosted by Imgur")
+
 Requirements
 ------------
 django-model-utils 2.0.3
 
 It was developed using Django 1.6.5
 
+Installation
+------------
+Pull the repo into your project and run `pip install -r requirements.txt`.
+
+Add `'quiz', 'multichoice', 'true_false',` to your `INSTALLED_APPS` setting.
+
+`INSTALLED_APPS = (
+	...
+    'quiz',
+    'multichoice',
+    'true_false',
+	...
+)`
+
+Add the following to your projects `urls.py` file, substituting `q` for whatever you want the quiz base url to be.
+
+`urlpatterns = patterns('',
+    ...
+    url(r'^q/', include('quiz.urls')),
+	...
+)`
 This is my first open source project so please forgive any problems and/or dreadful code!
 
 MIT License (MIT)
