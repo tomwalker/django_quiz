@@ -1,0 +1,4 @@
+include README.md
+recursive-include quiz/templates *
+recursive-include multichoice/templates *
+recursive-include true_false/templates *
