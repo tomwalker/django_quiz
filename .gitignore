@@ -4,3 +4,12 @@
 /manage.py
 /mysite*
 /plan.txt
+/dist/django-quiz-app-0.3.tar.gz
+/django_quiz.egg-info/PKG-INFO
+/django_quiz.egg-info/SOURCES.txt
+/django_quiz.egg-info/dependency_links.txt
+/django_quiz.egg-info/top_level.txt
+/django_quiz_app.egg-info/PKG-INFO
+/django_quiz_app.egg-info/SOURCES.txt
+/django_quiz_app.egg-info/dependency_links.txt
+/django_quiz_app.egg-info/top_level.txt

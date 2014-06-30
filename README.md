@@ -35,7 +35,9 @@ It was developed using Django 1.6.5
 
 Installation
 ------------
-Pull the repo into your project and run `pip install -r requirements.txt`.
+Clone the repo with `git clone https://github.com/tomwalker/django_quiz.git`.
+
+Run `pip install -r requirements.txt`.
 
 Add `'quiz', 'multichoice', 'true_false',` to your `INSTALLED_APPS` setting.
 

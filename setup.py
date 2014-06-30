@@ -6,7 +6,7 @@ README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='django-quiz',
+    name='django-quiz-app',
     version='0.3',
     packages=['quiz', 'multichoice', 'true_false'],
     include_package_data=True,
@@ -27,5 +27,9 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    ],
+    install_requires=[
+      'django-model-utils == 2.0.3',
+      'Django >= 1.5.1',
     ],
 )
