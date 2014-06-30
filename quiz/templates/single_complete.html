@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load quiz_tags %}
+
+{% block title %} {{ quiz.title }} {% endblock %}
+{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+{% if user.is_authenticated %}
+  <p>You have already sat this exam and only one sitting is permitted.</p>
+{% else %}
+  <p>This exam is only accessible to signed in users.</p>
+{% endif %}
+
+</div>
+
+{% endblock %}

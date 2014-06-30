@@ -14,7 +14,6 @@ from model_utils.managers import InheritanceManager
 If you want to prepopulate the category choices then here is an example.
 Uncomment 'choices' in the category model.
 """
-
 CATEGORY_CHOICES = ( ('Endocrinology', 'Endocrinology'),
                      ('Dermatology', 'Dermatology'),
                      ('Cellular Biology', 'Cellular Biology'),
@@ -73,12 +72,12 @@ class Quiz(models.Model):
                              blank = False,)
 
     description = models.TextField(blank = True,
-                                   help_text = "a description of the quiz",)
+                                   help_text = ("a description of the quiz"),)
 
     url = models.CharField(max_length = 60,
                            blank = False,
-                           help_text = "an SEO friendly url",
-                           verbose_name = 'SEO friendly url',)
+                           help_text = ("a user friendly url"),
+                           verbose_name = ('user friendly url'),)
 
     category = models.ForeignKey(Category,
                                  null = True,
@@ -86,19 +85,30 @@ class Quiz(models.Model):
 
     random_order = models.BooleanField(blank = False,
                                        default = False,
-                                       help_text = "Display the questions in a \
-                                       random order or as they are set?",)
+                                       help_text = ("Display the questions in \
+                                                    a random order or as they \
+                                                    are set?"),)
 
     answers_at_end = models.BooleanField(blank = False,
                                          default = False,
-                                         help_text = "Correct answer is NOT \
-                                         shown after question. Answers \
-                                         displayed at end",)
+                                         help_text = ("Correct answer is NOT \
+                                                      shown after question. \
+                                                      Answers displayed at \
+                                                      the end"),)
 
     exam_paper = models.BooleanField(blank = False,
                                      default = False,
-                                     help_text = "If yes, the result of each \
-                                     attempt by a user will be stored",)
+                                     help_text = ("If yes, the result of each \
+                                                  attempt by a user will be \
+                                                  stored"),)
+
+    single_attempt = models.BooleanField(blank = False,
+                                         default = False,
+                                         help_text = ("If yes, only one \
+                                                       attempt by a user will \
+                                                       be permitted. Non \
+                                                       users cannot sit \
+                                                       this exam."),)
 
 
     def save(self, force_insert = False, force_update = False, *args, **kwargs):
@@ -106,6 +116,9 @@ class Quiz(models.Model):
 
         self.url = ''.join(letter for letter in self.url if
                            letter.isalnum() or letter == '-')
+
+        if self.single_attempt == True:
+            self.exam_paper = True
 
         super(Quiz, self).save(force_insert, force_update, *args, **kwargs)
 
@@ -140,12 +153,9 @@ class Progress(models.Model):
     Data stored in csv using the format:
         category, score, possible, category, score, possible, ...
     """
-
     user = models.OneToOneField('auth.User')  #  one user per progress class
 
-    #  The god awful csv. Always end with a comma
     score = models.CommaSeparatedIntegerField(max_length = 1024)
-
 
     objects = ProgressManager()
 
@@ -164,7 +174,6 @@ class Progress(models.Model):
 
         The dict will have one key for every category that you have defined
         """
-
         categories = Category.objects.all()
         score_before = self.score
         output = {}

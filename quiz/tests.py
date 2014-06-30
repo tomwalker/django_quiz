@@ -68,6 +68,12 @@ class TestQuiz(TestCase):
         self.assertEqual(q5.answers_at_end, False)
         self.assertEqual(q5.exam_paper, True)
 
+    def test_quiz_single_attempt(self):
+        self.quiz1.single_attempt = True
+        self.quiz1.save()
+
+        self.assertEqual(self.quiz1.exam_paper, True)
+
 
 class TestProgress(TestCase):
     def setUp(self):
@@ -202,6 +208,7 @@ class TestSitting(TestCase):
         self.assertEqual(self.sitting.complete, False)
         self.sitting.mark_quiz_complete()
         self.assertEqual(self.sitting.complete, True)
+
 
 '''
 Tests relating to views
@@ -394,6 +401,16 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(self.client.session['session_score'], 1)
         self.assertEqual(self.client.session['session_score_possible'], 3)
 
+    def test_anon_cannot_sit_single_attempt(self):
+        self.quiz1.single_attempt = True
+        self.quiz1.save()
+        response = self.client.get('/q/tq1/')
+
+        self.assertContains(response, 'accessible')
+        self.assertTemplateUsed('single_complete.html')
+
+
+
 class TestQuestionViewsUser(TestCase):
 
     def setUp(self):
@@ -526,8 +543,8 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(response.context['previous'], {})
 
         response = self.client.get('/q/tq2/',
-                                   {'guess': 456,
-                                    'question_id': 2})
+                                   {'guess': 'T',
+                                    'question_id': 3})
 
         self.assertEqual(response.context['score'], 1)
         self.assertEqual(response.context['max_score'], 2)
@@ -546,6 +563,23 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(Sitting.objects.count(), 1)
         # test that exam result can be recalled later
         self.assertIn(sitting, progress.show_exams())
+
+    def test_user_cannot_sit_single_attempt(self):
+        self.quiz2.single_attempt = True
+        self.quiz2.save()
+        self.client.login(username='jacob', password='top_secret')
+        response = self.client.get('/q/tq2/',
+                                   {'guess': '123',
+                                    'question_id': 1})
+        response = self.client.get('/q/tq2/',
+                                   {'guess': 'T',
+                                    'question_id': 3})
+
+        # quiz complete, trying it again
+        response = self.client.get('/q/tq2/')
+
+        self.assertContains(response, 'only one sitting is permitted.')
+        self.assertTemplateUsed('single_complete.html')
 
 class TestTemplateTags(TestCase):
 
@@ -621,8 +655,8 @@ class TestTemplateTags(TestCase):
 
     def test_correct_answer_all_anon(self):
         template = Template( '{% load quiz_tags %}' +
-                             '{% correct_answer_for_all_with_users_incorrect ' +
-                             'question  incorrect_questions %}')
+                             '{% correct_answer_for_all_with_users_incorrect' +
+                             ' question  incorrect_questions %}')
 
         context = Context({'question': self.question1,})
 

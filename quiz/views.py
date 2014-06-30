@@ -33,6 +33,19 @@ def quiz_take(request, quiz_name):
     quiz = Quiz.objects.get(url = quiz_name.lower())
 
     if request.user.is_authenticated() == True:
+
+        if quiz.single_attempt == True:
+            try:
+                single = Sitting.objects.get(user = request.user,
+                                            quiz = quiz,
+                                            complete = True)
+            except Sitting.DoesNotExist:
+                pass
+            except Sitting.MultipleObjectsReturned:
+                return render(request, 'single_complete.html')
+            else:
+                return render(request, 'single_complete.html')
+
         try:
             previous_sitting = Sitting.objects.get(user = request.user,
                                                    quiz = quiz,
@@ -54,6 +67,8 @@ def quiz_take(request, quiz_name):
 
 
     else:  #  anon user
+        if quiz.single_attempt == True:
+            return render(request, 'single_complete.html')
         quiz_id = str(quiz.id)
         q_list = quiz_id + "_q_list"
 
