@@ -7,7 +7,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-quiz-app',
-    version='0.3.0',
+    version='0.3.1',
     packages=['quiz', 'multichoice', 'true_false'],
     include_package_data=True,
     license='MIT License',
