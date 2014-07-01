@@ -10,6 +10,7 @@ the template files that are dependant on bootstrap.
 
 ![Questions](http://i.imgur.com/VRYx3OV.png "Question picture hosted by Imgur")
 
+
 Current features
 ----------------
 Features of each quiz:
@@ -24,6 +25,7 @@ Features of each quiz:
 * Explanation for each question result can be given
 * Multiple choice question type
 * True/False question type
+
 
 ![Result page](http://i.imgur.com/UJtRZxo.png "Result picture hosted by Imgur")
 
@@ -41,25 +43,28 @@ Run `pip install -r requirements.txt`.
 
 Add `'quiz', 'multichoice', 'true_false',` to your `INSTALLED_APPS` setting.
 
-`INSTALLED_APPS = (
-	...
-    'quiz',
-    'multichoice',
-    'true_false',
-	...
-)`
+    INSTALLED_APPS = (
+        ...
+        'quiz',
+        'multichoice',
+        'true_false',
+        ...
+    )
 
 Add the following to your projects `urls.py` file, substituting `q` for whatever you want the quiz base url to be.
 
-`urlpatterns = patterns('',
-    ...
-    url(r'^q/', include('quiz.urls')),
-	...
-)`
+    urlpatterns = patterns('',
+        ...
+        url(r'^q/', include('quiz.urls')),
+    	...
+    )
+
+
+
 This is my first open source project so please forgive any problems and/or dreadful code!
 
 MIT License (MIT)
-Copyright (c) 2013 Dr Tom Walker
+Copyright (c) 2012 - 2014 Dr Tom Walker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

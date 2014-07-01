@@ -7,3 +7,4 @@
 /plan.txt
 /dist*
 *.egg-info*
+build*
