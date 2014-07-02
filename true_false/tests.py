@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from true_false.models import TF_Question
+from .models import TF_Question
 
 
 class TestTrueFalseQuestionModel(TestCase):

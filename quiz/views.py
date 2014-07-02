@@ -3,7 +3,7 @@ import random
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render, render_to_response
 
-from quiz.models import Quiz, Category, Progress, Sitting, Question
+from .models import Quiz, Category, Progress, Sitting, Question
 
 
 def index(request):

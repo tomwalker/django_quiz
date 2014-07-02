@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from multichoice.models import MCQuestion, Answer
+from .models import MCQuestion, Answer
 
 
 class TestMCQuestionModel(TestCase):

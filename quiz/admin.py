@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from quiz.models import Quiz, Category, Progress, Question
+from .models import Quiz, Category, Progress, Question
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 

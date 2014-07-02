@@ -5,8 +5,8 @@ from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.template import Template, Context
 
-from quiz.models import Category, Quiz, Progress, Sitting
-from quiz.views import quiz_take
+from .models import Category, Quiz, Progress, Sitting
+from .views import quiz_take
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
