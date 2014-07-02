@@ -5,12 +5,12 @@ from true_false.models import TF_Question
 
 class TestTrueFalseQuestionModel(TestCase):
     def setUp(self):
-        self.red = TF_Question.objects.create(content = "Is red the best colour?",
-                                              explanation = "it is",
-                                              correct = True,)
-        self.blue = TF_Question.objects.create(content = "Is blue the best colour?",
-                                               explanation = "it is not",
-                                               correct = False,)
+        self.red = TF_Question.objects.create(content="Is red the best?",
+                                              explanation="it is",
+                                              correct=True,)
+        self.blue = TF_Question.objects.create(content="Is blue the best?",
+                                               explanation="it is not",
+                                               correct=False,)
 
     def test_true_q(self):
         self.assertEqual(self.red.correct, True)

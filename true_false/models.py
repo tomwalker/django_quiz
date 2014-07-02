@@ -1,12 +1,13 @@
 from django.db import models
-from quiz.models import Quiz, Category, Question
+from quiz.models import Question
+
 
 class TF_Question(Question):
-    correct = models.BooleanField(blank = False,
-                                  default = False,
-                                  help_text = ("Tick this if the question " +
-                                               "is true. Leave it blank for" +
-                                               " false."),)
+    correct = models.BooleanField(blank=False,
+                                  default=False,
+                                  help_text="Tick this if the question "
+                                            "is true. Leave it blank for"
+                                            " false.")
 
     def check_if_correct(self, guess):
         if guess == "T":
@@ -27,4 +28,4 @@ class TF_Question(Question):
         ordering = ['category']
 
     def __unicode__(self):
-        return self.content
+        return unicode(self.content)

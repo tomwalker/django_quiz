@@ -1,44 +1,42 @@
 import random
 
-from django.contrib import auth
-from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render, render_to_response
 
 from quiz.models import Quiz, Category, Progress, Sitting, Question
-from multichoice.models import MCQuestion, Answer
-from true_false.models import TF_Question
+
 
 def index(request):
     all_quizzes = Quiz.objects.all()
     return render(request, 'quiz_index.html',
-                  {'quiz_list': all_quizzes,})
+                  {'quiz_list': all_quizzes})
 
 
 def list_categories(request):
     return render(request, 'list_categories.html',
-                  {'categories': Category.objects.all(),})
+                  {'categories': Category.objects.all()})
 
 
 def view_category(request, slug):
     category = get_object_or_404(Category,
-                                 category = slug.replace(' ', '-').lower())
-    quizzes = Quiz.objects.filter(category = category)
+                                 category=slug.replace(' ', '-').lower())
+    quizzes = Quiz.objects.filter(category=category)
 
     return render(request, 'view_quiz_category.html',
                   {'category': category,
-                   'quizzes': quizzes,})
+                   'quizzes': quizzes})
+
 
 def quiz_take(request, quiz_name):
-    quiz = Quiz.objects.get(url = quiz_name.lower())
+    quiz = Quiz.objects.get(url=quiz_name.lower())
 
-    if request.user.is_authenticated() == True:
+    if request.user.is_authenticated() is True:
 
-        if quiz.single_attempt == True:
+        if quiz.single_attempt is True:
             try:
-                single = Sitting.objects.get(user = request.user,
-                                            quiz = quiz,
-                                            complete = True)
+                Sitting.objects.get(user=request.user,
+                                    quiz=quiz,
+                                    complete=True)
             except Sitting.DoesNotExist:
                 pass
             except Sitting.MultipleObjectsReturned:
@@ -47,17 +45,17 @@ def quiz_take(request, quiz_name):
                 return render(request, 'single_complete.html')
 
         try:
-            previous_sitting = Sitting.objects.get(user = request.user,
-                                                   quiz = quiz,
-                                                   complete = False,)
+            previous_sitting = Sitting.objects.get(user=request.user,
+                                                   quiz=quiz,
+                                                   complete=False,)
 
         except Sitting.DoesNotExist:
             return user_new_quiz_session(request, quiz)
 
         except Sitting.MultipleObjectsReturned:
-            previous_sitting = Sitting.objects.filter(user = request.user,
-                                                      quiz = quiz,
-                                                      complete = False,
+            previous_sitting = Sitting.objects.filter(user=request.user,
+                                                      quiz=quiz,
+                                                      complete=False,
                                                       )[0]
 
             return user_load_next_question(request, previous_sitting, quiz)
@@ -65,9 +63,8 @@ def quiz_take(request, quiz_name):
         else:
             return user_load_next_question(request, previous_sitting, quiz)
 
-
-    else:  #  anon user
-        if quiz.single_attempt == True:
+    else:  # anon user
+        if quiz.single_attempt is True:
             return render(request, 'single_complete.html')
         quiz_id = str(quiz.id)
         q_list = quiz_id + "_q_list"
@@ -83,7 +80,7 @@ def new_anon_quiz_session(request, quiz):
     Sets the session variables when starting a quiz for the first time
     """
 
-    request.session.set_expiry(259200)  #  expires after 3 days
+    request.session.set_expiry(259200)  # expires after 3 days
 
     questions = quiz.question_set.all().select_subclasses()
     question_list = []
@@ -91,14 +88,14 @@ def new_anon_quiz_session(request, quiz):
         #  question_list is a list of question IDs, which are integers
         question_list.append(question.id)
 
-    if quiz.random_order == True:
+    if quiz.random_order is True:
         random.shuffle(question_list)
 
     # session score for anon users
     request.session[str(quiz.id) + "_score"] = 0
 
     # session list of questions
-    request.session[str(quiz.id)+ "_q_list"] = question_list
+    request.session[str(quiz.id) + "_q_list"] = question_list
 
     if 'page_count' not in request.session:
         # session page count, used for adverts on original website
@@ -118,7 +115,7 @@ def user_new_quiz_session(request, quiz):
 
 
 def load_anon_next_question(request, quiz):
-    question_list = request.session[str(quiz.id)+ "_q_list"]
+    question_list = request.session[str(quiz.id) + "_q_list"]
     previous = {}
 
     if 'guess' in request.GET and request.GET['guess']:
@@ -126,10 +123,10 @@ def load_anon_next_question(request, quiz):
         #  returns a dictionary with previous question details
         previous = question_check_anon(request, quiz)
         question_list = question_list[1:]
-        request.session[str(quiz.id)+ "_q_list"] = question_list
+        request.session[str(quiz.id) + "_q_list"] = question_list
         request.session['page_count'] = request.session['page_count'] + 1
 
-    if not request.session[str(quiz.id)+ "_q_list"]:
+    if not request.session[str(quiz.id) + "_q_list"]:
         #  no questions left!
         return final_result_anon(request, quiz, previous)
 
@@ -144,7 +141,7 @@ def load_anon_next_question(request, quiz):
 
     # try:
     #     if request.session['page_count'] > 0 and \
-    #        request.session['page_count'] % 10 == 0:
+    #        request.session['page_count'] % 10 is 0:
     #         request.session['page_count'] = request.session['page_count'] + 1
     #         show_advert = True
 
@@ -152,7 +149,7 @@ def load_anon_next_question(request, quiz):
     #     request.session['page_count'] = 0
 
     next_question_id = question_list[0]
-    next_question = Question.objects.get_subclass(id = next_question_id)
+    next_question = Question.objects.get_subclass(id=next_question_id)
     question_type = next_question.__class__.__name__
 
     return render_to_response('question.html',
@@ -160,8 +157,8 @@ def load_anon_next_question(request, quiz):
                                'question': next_question,
                                'question_type': question_type,
                                'previous': previous,
-                               'show_advert': show_advert,},
-                              context_instance = RequestContext(request))
+                               'show_advert': show_advert},
+                              context_instance=RequestContext(request))
 
 
 def user_load_next_question(request, sitting, quiz):
@@ -174,7 +171,7 @@ def user_load_next_question(request, sitting, quiz):
 
     question_ID = sitting.get_next_question()
 
-    if question_ID == False:
+    if question_ID is False:
         #  no questions left
         return final_result_user(request, sitting, previous)
 
@@ -182,14 +179,14 @@ def user_load_next_question(request, sitting, quiz):
 
     # try:
     #     if request.session['page_count'] > 0 and \
-    #        request.session['page_count'] % 10 == 0:
+    #        request.session['page_count'] % 10 is 0:
     #         request.session['page_count'] = request.session['page_count'] + 1
     #         show_advert = True
 
     # except KeyError:
     #     request.session['page_count'] = 0
 
-    next_question = Question.objects.get_subclass(id = question_ID)
+    next_question = Question.objects.get_subclass(id=question_ID)
     question_type = next_question.__class__.__name__
 
     return render_to_response('question.html',
@@ -197,8 +194,8 @@ def user_load_next_question(request, sitting, quiz):
                                'question': next_question,
                                'question_type': question_type,
                                'previous': previous,
-                               'show_advert': show_advert,},
-                              context_instance = RequestContext(request))
+                               'show_advert': show_advert},
+                              context_instance=RequestContext(request))
 
 
 def final_result_anon(request, quiz, previous):
@@ -206,21 +203,21 @@ def final_result_anon(request, quiz, previous):
     score = request.session[quiz_id + "_score"]
     max_score = quiz.question_set.all().select_subclasses().count()
     percent = int(round((float(score) / max_score) * 100))
-    if score == 0:
+    if score is 0:
         score = "0"
 
     session_score, session_possible = anon_session_score(request)
     del request.session[quiz_id + "_q_list"]
 
-    if quiz.answers_at_end == False:
+    if quiz.answers_at_end is False:
         return render_to_response('result.html',
                                   {'score': score,
                                    'max_score': max_score,
                                    'percent': percent,
                                    'previous': previous,
                                    'session': session_score,
-                                   'possible': session_possible,},
-                                  context_instance = RequestContext(request))
+                                   'possible': session_possible},
+                                  context_instance=RequestContext(request))
     else:
         questions = quiz.question_set.all().select_subclasses()
         return render_to_response('result.html',
@@ -229,8 +226,8 @@ def final_result_anon(request, quiz, previous):
                                    'percent': percent,
                                    'questions': questions,
                                    'session': session_score,
-                                   'possible': session_possible,},
-                                  context_instance = RequestContext(request))
+                                   'possible': session_possible},
+                                  context_instance=RequestContext(request))
 
 
 def final_result_user(request, sitting, previous):
@@ -242,17 +239,17 @@ def final_result_user(request, sitting, previous):
 
     sitting.mark_quiz_complete()
 
-    if quiz.exam_paper == False:  #  if we do not plan to store the outcome
-        sitting.delete()  #  delete the sitting to free up space
+    if quiz.exam_paper is False:  # if we do not plan to store the outcome
+        sitting.delete()  # delete the sitting to free up space
 
-    if quiz.answers_at_end == False:
+    if quiz.answers_at_end is False:
         return render_to_response('result.html',
                                   {'quiz': quiz,
                                    'score': score,
                                    'max_score': max_score,
                                    'percent': percent,
-                                   'previous': previous,},
-                                  context_instance = RequestContext(request))
+                                   'previous': previous},
+                                  context_instance=RequestContext(request))
     else:
         questions = quiz.question_set.all().select_subclasses()
         return render_to_response('result.html',
@@ -261,17 +258,17 @@ def final_result_user(request, sitting, previous):
                                    'max_score': max_score,
                                    'percent': percent,
                                    'questions': questions,
-                                   'incorrect_questions': incorrect,},
-                                  context_instance = RequestContext(request))
+                                   'incorrect_questions': incorrect},
+                                  context_instance=RequestContext(request))
 
 
 def question_check_anon(request, quiz):
     guess = request.GET['guess']
     question_id = request.GET['question_id']
-    question = Question.objects.get_subclass(id = question_id)
+    question = Question.objects.get_subclass(id=question_id)
     is_correct = question.check_if_correct(guess)
 
-    if is_correct == True:
+    if is_correct is True:
         outcome = "correct"
         current = request.session[str(quiz.id) + "_score"]
         request.session[str(quiz.id) + "_score"] = int(current) + 1
@@ -281,10 +278,10 @@ def question_check_anon(request, quiz):
         outcome = "incorrect"
         anon_session_score(request, 0, 1)
 
-    if quiz.answers_at_end != True:
+    if quiz.answers_at_end is not True:
         return {'previous_answer': guess,
                 'previous_outcome': outcome,
-                'previous_question': question,}
+                'previous_question': question}
 
     else:
         return {}
@@ -293,10 +290,10 @@ def question_check_anon(request, quiz):
 def question_check_user(request, quiz, sitting):
     guess = request.GET['guess']
     question_id = request.GET['question_id']
-    question = Question.objects.get_subclass(id = question_id)
+    question = Question.objects.get_subclass(id=question_id)
     is_correct = question.check_if_correct(guess)
 
-    if is_correct == True:
+    if is_correct is True:
         outcome = "correct"
         sitting.add_to_score(1)
         user_progress_score_update(request, question.category, 1, 1)
@@ -305,17 +302,17 @@ def question_check_user(request, quiz, sitting):
         sitting.add_incorrect_question(question)
         user_progress_score_update(request, question.category, 0, 1)
 
-    if quiz.answers_at_end != True:
+    if quiz.answers_at_end is not True:
         return {'previous_answer': guess,
                 'previous_outcome': outcome,
-                'previous_question': question,}
+                'previous_question': question}
     else:
         return {}
 
 
 def user_progress_score_update(request, category, score, possible):
     try:
-        progress = Progress.objects.get(user = request.user)
+        progress = Progress.objects.get(user=request.user)
 
     except Progress.DoesNotExist:
         progress = Progress.objects.new_progress(request.user)
@@ -323,7 +320,7 @@ def user_progress_score_update(request, category, score, possible):
     progress.update_score(category, score, possible)
 
 
-def anon_session_score(request, add = 0, possible = 0):
+def anon_session_score(request, add=0, possible=0):
     """
     Returns the session score for non-signed in users.
     If number passed in then add this to the running total and
@@ -340,8 +337,8 @@ def anon_session_score(request, add = 0, possible = 0):
         request.session["session_score_possible"] = 0
 
     if possible > 0:
-        request.session["session_score"] = (request.session["session_score"] + \
-                                           add)
+        request.session["session_score"] = (request.session["session_score"] +
+                                            add)
 
         request.session["session_score_possible"] = \
             (request.session["session_score_possible"] + possible)
@@ -351,22 +348,22 @@ def anon_session_score(request, add = 0, possible = 0):
 
 
 def progress(request):
-    if request.user.is_authenticated() != True:
-        #  display session score and encourage to sign up
+    if request.user.is_authenticated() is not True:
+        # display session score and encourage to sign up
         score, possible = anon_session_score(request)
         return render_to_response('signup.html',
                                   {'anon_score': score,
-                                   'anon_possible': possible,},
-                                  context_instance = RequestContext(request))
+                                   'anon_possible': possible},
+                                  context_instance=RequestContext(request))
 
     try:
-        progress = Progress.objects.get(user = request.user)
+        progress = Progress.objects.get(user=request.user)
 
     except Progress.DoesNotExist:
         progress = Progress.objects.new_progress(request.user)
         return render_to_response('progress.html',
-                                  {'new_user': True,},
-                                  context_instance = RequestContext(request))
+                                  {'new_user': True},
+                                  context_instance=RequestContext(request))
 
     cat_scores = progress.list_all_cat_scores()
     exams = progress.show_exams()
@@ -374,4 +371,4 @@ def progress(request):
     return render_to_response('progress.html',
                               {'cat_scores': cat_scores,
                                'exams': exams},
-                              context_instance = RequestContext(request))
+                              context_instance=RequestContext(request))
