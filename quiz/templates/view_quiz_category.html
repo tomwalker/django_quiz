@@ -4,6 +4,7 @@
 {% block content %}
 <h1>Quizzes in {{ category.category }}</h1>
 
+  {% with object_list as quizzes %}
     {% if quizzes %}
         <ul>
         {% for quiz in quizzes %}
@@ -17,4 +18,5 @@
     {% else %}
         <p>There are no quizzes</p>
     {% endif %}
+  {% endwith %}
 {% endblock %}

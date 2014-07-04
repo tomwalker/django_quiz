@@ -234,6 +234,7 @@ class TestNonQuestionViews(TestCase):
     def test_index(self):
         response = self.client.get('/q/')
         self.assertContains(response, 'test quiz 1')
+        self.assertTemplateUsed('quiz_list.html')
 
     def test_list_categories(self):
         response = self.client.get('/q/category/')
@@ -249,16 +250,8 @@ class TestNonQuestionViews(TestCase):
         self.assertNotContains(response, 'test quiz 2')
 
     def test_progress_anon(self):
-        response = self.client.get('/q/progress/')
-        self.assertContains(response, 'Sign up')
-
-        session = self.client.session
-        session['session_score'] = 1
-        session['session_score_possible'] = 2
-        session.save()
-
-        response = self.client.get('/q/progress/')
-        self.assertContains(response, '1 out of 2')
+        response = self.client.get('/q/progress/', follow=False)
+        self.assertTemplateNotUsed(response, 'progress.html')
 
     def test_progress_user(self):
         self.user = User.objects.create_user(username='jacob',

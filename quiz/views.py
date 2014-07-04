@@ -1,30 +1,58 @@
 import random
 
-from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, render_to_response
+from django.template import RequestContext
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, TemplateView
 
 from .models import Quiz, Category, Progress, Sitting, Question
 
 
-def index(request):
-    all_quizzes = Quiz.objects.all()
-    return render(request, 'quiz_index.html',
-                  {'quiz_list': all_quizzes})
+class QuizListView(ListView):
+    model = Quiz
 
 
-def list_categories(request):
-    return render(request, 'list_categories.html',
-                  {'categories': Category.objects.all()})
+class CategoriesListView(ListView):
+    model = Category
 
 
-def view_category(request, slug):
-    category = get_object_or_404(Category,
-                                 category=slug.replace(' ', '-').lower())
-    quizzes = Quiz.objects.filter(category=category)
+class ViewQuizListByCategory(ListView):
+    model = Quiz
+    template_name = 'view_quiz_category.html'
 
-    return render(request, 'view_quiz_category.html',
-                  {'category': category,
-                   'quizzes': quizzes})
+    def get_context_data(self, **kwargs):
+        context = super(ViewQuizListByCategory, self)\
+            .get_context_data(**kwargs)
+
+        category = get_object_or_404(Category,
+                                     category=self.kwargs['category_name'])
+        context['category'] = category
+        return context
+
+    def get_queryset(self):
+        category = get_object_or_404(Category,
+                                     category=self.kwargs['category_name'])
+        queryset = super(ViewQuizListByCategory, self).get_queryset()
+        return queryset.filter(category=category)
+
+
+class QuizUserProgressView(TemplateView):
+    template_name = 'progress.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(QuizUserProgressView, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(QuizUserProgressView, self).get_context_data(**kwargs)
+
+        progress = get_object_or_404(Progress, user=self.request.user)
+        context['cat_scores'] = progress.list_all_cat_scores()
+        context['exams'] = progress.show_exams()
+
+        return context
 
 
 def quiz_take(request, quiz_name):
@@ -345,30 +373,3 @@ def anon_session_score(request, add=0, possible=0):
 
     return request.session["session_score"], \
         request.session["session_score_possible"]
-
-
-def progress(request):
-    if request.user.is_authenticated() is not True:
-        # display session score and encourage to sign up
-        score, possible = anon_session_score(request)
-        return render_to_response('signup.html',
-                                  {'anon_score': score,
-                                   'anon_possible': possible},
-                                  context_instance=RequestContext(request))
-
-    try:
-        progress = Progress.objects.get(user=request.user)
-
-    except Progress.DoesNotExist:
-        progress = Progress.objects.new_progress(request.user)
-        return render_to_response('progress.html',
-                                  {'new_user': True},
-                                  context_instance=RequestContext(request))
-
-    cat_scores = progress.list_all_cat_scores()
-    exams = progress.show_exams()
-
-    return render_to_response('progress.html',
-                              {'cat_scores': cat_scores,
-                               'exams': exams},
-                              context_instance=RequestContext(request))

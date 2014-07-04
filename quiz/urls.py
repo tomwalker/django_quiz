@@ -1,24 +1,27 @@
 from django.conf.urls import patterns, url
 
+from .views import QuizListView, CategoriesListView,\
+    ViewQuizListByCategory, QuizUserProgressView
+
 
 urlpatterns = patterns('quiz.views',
                        # quiz base url
                        url(regex=r'^$',
-                           view='index',
+                           view=QuizListView.as_view(),
                            name='quiz_index'),
 
                        url(regex=r'^category/$',
-                           view='list_categories',
+                           view=CategoriesListView.as_view(),
                            name='quiz_category_list_all'),
 
                        # quiz category: list quizzes
-                       url(regex=r'^category/(?P<slug>[\w.-]+)/$',
-                           view='view_category',
+                       url(regex=r'^category/(?P<category_name>[\w.-]+)/$',
+                           view=ViewQuizListByCategory.as_view(),
                            name='quiz_category_list_matching'),
 
                        #  progress
                        url(regex=r'^progress/$',
-                           view='progress',
+                           view=QuizUserProgressView.as_view(),
                            name='quiz_progress'),
 
                        #  passes variable 'quiz_name' to quiz_take view
