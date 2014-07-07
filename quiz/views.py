@@ -4,13 +4,18 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import Quiz, Category, Progress, Sitting, Question
 
 
 class QuizListView(ListView):
     model = Quiz
+
+
+class QuizDetailView(DetailView):
+    model = Quiz
+    slug_field = 'url'
 
 
 class CategoriesListView(ListView):
@@ -60,36 +65,32 @@ def quiz_take(request, quiz_name):
 
     if request.user.is_authenticated() is True:
 
-        if quiz.single_attempt is True:
-            try:
-                Sitting.objects.get(user=request.user,
-                                    quiz=quiz,
-                                    complete=True)
-            except Sitting.DoesNotExist:
-                pass
-            except Sitting.MultipleObjectsReturned:
-                return render(request, 'single_complete.html')
-            else:
-                return render(request, 'single_complete.html')
+        if quiz.single_attempt is True and\
+           Sitting.objects.filter(user=request.user,
+                                  quiz=quiz,
+                                  complete=True)\
+                          .count() > 0:
+            return render(request, 'single_complete.html')
 
         try:
-            previous_sitting = Sitting.objects.get(user=request.user,
-                                                   quiz=quiz,
-                                                   complete=False,)
+            sitting = Sitting.objects.get(user=request.user,
+                                          quiz=quiz,
+                                          complete=False)
 
         except Sitting.DoesNotExist:
-            return user_new_quiz_session(request, quiz)
+            sitting = Sitting.objects.new_sitting(request.user, quiz)
+
+            if 'page_count' not in request.session:
+                #  session page count
+                request.session['page_count'] = 0
 
         except Sitting.MultipleObjectsReturned:
-            previous_sitting = Sitting.objects.filter(user=request.user,
-                                                      quiz=quiz,
-                                                      complete=False,
-                                                      )[0]
+            sitting = Sitting.objects.filter(user=request.user,
+                                             quiz=quiz,
+                                             complete=False)[0]
 
-            return user_load_next_question(request, previous_sitting, quiz)
-
-        else:
-            return user_load_next_question(request, previous_sitting, quiz)
+        finally:
+            return user_load_next_question(request, sitting, quiz)
 
     else:  # anon user
         if quiz.single_attempt is True:
@@ -130,16 +131,6 @@ def new_anon_quiz_session(request, quiz):
         request.session['page_count'] = 0
 
     return load_anon_next_question(request, quiz)
-
-
-def user_new_quiz_session(request, quiz):
-    sitting = Sitting.objects.new_sitting(request.user, quiz)
-
-    if 'page_count' not in request.session:
-        #  session page count
-        request.session['page_count'] = 0
-
-    return user_load_next_question(request, sitting, quiz)
 
 
 def load_anon_next_question(request, quiz):
@@ -191,13 +182,30 @@ def load_anon_next_question(request, quiz):
 
 def user_load_next_question(request, sitting, quiz):
     previous = {}
+    if 'guess' in request.GET:
+        progress, created = Progress.objects.get_or_create(user=request.user)
+        guess = request.GET['guess']
+        previous_question_id = sitting.get_first_question()
+        question = Question.objects.get_subclass(id=previous_question_id)
+        is_correct = question.check_if_correct(guess)
 
-    if 'guess' in request.GET and request.GET['guess']:
-        previous = question_check_user(request, quiz, sitting)
+        if is_correct is True:
+            sitting.add_to_score(1)
+            progress.update_score(question.category, 1, 1)
+
+        else:
+            sitting.add_incorrect_question(question)
+            progress.update_score(question.category, 0, 1)
+
+        if quiz.answers_at_end is not True:
+            previous = {'previous_answer': guess,
+                        'previous_outcome': is_correct,
+                        'previous_question': question}
+
         sitting.remove_first_question()
         request.session['page_count'] = request.session['page_count'] + 1
 
-    question_ID = sitting.get_next_question()
+    question_ID = sitting.get_first_question()
 
     if question_ID is False:
         #  no questions left
@@ -313,39 +321,6 @@ def question_check_anon(request, quiz):
 
     else:
         return {}
-
-
-def question_check_user(request, quiz, sitting):
-    guess = request.GET['guess']
-    question_id = request.GET['question_id']
-    question = Question.objects.get_subclass(id=question_id)
-    is_correct = question.check_if_correct(guess)
-
-    if is_correct is True:
-        outcome = "correct"
-        sitting.add_to_score(1)
-        user_progress_score_update(request, question.category, 1, 1)
-    else:
-        outcome = "incorrect"
-        sitting.add_incorrect_question(question)
-        user_progress_score_update(request, question.category, 0, 1)
-
-    if quiz.answers_at_end is not True:
-        return {'previous_answer': guess,
-                'previous_outcome': outcome,
-                'previous_question': question}
-    else:
-        return {}
-
-
-def user_progress_score_update(request, category, score, possible):
-    try:
-        progress = Progress.objects.get(user=request.user)
-
-    except Progress.DoesNotExist:
-        progress = Progress.objects.new_progress(request.user)
-
-    progress.update_score(category, score, possible)
 
 
 def anon_session_score(request, add=0, possible=0):

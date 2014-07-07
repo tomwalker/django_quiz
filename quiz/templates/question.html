@@ -15,11 +15,11 @@
         <p class="muted"><small>The previous question:</small></p>
         <p>{{ previous.previous_question }}</p>
 
-        {% ifequal previous.previous_outcome 'correct' %}
+        {% if previous.previous_outcome %}
 			<div class="alert alert-success">
 		{% else %}
 			<div class="alert alert-warning">
-		{% endifequal %}
+		{% endif %}
 
 		    	<p><small>Your answer was </small><strong>{{ previous.previous_outcome }}</strong></p>
 		    </div>

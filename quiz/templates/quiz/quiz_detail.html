@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ quiz.title }}
+{% endblock %}
+
+{% block content %}
+<h2>{{ quiz.title }}</h2>
+<h3>Category: {{ quiz.category }}</h3>
+{% if quiz.single_attempt %}
+  <h4>You will only get one attempt at this quiz.</h4>
+{% endif %}
+<p>{{ quiz.description }}</p>
+<p><a href="{% url 'quiz.views.quiz_take' quiz_name=quiz.url %}">Start quiz</a></p>
+{% endblock %}

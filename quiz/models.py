@@ -342,7 +342,7 @@ class Sitting(models.Model):
 
     objects = SittingManager()
 
-    def get_next_question(self):
+    def get_first_question(self):
         """
         Returns integer of the next question ID.
         If no question is found, returns False
