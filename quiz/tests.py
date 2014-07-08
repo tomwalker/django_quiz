@@ -322,14 +322,12 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(self.client.session.get_expiry_age(), 259200)
         self.assertEqual(self.client.session['1_q_list'], [1, 2])
         self.assertEqual(self.client.session['1_score'], 0)
-        self.assertEqual(self.client.session['page_count'], 0)
         self.assertEqual(response.context['quiz'].id, self.quiz1.id)
         self.assertEqual(response.context['question'].content,
                          self.question1.content)
         self.assertEqual(response.context['question_type'],
                          self.question1.__class__.__name__)
         self.assertEqual(response.context['previous'], {})
-        self.assertEqual(response.context['show_advert'], False)
         self.assertTemplateUsed('question.html')
 
         session = self.client.session
@@ -340,7 +338,6 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(self.client.session.get_expiry_age(), 1)
         self.assertEqual(self.client.session['1_q_list'], [1, 2])
         self.assertEqual(self.client.session['1_score'], 0)
-        self.assertEqual(self.client.session['page_count'], 0)
 
     def test_quiz_take_anon_submit(self):
         # show first question
@@ -471,14 +468,12 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(sitting.user.username, 'jacob')
         self.assertEqual(sitting.question_list, '1,2,')
         self.assertEqual(sitting.current_score, 0)
-        self.assertEqual(self.client.session['page_count'], 0)
         self.assertEqual(response.context['quiz'].id, self.quiz1.id)
         self.assertEqual(response.context['question'].content,
                          self.question1.content)
         self.assertEqual(response.context['question_type'],
                          self.question1.__class__.__name__)
         self.assertEqual(response.context['previous'], {})
-        self.assertEqual(response.context['show_advert'], False)
         self.assertTemplateUsed('question.html')
 
         response = self.client.get('/q/tq1/take/')
@@ -522,7 +517,6 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(progress_count, 1)
         self.assertIn(self.c1.category, progress)
         self.assertEqual(sitting.question_list, '2,')
-        self.assertEqual(self.client.session['page_count'], 1)
         self.assertIn('123', response.context['previous']['previous_answer'])
         self.assertEqual(response.context['question'].content,
                          self.question2.content)

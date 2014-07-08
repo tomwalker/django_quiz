@@ -80,10 +80,6 @@ def quiz_take(request, quiz_name):
         except Sitting.DoesNotExist:
             sitting = Sitting.objects.new_sitting(request.user, quiz)
 
-            if 'page_count' not in request.session:
-                #  session page count
-                request.session['page_count'] = 0
-
         except Sitting.MultipleObjectsReturned:
             sitting = Sitting.objects.filter(user=request.user,
                                              quiz=quiz,
@@ -126,10 +122,6 @@ def new_anon_quiz_session(request, quiz):
     # session list of questions
     request.session[str(quiz.id) + "_q_list"] = question_list
 
-    if 'page_count' not in request.session:
-        # session page count, used for adverts on original website
-        request.session['page_count'] = 0
-
     return load_anon_next_question(request, quiz)
 
 
@@ -143,29 +135,10 @@ def load_anon_next_question(request, quiz):
         previous = question_check_anon(request, quiz)
         question_list = question_list[1:]
         request.session[str(quiz.id) + "_q_list"] = question_list
-        request.session['page_count'] = request.session['page_count'] + 1
 
     if not request.session[str(quiz.id) + "_q_list"]:
         #  no questions left!
         return final_result_anon(request, quiz, previous)
-
-    show_advert = False
-
-    """
-    This is a counter that allows you to add something into the
-    template every X amount of pages.
-    In my original site, I used this to show a full page advert
-    every 10 pages.
-    """
-
-    # try:
-    #     if request.session['page_count'] > 0 and \
-    #        request.session['page_count'] % 10 is 0:
-    #         request.session['page_count'] = request.session['page_count'] + 1
-    #         show_advert = True
-
-    # except KeyError:
-    #     request.session['page_count'] = 0
 
     next_question_id = question_list[0]
     next_question = Question.objects.get_subclass(id=next_question_id)
@@ -175,8 +148,7 @@ def load_anon_next_question(request, quiz):
                               {'quiz': quiz,
                                'question': next_question,
                                'question_type': question_type,
-                               'previous': previous,
-                               'show_advert': show_advert},
+                               'previous': previous},
                               context_instance=RequestContext(request))
 
 
@@ -203,24 +175,12 @@ def user_load_next_question(request, sitting, quiz):
                         'previous_question': question}
 
         sitting.remove_first_question()
-        request.session['page_count'] = request.session['page_count'] + 1
 
     question_ID = sitting.get_first_question()
 
     if question_ID is False:
         #  no questions left
         return final_result_user(request, sitting, previous)
-
-    show_advert = False
-
-    # try:
-    #     if request.session['page_count'] > 0 and \
-    #        request.session['page_count'] % 10 is 0:
-    #         request.session['page_count'] = request.session['page_count'] + 1
-    #         show_advert = True
-
-    # except KeyError:
-    #     request.session['page_count'] = 0
 
     next_question = Question.objects.get_subclass(id=question_ID)
     question_type = next_question.__class__.__name__
@@ -229,8 +189,7 @@ def user_load_next_question(request, sitting, quiz):
                               {'quiz': quiz,
                                'question': next_question,
                                'question_type': question_type,
-                               'previous': previous,
-                               'show_advert': show_advert},
+                               'previous': previous},
                               context_instance=RequestContext(request))
 
 
