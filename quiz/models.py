@@ -351,8 +351,9 @@ class Sitting(models.Model):
         first_comma = self.question_list.find(',')
         if first_comma == -1 or first_comma == 0:
             return False
-
-        return int(self.question_list[:first_comma])
+        question_id = int(self.question_list[:first_comma])
+        question = Question.objects.get_subclass(id=question_id)
+        return question
 
     def remove_first_question(self):
         first_comma = self.question_list.find(',')

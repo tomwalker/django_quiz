@@ -161,10 +161,12 @@ class TestSitting(TestCase):
         self.sitting = Sitting.objects.new_sitting(self.user, self.quiz1)
 
     def test_get_next_remove_first(self):
-        self.assertEqual(self.sitting.get_first_question(), 1)
+        self.assertEqual(self.sitting.get_first_question(),
+                         self.question1)
 
         self.sitting.remove_first_question()
-        self.assertEqual(self.sitting.get_first_question(), 2)
+        self.assertEqual(self.sitting.get_first_question(),
+                         self.question2)
 
         self.sitting.remove_first_question()
         self.assertEqual(self.sitting.get_first_question(), False)
@@ -503,7 +505,7 @@ class TestQuestionViewsUser(TestCase):
         response = self.client.get('/q/tq1/take/',
                                    {'guess': '123',
                                     'question_id':
-                                    next_question})
+                                    next_question.id})
 
         sitting = Sitting.objects.get(quiz=self.quiz1)
         progress_count = Progress.objects.count()

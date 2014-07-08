@@ -12,63 +12,65 @@
 
 {% if previous %}
 
-        <p class="muted"><small>The previous question:</small></p>
-        <p>{{ previous.previous_question }}</p>
+  <p class="muted"><small>The previous question:</small></p>
+  <p>{{ previous.previous_question }}</p>
 
-        {% if previous.previous_outcome %}
-			<div class="alert alert-success">
-		{% else %}
-			<div class="alert alert-warning">
-		{% endif %}
+  {% if previous.previous_outcome %}
+	<div class="alert alert-success">
+  {% else %}
+	<div class="alert alert-warning">
+  {% endif %}
+  	  <p><small>
+		Your answer was </small>
+		<strong>{{ previous.previous_outcome }}</strong>
+	  </p>
 
-		    	<p><small>Your answer was </small><strong>{{ previous.previous_outcome }}</strong></p>
-		    </div>
+	</div>
 
-			{% correct_answer previous %}
-		    <p><strong>Explanation:</strong></p>
-		    <div class="well " style="background-color: #fcf8e3;">
-		     	<p>{{ previous.previous_question.explanation }}</p>
-		    </div>
+	{% correct_answer previous %}
 
+	<p><strong>Explanation:</strong></p>
+	<div class="well " style="background-color: #fcf8e3;">
+	  <p>{{ previous.previous_question.explanation }}</p>
+	</div>
 
-<hr>
+	<hr>
 
 {% endif %}
 
 <br />
 
-
 {% if question %}
 
-    	<p><small class="muted">Question category:</small> <strong>{{ question.category }}</strong></p>
-        <p class="lead">{{ question.content }}</p>
+<p>
+  <small class="muted">Question category:</small>
+  <strong>{{ question.category }}</strong>
+</p>
 
-		<form action="{% url 'quiz_question' quiz.url %}" method="get">
-		  <input type=hidden name="question_id" value="{{ question.id }}">
+<p class="lead">{{ question.content }}</p>
 
-		  <table class="table table-hover table-bordered" id="answerchoice">
-			<tbody>
+<form action="{% url 'quiz_question' quiz.url %}" method="get">
+  <input type=hidden name="question_id" value="{{ question.id }}">
 
-			  {% ifequal question_type 'TF_Question' %}
-			      {% include 'answers_for_tf_question.html' %}
-			  {% endifequal %}
+  <table class="table table-hover table-bordered" id="answerchoice">
+	<tbody>
 
-			  {% ifequal question_type 'MCQuestion' %}
-		          {% answers_for_mc_question question %}
-			  {% endifequal %}
+	  {% ifequal question_type 'TF_Question' %}
+	    {% include 'answers_for_tf_question.html' %}
+	  {% endifequal %}
 
-			</tbody>
-		  </table>
-		  <input type="submit" value="Check" class="btn btn-large btn-block btn-warning" >
-		</form>
+	  {% ifequal question_type 'MCQuestion' %}
+	    {% answers_for_mc_question question %}
+	  {% endifequal %}
 
+	</tbody>
+  </table>
+  <input type="submit" value="Check" class="btn btn-large btn-block btn-warning" >
+</form>
 
 {% endif %}
 
-    <hr>
-
-
-
+<hr>
 </div>
 
 {% endblock %}
