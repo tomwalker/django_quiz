@@ -22,3 +22,10 @@ class TestTrueFalseQuestionModel(TestCase):
         self.assertEqual(self.blue.correct, False)
         self.assertEqual(self.blue.check_if_correct("T"), False)
         self.assertEqual(self.blue.check_if_correct("F"), True)
+
+    def test_get_answers(self):
+        self.assertEqual(self.red.get_answers(),
+                         [{'correct': True,
+                           'content': 'True'},
+                          {'correct': False,
+                           'content': 'False'}])

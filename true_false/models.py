@@ -22,6 +22,12 @@ class TF_Question(Question):
         else:
             return False
 
+    def get_answers(self):
+        return [{'correct': self.check_if_correct('T'),
+                 'content': 'True'},
+                {'correct': self.check_if_correct('F'),
+                 'content': 'False'}]
+
     class Meta:
         verbose_name = "True/False Question"
         verbose_name_plural = "True/False Questions"

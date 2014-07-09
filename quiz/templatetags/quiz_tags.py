@@ -19,21 +19,13 @@ def correct_answer(context, previous):
     """
     q = previous['previous_question']
     q_type = q.__class__.__name__
-
+    answers = q.get_answers()
+    previous_answer_id = context['previous']['previous_answer']
     if isinstance(q, MCQuestion):
-        answers = Answer.objects.filter(question=q)
-        previous_answer_id = int(context['previous']['previous_answer'])
-        return {'answers': answers,
-                'question_type': {q_type: True},
-                'previous_answer_id': previous_answer_id}
-
-    if isinstance(q, TF_Question):
-        answers = [{'correct': q.check_if_correct('T'),
-                    'content': 'True'},
-                   {'correct': q.check_if_correct('F'),
-                    'content': 'False'}]
-        return {'answers': answers,
-                'question_type': {q_type: True}}
+        previous_answer_id = int(previous_answer_id)
+    return {'answers': answers,
+            'question_type': {q_type: True},
+            'previous_answer_id': previous_answer_id}
 
 
 @register.inclusion_tag('correct_answer.html', takes_context=True)

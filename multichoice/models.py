@@ -12,6 +12,9 @@ class MCQuestion(Question):
         else:
             return False
 
+    def get_answers(self):
+        return Answer.objects.filter(question=self)
+
     class Meta:
         verbose_name = "Multiple Choice Question"
         verbose_name_plural = "Multiple Choice Questions"

@@ -22,11 +22,13 @@ class TestMCQuestionModel(TestCase):
                                              correct=True)
 
     def test_answers(self):
-        answers = Answer.objects.filter(question__id=self.q.id)
-        correct_a = Answer.objects.get(question__id=self.q.id,
+        answers = Answer.objects.filter(question=self.q)
+        correct_a = Answer.objects.get(question=self.q,
                                        correct=True)
+        answers_by_method = self.q.get_answers()
 
         self.assertEqual(answers.count(), 2)
         self.assertEqual(correct_a.content, "European")
         self.assertEqual(self.q.check_if_correct(123), False)
         self.assertEqual(self.q.check_if_correct(456), True)
+        self.assertEqual(answers_by_method.count(), 2)
