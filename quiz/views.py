@@ -97,7 +97,7 @@ def user_load_sitting(request, quiz):
 
 
 def user_load_next_question(request, sitting, quiz):
-    previous = {}
+    previous = False
     if 'guess' in request.GET:
         progress, created = Progress.objects.get_or_create(user=request.user)
         guess = request.GET['guess']
@@ -124,7 +124,7 @@ def user_load_next_question(request, sitting, quiz):
         #  no questions left
         return final_result_user(request, sitting, previous)
 
-    question_type = next_question.__class__.__name__
+    question_type = {next_question.__class__.__name__: True}
 
     return render_to_response('question.html',
                               {'quiz': quiz,
@@ -232,7 +232,7 @@ def new_anon_quiz_session(request, quiz):
 
 def load_anon_next_question(request, quiz):
     question_list = request.session[str(quiz.id) + "_q_list"]
-    previous = {}
+    previous = False
 
     if 'guess' in request.GET and request.GET['guess']:
         #  if there has been a previous question

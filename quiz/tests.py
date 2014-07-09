@@ -329,7 +329,7 @@ class TestQuestionViewsAnon(TestCase):
                          self.question1.content)
         self.assertEqual(response.context['question_type'],
                          self.question1.__class__.__name__)
-        self.assertEqual(response.context['previous'], {})
+        self.assertEqual(response.context['previous'], False)
         self.assertTemplateUsed('question.html')
 
         session = self.client.session
@@ -474,8 +474,8 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(response.context['question'].content,
                          self.question1.content)
         self.assertEqual(response.context['question_type'],
-                         self.question1.__class__.__name__)
-        self.assertEqual(response.context['previous'], {})
+                         {self.question1.__class__.__name__: True})
+        self.assertEqual(response.context['previous'], False)
         self.assertTemplateUsed('question.html')
 
         response = self.client.get('/q/tq1/take/')
@@ -539,7 +539,7 @@ class TestQuestionViewsUser(TestCase):
                                     'question_id': 1})
 
         self.assertNotContains(response, 'previous question')
-        self.assertEqual(response.context['previous'], {})
+        self.assertEqual(response.context['previous'], False)
 
         response = self.client.get('/q/tq2/take/',
                                    {'guess': 'T',

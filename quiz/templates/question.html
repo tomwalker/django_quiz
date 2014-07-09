@@ -49,19 +49,19 @@
 
 <p class="lead">{{ question.content }}</p>
 
-<form action="{% url 'quiz_question' quiz.url %}" method="get">
+<form action="" method="get">
   <input type=hidden name="question_id" value="{{ question.id }}">
 
   <table class="table table-hover table-bordered" id="answerchoice">
 	<tbody>
 
-	  {% ifequal question_type 'TF_Question' %}
+	  {% if question_type.TF_Question %}
 	    {% include 'answers_for_tf_question.html' %}
-	  {% endifequal %}
+	  {% endif %}
 
-	  {% ifequal question_type 'MCQuestion' %}
+	  {% if question_type.MCQuestion %}
 	    {% answers_for_mc_question question %}
-	  {% endifequal %}
+	  {% endif %}
 
 	</tbody>
   </table>

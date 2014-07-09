@@ -6,7 +6,7 @@
     {% if quiz_list %}
         <ul>
         {% for quiz in quiz_list %}
-            <li><a href="{% url 'quiz.views.quiz_take' quiz_name=quiz.url %}">{{ quiz.title }}</a></li>
+            <li><a href="{% url 'quiz_start_page' slug=quiz.url %}">{{ quiz.title }}</a></li>
         {% endfor %}
         </ul>
     {% else %}

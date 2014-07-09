@@ -1,6 +1,7 @@
 from django import template
 
-from multichoice.models import Answer
+from multichoice.models import Answer, MCQuestion
+from true_false.models import TF_Question
 
 register = template.Library()
 
@@ -17,21 +18,22 @@ def correct_answer(context, previous):
     processes the correct answer based on the previous question dict
     """
     q = previous['previous_question']
+    q_type = q.__class__.__name__
 
-    if q.__class__.__name__ == "MCQuestion":
-        answers = Answer.objects.filter(question__id=q.id)
+    if isinstance(q, MCQuestion):
+        answers = Answer.objects.filter(question=q)
         previous_answer_id = int(context['previous']['previous_answer'])
         return {'answers': answers,
-                'question_type': q.__class__.__name__,
+                'question_type': {q_type: True},
                 'previous_answer_id': previous_answer_id}
 
-    if q.__class__.__name__ == "TF_Question":
+    if isinstance(q, TF_Question):
         answers = [{'correct': q.check_if_correct('T'),
                     'content': 'True'},
                    {'correct': q.check_if_correct('F'),
                     'content': 'False'}]
         return {'answers': answers,
-                'question_type': q.__class__.__name__}
+                'question_type': {q_type: True}}
 
 
 @register.inclusion_tag('correct_answer.html', takes_context=True)
@@ -57,7 +59,7 @@ def correct_answer_for_all_with_users_incorrect(context,
                    {'correct': question.check_if_correct('F'),
                     'content': 'False'}]
 
-    return {'answers': answers, 'user_was_incorrect': user_was_incorrect, }
+    return {'answers': answers, 'user_was_incorrect': user_was_incorrect}
 
 
 @register.inclusion_tag('user_previous_exam.html', takes_context=True)
@@ -70,4 +72,4 @@ def user_previous_exam(context, exam):
     possible_score = exam.quiz.question_set.count()
     percent = int(round((float(final_score) / float(possible_score)) * 100))
     return {'title': title, 'score': final_score,
-            'possible': possible_score, 'percent': percent, }
+            'possible': possible_score, 'percent': percent}
