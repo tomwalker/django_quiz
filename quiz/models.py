@@ -121,6 +121,9 @@ class Quiz(models.Model):
     def __unicode__(self):
         return unicode(self.title)
 
+    def get_max_score(self):
+        return self.question_set.count()
+
 """
 Progress is used to track an individual signed in users score on different
 quiz's and categories
@@ -212,7 +215,7 @@ class Progress(models.Model):
                                         .exists()
 
         if category_test is False:
-            return "error",  "category does not exist"
+            return "error", "category does not exist"
 
         to_find = re.escape(category_queried) + r",(\d+),(\d+),"
 
@@ -245,7 +248,7 @@ class Progress(models.Model):
         if any([category_test is False, score_to_add is False,
                 possible_to_add is False, str(score_to_add).isdigit() is False,
                 str(possible_to_add).isdigit() is False]):
-            return "error",  "category does not exist or invalid score"
+            return "error", "category does not exist or invalid score"
 
         to_find = re.escape(str(category_queried)) + r",(\d+),(\d+),"
 
@@ -358,7 +361,7 @@ class Sitting(models.Model):
     def remove_first_question(self):
         first_comma = self.question_list.find(',')
         if first_comma != -1 or first_comma != 0:
-            self.question_list = self.question_list[first_comma+1:]
+            self.question_list = self.question_list[first_comma + 1:]
             self.save()
 
     def add_to_score(self, points):

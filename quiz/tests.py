@@ -33,19 +33,23 @@ class TestQuiz(TestCase):
         self.quiz1 = Quiz.objects.create(id=1,
                                          title='test quiz 1',
                                          description='d1',
-                                         url='tq1',)
+                                         url='tq1')
         self.quiz2 = Quiz.objects.create(id=2,
                                          title='test quiz 2',
                                          description='d2',
-                                         url='t q2',)
+                                         url='t q2')
         self.quiz3 = Quiz.objects.create(id=3,
                                          title='test quiz 3',
                                          description='d3',
-                                         url='t   q3',)
+                                         url='t   q3')
         self.quiz4 = Quiz.objects.create(id=4,
                                          title='test quiz 4',
                                          description='d4',
-                                         url='T-!£$%^&*Q4',)
+                                         url='T-!£$%^&*Q4')
+
+        self.question1 = MCQuestion.objects.create(id=1,
+                                                   content='squawk')
+        self.question1.quiz.add(self.quiz1)
 
     def test_quiz_url(self):
         self.assertEqual(self.quiz1.url, 'tq1')
@@ -59,7 +63,7 @@ class TestQuiz(TestCase):
                                  description='d5',
                                  url='tq5',
                                  category=self.c1,
-                                 exam_paper=True,)
+                                 exam_paper=True)
 
         self.assertEqual(q5.category.category, self.c1.category)
         self.assertEqual(q5.random_order, False)
@@ -72,6 +76,9 @@ class TestQuiz(TestCase):
 
         self.assertEqual(self.quiz1.exam_paper, True)
 
+    def test_get_max_score(self):
+        self.assertEqual(self.quiz1.get_max_score(), 1)
+
 
 class TestProgress(TestCase):
     def setUp(self):
@@ -80,7 +87,7 @@ class TestProgress(TestCase):
         self.quiz1 = Quiz.objects.create(id=1,
                                          title='test quiz 1',
                                          description='d1',
-                                         url='tq1',)
+                                         url='tq1')
 
         self.user = User.objects.create_user(username='jacob',
                                              email='jacob@jacob.com',
@@ -144,14 +151,14 @@ class TestSitting(TestCase):
         self.quiz1 = Quiz.objects.create(id=1,
                                          title='test quiz 1',
                                          description='d1',
-                                         url='tq1',)
+                                         url='tq1')
 
         self.question1 = MCQuestion.objects.create(id=1,
-                                                   content='squawk',)
+                                                   content='squawk')
         self.question1.quiz.add(self.quiz1)
 
         self.question2 = MCQuestion.objects.create(id=2,
-                                                   content='squeek',)
+                                                   content='squeek')
         self.question2.quiz.add(self.quiz1)
 
         self.user = User.objects.create_user(username='jacob',
@@ -196,7 +203,7 @@ class TestSitting(TestCase):
         self.assertIn('1', self.sitting.get_incorrect_questions())
 
         question3 = TF_Question.objects.create(id=3,
-                                               content='oink',)
+                                               content='oink')
         self.sitting.add_incorrect_question(question3)
         self.assertIn('3', self.sitting.get_incorrect_questions())
 
@@ -232,7 +239,7 @@ class TestNonQuestionViews(TestCase):
         self.quiz2 = Quiz.objects.create(id=2,
                                          title='test quiz 2',
                                          description='d2',
-                                         url='t q2',)
+                                         url='t q2')
 
     def test_index(self):
         response = self.client.get('/q/')
@@ -294,22 +301,22 @@ class TestQuestionViewsAnon(TestCase):
                                          category=self.c1)
 
         self.question1 = MCQuestion.objects.create(id=1,
-                                                   content='squawk',)
+                                                   content='squawk')
         self.question1.quiz.add(self.quiz1)
 
         self.question2 = MCQuestion.objects.create(id=2,
-                                                   content='squeek',)
+                                                   content='squeek')
         self.question2.quiz.add(self.quiz1)
 
         self.answer1 = Answer.objects.create(id=123,
                                              question=self.question1,
                                              content='bing',
-                                             correct=False,)
+                                             correct=False)
 
         self.answer2 = Answer.objects.create(id=456,
                                              question=self.question2,
                                              content='bong',
-                                             correct=True,)
+                                             correct=True)
 
     def test_quiz_take_anon_view_only(self):
         found = resolve('/q/tq1/take/')
@@ -450,12 +457,12 @@ class TestQuestionViewsUser(TestCase):
         self.answer1 = Answer.objects.create(id=123,
                                              question=self.question1,
                                              content='bing',
-                                             correct=False,)
+                                             correct=False)
 
         self.answer2 = Answer.objects.create(id=456,
                                              question=self.question2,
                                              content='bong',
-                                             correct=True,)
+                                             correct=True)
 
     def test_quiz_take_user_view_only(self):
         sittings_before = Sitting.objects.count()
@@ -589,12 +596,12 @@ class TestTemplateTags(TestCase):
         self.answer1 = Answer.objects.create(id=123,
                                              question=self.question1,
                                              content='bing',
-                                             correct=False,)
+                                             correct=False)
 
         self.answer2 = Answer.objects.create(id=456,
                                              question=self.question1,
                                              content='bong',
-                                             correct=True,)
+                                             correct=True)
 
         self.question2 = TF_Question.objects.create(id=3,
                                                     content='oink',
@@ -602,7 +609,7 @@ class TestTemplateTags(TestCase):
         self.quiz1 = Quiz.objects.create(id=1,
                                          title='test quiz 1',
                                          description='d1',
-                                         url='tq1',)
+                                         url='tq1')
 
         self.question1.quiz.add(self.quiz1)
         self.question2.quiz.add(self.quiz1)
@@ -654,8 +661,7 @@ class TestTemplateTags(TestCase):
 
     def test_correct_answer_all_anon(self):
         template = Template('{% load quiz_tags %}' +
-                            '{% correct_answer_for_all_with_users_incorrect' +
-                            ' question  incorrect_questions %}')
+                            '{% correct_answer_for_all question %}')
 
         context = Context({'question': self.question1})
 
@@ -665,8 +671,7 @@ class TestTemplateTags(TestCase):
 
     def test_correct_answer_all_user(self):
         template = Template('{% load quiz_tags %}' +
-                            '{% correct_answer_for_all_with_users_incorrect ' +
-                            'question  incorrect_questions %}')
+                            '{% correct_answer_for_all question %}')
 
         context = Context({'question': self.question1,
                            'incorrect_questions': '1,'})
