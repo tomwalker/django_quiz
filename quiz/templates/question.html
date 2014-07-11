@@ -22,7 +22,9 @@
   {% endif %}
   	  <p><small>
 		Your answer was </small>
-		<strong>{{ previous.previous_outcome }}</strong>
+		<strong>
+		  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
+		</strong>
 	  </p>
 
 	</div>

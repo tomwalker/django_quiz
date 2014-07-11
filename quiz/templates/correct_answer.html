@@ -15,7 +15,7 @@
 		<tr>
     	  <td>{{ answer.content }}</td>
 		  <td>
-			{% if not question_type.TF_Question %}
+			{% if question_type.MCQuestion %}
 			  {% if answer.id == previous_answer_id %}
 			    This was your answer.
 			  {% endif %}

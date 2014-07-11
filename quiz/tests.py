@@ -79,6 +79,15 @@ class TestQuiz(TestCase):
     def test_get_max_score(self):
         self.assertEqual(self.quiz1.get_max_score(), 1)
 
+    def test_get_questions(self):
+        self.assertIn(self.question1, self.quiz1.get_questions())
+
+    def test_anon_score_id(self):
+        self.assertEqual(self.quiz1.anon_score_id(), '1_score')
+
+    def test_anon_q_list(self):
+        self.assertEqual(self.quiz1.anon_q_list(), '1_q_list')
+
 
 class TestProgress(TestCase):
     def setUp(self):
@@ -335,7 +344,7 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(response.context['question'].content,
                          self.question1.content)
         self.assertEqual(response.context['question_type'],
-                         self.question1.__class__.__name__)
+                         {self.question1.__class__.__name__: True})
         self.assertEqual(response.context['previous'], False)
         self.assertTemplateUsed('question.html')
 
@@ -369,7 +378,7 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(self.client.session['session_score_possible'], 1)
         self.assertEqual(response.context['previous'],
                          {'previous_answer': '123',
-                          'previous_outcome': 'incorrect',
+                          'previous_outcome': False,
                           'previous_question': first_question})
         self.assertTemplateUsed('question.html')
         second_question = response.context['question']
@@ -392,7 +401,7 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(response.context['possible'], 2)
         self.assertEqual(response.context['previous'],
                          {'previous_answer': '456',
-                          'previous_outcome': 'correct',
+                          'previous_outcome': True,
                           'previous_question': second_question})
         self.assertTemplateUsed('result.html')
 

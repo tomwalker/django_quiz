@@ -13,7 +13,11 @@
 
   <p class="muted"><small>The previous question:</small></p>
   <p>{{ previous.previous_question }}</p>
-  <p>Your answer was <strong>{{ previous.previous_outcome }}</strong></p>
+  <p>Your answer was
+	<strong>
+	  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
+	</strong>
+  </p>
   {% correct_answer previous %}
   <p><strong>Explanation:</strong></p>
   <div class="well " style="background-color: #fcf8e3;">
@@ -23,7 +27,7 @@
 
   {% endif %}
 
-  {% if score or max_score %}
+  {% if max_score %}
 
   <div>
 	<h2>Exam results</h2>
@@ -50,7 +54,7 @@
 
   <hr>
 
-  {% if session and possible %}
+  {% if possible %}
 
   <p class="lead">
 	Your session score is {{ session }} out of a possible {{ possible }}
@@ -69,6 +73,13 @@
 	  </p>
 
 	  {% correct_answer_for_all question %}
+
+	  <p><strong>Explanation:</strong></p>
+	  <div class="well " style="background-color: #fcf8e3;">
+		<p>{{ question.explanation }}</p>
+	  </div>
+
+	  <hr>
 
   {% endfor %}
 

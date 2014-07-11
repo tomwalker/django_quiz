@@ -122,7 +122,7 @@ def user_load_next_question(request, sitting, quiz):
     next_question = sitting.get_first_question()
     if next_question is False:
         #  no questions left
-        return final_result_user(request, sitting, previous)
+        return final_result_user(request, sitting, quiz, previous)
 
     question_type = {next_question.__class__.__name__: True}
 
@@ -134,11 +134,10 @@ def user_load_next_question(request, sitting, quiz):
                               context_instance=RequestContext(request))
 
 
-def final_result_user(request, sitting, previous):
-    quiz = sitting.quiz
+def final_result_user(request, sitting, quiz, previous):
     score = sitting.get_current_score()
     incorrect = sitting.get_incorrect_questions()
-    max_score = quiz.question_set.all().select_subclasses().count()
+    max_score = quiz.get_max_score()
     percent = sitting.get_percent_correct()
 
     sitting.mark_quiz_complete()
@@ -155,7 +154,7 @@ def final_result_user(request, sitting, previous):
                                    'previous': previous},
                                   context_instance=RequestContext(request))
     else:
-        questions = quiz.question_set.all().select_subclasses()
+        questions = quiz.get_questions()
         return render_to_response('result.html',
                                   {'quiz': quiz,
                                    'score': score,
@@ -169,86 +168,46 @@ def final_result_user(request, sitting, previous):
 def anon_load_sitting(request, quiz):
     if quiz.single_attempt is True:
         return render(request, 'single_complete.html')
-    quiz_id = str(quiz.id)
-    q_list = quiz_id + "_q_list"
 
-    if q_list in request.session:
+    if quiz.anon_q_list() in request.session:
         return load_anon_next_question(request, quiz)
     else:
         return new_anon_quiz_session(request, quiz)
-
-
-def anon_session_score(request, add=0, possible=0):
-    """
-    Returns the session score for non-signed in users.
-    If number passed in then add this to the running total and
-    return session score
-
-    examples:
-        x, y = anon_session_score(1, 1) will add 1 out of a possible 1
-        x, y = anon_session_score(0, 2) will add 0 out of a possible 2
-        x, y = anon_session_score()     will return the session score
-                                        without modification
-    """
-    if "session_score" not in request.session:
-        request.session["session_score"] = 0
-        request.session["session_score_possible"] = 0
-
-    if possible > 0:
-        request.session["session_score"] = (request.session["session_score"] +
-                                            add)
-
-        request.session["session_score_possible"] = \
-            (request.session["session_score_possible"] + possible)
-
-    return request.session["session_score"], \
-        request.session["session_score_possible"]
 
 
 def new_anon_quiz_session(request, quiz):
     """
     Sets the session variables when starting a quiz for the first time
     """
-
     request.session.set_expiry(259200)  # expires after 3 days
-
-    questions = quiz.question_set.all().select_subclasses()
-    question_list = []
-    for question in questions:
-        #  question_list is a list of question IDs, which are integers
-        question_list.append(question.id)
-
+    questions = quiz.get_questions()
+    question_list = [question.id for question in questions]
     if quiz.random_order is True:
         random.shuffle(question_list)
 
     # session score for anon users
-    request.session[str(quiz.id) + "_score"] = 0
+    request.session[quiz.anon_score_id()] = 0
 
     # session list of questions
-    request.session[str(quiz.id) + "_q_list"] = question_list
+    request.session[quiz.anon_q_list()] = question_list
 
     return load_anon_next_question(request, quiz)
 
 
 def load_anon_next_question(request, quiz):
-    question_list = request.session[str(quiz.id) + "_q_list"]
     previous = False
 
-    if 'guess' in request.GET and request.GET['guess']:
-        #  if there has been a previous question
-        #  returns a dictionary with previous question details
+    if 'guess' in request.GET:
         previous = question_check_anon(request, quiz)
-        question_list = question_list[1:]
-        request.session[str(quiz.id) + "_q_list"] = question_list
+        request.session[quiz.anon_q_list()] = (request.
+                                               session[quiz.anon_q_list()][1:])
 
-    if not request.session[str(quiz.id) + "_q_list"]:
-        #  no questions left!
+    if not request.session[quiz.anon_q_list()]:
         return final_result_anon(request, quiz, previous)
 
-    next_question_id = question_list[0]
+    next_question_id = request.session[quiz.anon_q_list()][0]
     next_question = Question.objects.get_subclass(id=next_question_id)
-    question_type = next_question.__class__.__name__
-
+    question_type = {next_question.__class__.__name__: True}
     return render_to_response('question.html',
                               {'quiz': quiz,
                                'question': next_question,
@@ -257,16 +216,60 @@ def load_anon_next_question(request, quiz):
                               context_instance=RequestContext(request))
 
 
+def question_check_anon(request, quiz):
+    question = Question.objects.get_subclass(id=request.GET['question_id'])
+    is_correct = question.check_if_correct(request.GET['guess'])
+
+    if is_correct is True:
+        request.session[quiz.anon_score_id()] += 1
+        anon_session_score(request, 1, 1)
+    else:
+        anon_session_score(request, 0, 1)
+
+    if quiz.answers_at_end is not True:
+        return {'previous_answer': request.GET['guess'],
+                'previous_outcome': is_correct,
+                'previous_question': question}
+    else:
+        return {}
+
+
+def anon_session_score(request, to_add=0, possible=0):
+    """
+    Returns the session score for non-signed in users.
+    If number passed in then add this to the running total and
+    return session score
+
+    examples:
+        anon_session_score(1, 1) will add 1 out of a possible 1
+        anon_session_score(0, 2) will add 0 out of a possible 2
+        x, y = anon_session_score() will return the session score
+                                    without modification
+    """
+    if "session_score" not in request.session:
+        request.session["session_score"] = 0
+        request.session["session_score_possible"] = 0
+
+    if possible > 0:
+        request.session["session_score"] = (request.session["session_score"] +
+                                            to_add)
+
+        request.session["session_score_possible"] = \
+            (request.session["session_score_possible"] + possible)
+
+    return request.session["session_score"], \
+        request.session["session_score_possible"]
+
+
 def final_result_anon(request, quiz, previous):
-    quiz_id = str(quiz.id)
-    score = request.session[quiz_id + "_score"]
-    max_score = quiz.question_set.all().select_subclasses().count()
+    score = request.session[quiz.anon_score_id()]
+    max_score = quiz.get_max_score()
     percent = int(round((float(score) / max_score) * 100))
     if score is 0:
         score = "0"
 
     session_score, session_possible = anon_session_score(request)
-    del request.session[quiz_id + "_q_list"]
+    del request.session[quiz.anon_q_list()]
 
     if quiz.answers_at_end is False:
         return render_to_response('result.html',
@@ -278,7 +281,7 @@ def final_result_anon(request, quiz, previous):
                                    'possible': session_possible},
                                   context_instance=RequestContext(request))
     else:
-        questions = quiz.question_set.all().select_subclasses()
+        questions = quiz.get_questions()
         return render_to_response('result.html',
                                   {'score': score,
                                    'max_score': max_score,
@@ -287,28 +290,3 @@ def final_result_anon(request, quiz, previous):
                                    'session': session_score,
                                    'possible': session_possible},
                                   context_instance=RequestContext(request))
-
-
-def question_check_anon(request, quiz):
-    guess = request.GET['guess']
-    question_id = request.GET['question_id']
-    question = Question.objects.get_subclass(id=question_id)
-    is_correct = question.check_if_correct(guess)
-
-    if is_correct is True:
-        outcome = "correct"
-        current = request.session[str(quiz.id) + "_score"]
-        request.session[str(quiz.id) + "_score"] = int(current) + 1
-        anon_session_score(request, 1, 1)
-
-    else:
-        outcome = "incorrect"
-        anon_session_score(request, 0, 1)
-
-    if quiz.answers_at_end is not True:
-        return {'previous_answer': guess,
-                'previous_outcome': outcome,
-                'previous_question': question}
-
-    else:
-        return {}

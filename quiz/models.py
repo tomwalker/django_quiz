@@ -121,8 +121,17 @@ class Quiz(models.Model):
     def __unicode__(self):
         return unicode(self.title)
 
+    def get_questions(self):
+        return self.question_set.all().select_subclasses()
+
     def get_max_score(self):
-        return self.question_set.count()
+        return self.get_questions().count()
+
+    def anon_score_id(self):
+        return str(self.id) + "_score"
+
+    def anon_q_list(self):
+        return str(self.id) + "_q_list"
 
 """
 Progress is used to track an individual signed in users score on different
