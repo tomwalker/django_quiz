@@ -566,6 +566,7 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(response.context['percent'], 50)
         self.assertIn(self.question1, response.context['questions'])
         self.assertIn(self.question3, response.context['questions'])
+
         self.assertContains(response, 'above question incorrectly')
         self.assertContains(response, 'True')
 
@@ -629,44 +630,6 @@ class TestTemplateTags(TestCase):
 
         self.sitting = Sitting.objects.new_sitting(self.user, self.quiz1)
         self.sitting.current_score = 1
-
-    def test_answers_mc(self):
-        template = Template('{% load quiz_tags %}' +
-                            '{% answers_for_mc_question question %}')
-        context = Context({'question': self.question1})
-
-        self.assertTemplateUsed('answers_for_mc_question.html')
-        self.assertIn('bing', template.render(context))
-
-    def test_correct_answer_MC(self):
-        template = Template('{% load quiz_tags %}' +
-                            '{% correct_answer previous %}')
-
-        previous_MC = {'previous_answer': 123,
-                       'previous_outcome': 'incorrect',
-                       'previous_question': self.question1}
-
-        context = Context({'previous': previous_MC})
-
-        self.assertTemplateUsed('correct_answer.html')
-        self.assertIn('bing', template.render(context))
-        self.assertIn('bong', template.render(context))
-        self.assertIn('your answer', template.render(context))
-
-    def test_correct_answer_TF(self):
-        template = Template('{% load quiz_tags %}' +
-                            '{% correct_answer previous %}')
-
-        previous_TF = {'previous_answer': 'T',
-                       'previous_outcome': 'correct',
-                       'previous_question': self.question2}
-
-        context = Context({'previous': previous_TF})
-
-        self.assertTemplateUsed('correct_answer.html')
-        self.assertIn('True', template.render(context))
-        self.assertIn('False', template.render(context))
-        self.assertNotIn('your answer', template.render(context))
 
     def test_correct_answer_all_anon(self):
         template = Template('{% load quiz_tags %}' +

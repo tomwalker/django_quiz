@@ -18,7 +18,7 @@
 	  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
 	</strong>
   </p>
-  {% correct_answer previous %}
+  {% include 'correct_answer.html' %}
   <p><strong>Explanation:</strong></p>
   <div class="well " style="background-color: #fcf8e3;">
     <p>{{ previous.previous_question.explanation }}</p>

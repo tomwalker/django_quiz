@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import Quiz, Category, Progress, Sitting, Question
+from multichoice.models import MCQuestion
 
 
 class QuizListView(ListView):
@@ -115,21 +116,23 @@ def user_load_next_question(request, sitting, quiz):
         if quiz.answers_at_end is not True:
             previous = {'previous_answer': guess,
                         'previous_outcome': is_correct,
-                        'previous_question': question}
+                        'previous_question': question,
+                        'answers': question.get_answers(),
+                        'question_type': {question.__class__.__name__: True}}
 
         sitting.remove_first_question()
 
-    next_question = sitting.get_first_question()
-    if next_question is False:
+    next_q = sitting.get_first_question()
+    if next_q is False:
         #  no questions left
         return final_result_user(request, sitting, quiz, previous)
 
-    question_type = {next_question.__class__.__name__: True}
-
     return render_to_response('question.html',
                               {'quiz': quiz,
-                               'question': next_question,
-                               'question_type': question_type,
+                               'question': next_q,
+                               'question_type': {next_q.__class__.__name__:
+                                                 True},
+                               'answers': next_q.get_answers(),
                                'previous': previous},
                               context_instance=RequestContext(request))
 
