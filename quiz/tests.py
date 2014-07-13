@@ -77,7 +77,7 @@ class TestQuiz(TestCase):
         self.assertEqual(self.quiz1.exam_paper, True)
 
     def test_get_max_score(self):
-        self.assertEqual(self.quiz1.get_max_score(), 1)
+        self.assertEqual(self.quiz1.get_max_score, 1)
 
     def test_get_questions(self):
         self.assertIn(self.question1, self.quiz1.get_questions())
@@ -195,15 +195,15 @@ class TestSitting(TestCase):
 
         self.sitting.add_to_score(1)
         self.assertEqual(self.sitting.get_current_score(), 1)
-        self.assertEqual(self.sitting.get_percent_correct(), 50)
+        self.assertEqual(self.sitting.get_percent_correct, 50)
 
         self.sitting.add_to_score(1)
         self.assertEqual(self.sitting.get_current_score(), 2)
-        self.assertEqual(self.sitting.get_percent_correct(), 100)
+        self.assertEqual(self.sitting.get_percent_correct, 100)
 
         self.sitting.add_to_score(1)
         self.assertEqual(self.sitting.get_current_score(), 3)
-        self.assertEqual(self.sitting.get_percent_correct(), 100)
+        self.assertEqual(self.sitting.get_percent_correct, 100)
 
     def test_incorrect_and_complete(self):
         self.assertEqual(self.sitting.get_incorrect_questions(), [])
@@ -286,8 +286,6 @@ class TestNonQuestionViews(TestCase):
         self.assertIn('straw.berries', response.context['cat_scores'])
         self.assertEqual([1, 2, 50],
                          response.context['cat_scores']['elderberries'])
-        self.assertContains(response, 'var difference = 2 - 1;')
-        self.assertContains(response, 'var correct = 1;')
 
     def test_quiz_start_page(self):
         response = self.client.get('/q/tq1/')
@@ -651,15 +649,3 @@ class TestTemplateTags(TestCase):
         self.assertTemplateUsed('correct_answer.html')
         self.assertIn('bing', template.render(context))
         self.assertIn('incorrectly', template.render(context))
-
-    def test_previous_exam(self):
-        template = Template('{% load quiz_tags %}' +
-                            '{% user_previous_exam exam %}')
-
-        context = Context({'exam': self.sitting})
-
-        self.assertTemplateUsed('user_previous_exam.html')
-        self.assertIn('test quiz 1', template.render(context))
-        self.assertIn('<td>1</td>', template.render(context))
-        self.assertIn('<td>2</td>', template.render(context))
-        self.assertIn('<td>50</td>', template.render(context))

@@ -7,7 +7,6 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import Quiz, Category, Progress, Sitting, Question
-from multichoice.models import MCQuestion
 
 
 class QuizListView(ListView):
@@ -140,8 +139,8 @@ def user_load_next_question(request, sitting, quiz):
 def final_result_user(request, sitting, quiz, previous):
     score = sitting.get_current_score()
     incorrect = sitting.get_incorrect_questions()
-    max_score = quiz.get_max_score()
-    percent = sitting.get_percent_correct()
+    max_score = quiz.get_max_score
+    percent = sitting.get_percent_correct
 
     sitting.mark_quiz_complete()
 
@@ -266,7 +265,7 @@ def anon_session_score(request, to_add=0, possible=0):
 
 def final_result_anon(request, quiz, previous):
     score = request.session[quiz.anon_score_id()]
-    max_score = quiz.get_max_score()
+    max_score = quiz.get_max_score
     percent = int(round((float(score) / max_score) * 100))
     if score is 0:
         score = "0"

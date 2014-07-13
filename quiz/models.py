@@ -124,6 +124,7 @@ class Quiz(models.Model):
     def get_questions(self):
         return self.question_set.all().select_subclasses()
 
+    @property
     def get_max_score(self):
         return self.get_questions().count()
 
@@ -382,6 +383,7 @@ class Sitting(models.Model):
     def get_current_score(self):
         return self.current_score
 
+    @property
     def get_percent_correct(self):
         dividend = float(self.current_score)
         divisor = self.quiz.question_set.all().select_subclasses().count()
