@@ -6,6 +6,7 @@ from .models import Quiz, Category, Progress, Question
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
+
 class QuestionInline(admin.TabularInline):
     model = Question.quiz.through
     filter_horizontal = ('content',)
@@ -16,19 +17,22 @@ class AnswerInline(admin.TabularInline):
 
 """
 below is from
-http://stackoverflow.com/questions/11657682/django-admin-interface-using-horizontal-filter-with-
+http://stackoverflow.com/questions/11657682/
+django-admin-interface-using-horizontal-filter-with-
 inline-manytomany-field
 """
+
 
 class QuizAdminForm(forms.ModelForm):
     class Meta:
         model = Quiz
 
     questions = forms.ModelMultipleChoiceField(
-                          queryset = Question.objects.all().select_subclasses(),
-                          required = False,
-                          widget = FilteredSelectMultiple(verbose_name = ('Questions'),
-                                                          is_stacked = False))
+        queryset=Question.objects.all().select_subclasses(),
+        required=False,
+        widget=FilteredSelectMultiple(
+            verbose_name=('Questions'),
+            is_stacked=False))
 
     def __init__(self, *args, **kwargs):
         super(QuizAdminForm, self).__init__(*args, **kwargs)
@@ -56,14 +60,14 @@ class QuizAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('category', )
 
+
 class MCQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'quiz', 'explanation' )
+    fields = ('content', 'category', 'quiz', 'explanation')
 
     search_fields = ('content', )
     filter_horizontal = ('quiz',)
-
 
     inlines = [AnswerInline]
 
@@ -74,6 +78,7 @@ class ProgressAdmin(admin.ModelAdmin):
             create a user section
     """
     search_fields = ('user', 'score', )
+
 
 class TFQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
