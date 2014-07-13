@@ -137,7 +137,7 @@ def user_load_next_question(request, sitting, quiz):
 
 
 def final_result_user(request, sitting, quiz, previous):
-    score = sitting.get_current_score()
+    score = sitting.get_current_score
     incorrect = sitting.get_incorrect_questions()
     max_score = quiz.get_max_score
     percent = sitting.get_percent_correct

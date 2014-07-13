@@ -1,35 +1,6 @@
 import re
 from django.db import models
 from model_utils.managers import InheritanceManager
-# the above taken from:
-# https://django-model-utils.readthedocs.org/en/latest/managers.html
-
-
-"""
-If you want to prepopulate the category choices then here is an example.
-Uncomment 'choices' in the category model.
-"""
-CATEGORY_CHOICES = (('Endocrinology', 'Endocrinology'),
-                    ('Dermatology', 'Dermatology'),
-                    ('Cellular Biology', 'Cellular Biology'),
-                    ('Neurology', 'Neurology'),
-                    ('Gastroenterology', 'Gastroenterology'),
-                    ('Statistics', 'Statistics'),
-                    ('Rheumatology', 'Rheumatology'),
-                    ('Tropical medicine', 'Tropical medicine'),
-                    ('Respiratory', 'Respiratory'),
-                    ('Immunology', 'Immunology'),
-                    ('Nephrology', 'Nephrology'),
-                    ('Genetic Medicine', 'Genetic Medicine'),
-                    ('Haematology', 'Haematology'),
-                    ('Pharmacology', 'Pharmacology'),
-                    ('Physiology', 'Physiology'),
-                    ('Ophthalmology', 'Ophthalmology'),
-                    ('Anatomy', 'Anatomy'),
-                    ('Biochemistry', 'Biochemistry'),
-                    ('empty', 'empty'),
-                    ('Psychiatry', 'Psychiatry'),
-                    ('Cardiology', 'Cardiology'))
 
 
 class CategoryManager(models.Manager):
@@ -46,7 +17,6 @@ class Category(models.Model):
 
     category = models.CharField(max_length=250,
                                 blank=True,
-                                # choices=CATEGORY_CHOICES,
                                 unique=True,
                                 null=True)
 
@@ -178,13 +148,12 @@ class Progress(models.Model):
 
         The dict will have one key for every category that you have defined
         """
-        categories = Category.objects.all()
         score_before = self.score
         output = {}
 
-        for cat in categories:
+        for cat in Category.objects.all():
             to_find = re.escape(cat.category) + r",(\d+),(\d+),"
-            #  group 1 is score, group 2 is possible
+            #  group 1 is score, group 2 is highest possible
 
             match = re.search(to_find, self.score, re.IGNORECASE)
 
@@ -198,12 +167,10 @@ class Progress(models.Model):
                 except:
                     percent = 0
 
-                score_list = [score, possible, percent]
-                output[cat.category] = score_list
+                output[cat.category] = [score, possible, percent]
 
             else:  # if category has not been added yet, add it.
-                temp = self.score + cat.category + ",0,0,"
-                self.score = temp
+                self.score += cat.category + ",0,0,"
                 output[cat.category] = [0, 0]
 
         if len(self.score) > len(score_before):
@@ -220,39 +187,33 @@ class Progress(models.Model):
         Pass in a category, get the users score and possible maximum score
         as the integers x,y respectively
         """
-
         category_test = Category.objects.filter(category=category_queried) \
                                         .exists()
 
         if category_test is False:
             return "error", "category does not exist"
 
-        to_find = re.escape(category_queried) + r",(\d+),(\d+),"
-
+        to_find = re.escape(category_queried) +\
+            r",(?P<score>\d+),(?P<possible>\d+),"
         match = re.search(to_find, self.score, re.IGNORECASE)
 
         if match:
-            score = int(match.group(1))
-            possible = int(match.group(2))
-            return score, possible
+            return int(match.group('score')), int(match.group('possible'))
 
-        else:  # if not found but category exists, add category  with 0 points
-            temp = self.score + category_queried + ",0,0,"
-            self.score = temp
+        else:  # if not found but category exists, add category with 0 points
+            self.score += category_queried + ",0,0,"
             self.save()
 
             return 0, 0
 
-    def update_score(self, category_queried, score_to_add, possible_to_add):
+    def update_score(self, category, score_to_add=0, possible_to_add=0):
         """
-        Pass in category, amount to increase score and max possible.
-        Increase if all were correct.
+        Pass in string of the category name, amount to increase score
+        and max possible.
 
         Does not return anything.
-
-        TO DO: Raise error when necessary
         """
-        category_test = Category.objects.filter(category=category_queried) \
+        category_test = Category.objects.filter(category=category) \
                                         .exists()
 
         if any([category_test is False, score_to_add is False,
@@ -260,37 +221,31 @@ class Progress(models.Model):
                 str(possible_to_add).isdigit() is False]):
             return "error", "category does not exist or invalid score"
 
-        to_find = re.escape(str(category_queried)) + r",(\d+),(\d+),"
+        to_find = re.escape(str(category)) +\
+            r",(?P<score>\d+),(?P<possible>\d+),"
 
         match = re.search(to_find, self.score, re.IGNORECASE)
 
         if match:
-            current_score = int(match.group(1))
-            current_possible = int(match.group(2))
+            updated_score = int(match.group('score')) + abs(score_to_add)
+            updated_possible = int(match.group('possible')) +\
+                abs(possible_to_add)
 
-            updated_current_score = current_score + score_to_add
-            updated_current_possible = current_possible + possible_to_add
-
-            new_score = (str(category_queried) + "," +
-                         str(updated_current_score) + "," +
-                         str(updated_current_possible) + ",")
-
-            temp = self.score
-            found_instance = match.group()
+            new_score = (str(category) + "," +
+                         str(updated_score) + "," +
+                         str(updated_possible) + ",")
 
             # swap old score for the new one
-            self.score = temp.replace(found_instance, new_score)
+            self.score = self.score.replace(match.group(), new_score)
             self.save()
 
         else:
             """
             if not present but existing category, add with the points passed in
             """
-            temp = (self.score +
-                    str(category_queried) + "," +
-                    str(score_to_add) + "," +
-                    str(possible_to_add) + ",")
-            self.score = temp
+            self.score += (str(category) + "," +
+                           str(score_to_add) + "," +
+                           str(possible_to_add) + ",")
             self.save()
 
     def show_exams(self):
@@ -315,7 +270,7 @@ class SittingManager(models.Manager):
 
         questions = ""
         for question in question_set:
-            questions = (questions + str(question.id) + ",")
+            questions += str(question.id) + ","
 
         new_sitting = self.create(user=user,
                                   quiz=quiz,
@@ -357,7 +312,7 @@ class Sitting(models.Model):
 
     def get_first_question(self):
         """
-        Returns integer of the next question ID.
+        Returns the next question.
         If no question is found, returns False
         Does NOT remove the question from the front of the list.
         """
@@ -365,8 +320,7 @@ class Sitting(models.Model):
         if first_comma == -1 or first_comma == 0:
             return False
         question_id = int(self.question_list[:first_comma])
-        question = Question.objects.get_subclass(id=question_id)
-        return question
+        return Question.objects.get_subclass(id=question_id)
 
     def remove_first_question(self):
         first_comma = self.question_list.find(',')
@@ -375,11 +329,10 @@ class Sitting(models.Model):
             self.save()
 
     def add_to_score(self, points):
-        present_score = int(self.get_current_score())
-        updated_score = present_score + int(points)
-        self.current_score = updated_score
+        self.current_score = self.get_current_score + int(points)
         self.save()
 
+    @property
     def get_current_score(self):
         return self.current_score
 
@@ -411,16 +364,14 @@ class Sitting(models.Model):
         """
         if isinstance(question, Question) is False:
             return False
-        current_incorrect = self.incorrect_questions
-        question_id = question.id
-
-        self.incorrect_questions = current_incorrect + str(question_id) + ","
+        self.incorrect_questions += str(question.id) + ","
         self.save()
 
     def get_incorrect_questions(self):
-        question_list = self.incorrect_questions
-        split_questions = filter(None, question_list.split(','))
-        return split_questions
+        """
+        Returns a list of non empty strings
+        """
+        return filter(None, self.incorrect_questions.split(','))
 
 
 class Question(models.Model):

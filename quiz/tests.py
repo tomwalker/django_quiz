@@ -191,18 +191,18 @@ class TestSitting(TestCase):
         self.assertEqual(self.sitting.get_first_question(), False)
 
     def test_scoring(self):
-        self.assertEqual(self.sitting.get_current_score(), 0)
+        self.assertEqual(self.sitting.get_current_score, 0)
 
         self.sitting.add_to_score(1)
-        self.assertEqual(self.sitting.get_current_score(), 1)
+        self.assertEqual(self.sitting.get_current_score, 1)
         self.assertEqual(self.sitting.get_percent_correct, 50)
 
         self.sitting.add_to_score(1)
-        self.assertEqual(self.sitting.get_current_score(), 2)
+        self.assertEqual(self.sitting.get_current_score, 2)
         self.assertEqual(self.sitting.get_percent_correct, 100)
 
         self.sitting.add_to_score(1)
-        self.assertEqual(self.sitting.get_current_score(), 3)
+        self.assertEqual(self.sitting.get_current_score, 3)
         self.assertEqual(self.sitting.get_percent_correct, 100)
 
     def test_incorrect_and_complete(self):
