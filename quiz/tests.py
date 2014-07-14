@@ -1,12 +1,16 @@
 # -*- coding: iso-8859-15 -*-
 
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.core.urlresolvers import resolve
-from django.test import TestCase
+from django.http import HttpRequest
+from django.test import TestCase, RequestFactory
 from django.template import Template, Context
+from django.utils.importlib import import_module
 
 from .models import Category, Quiz, Progress, Sitting
-from .views import quiz_take
+from .views import quiz_take, anon_session_score
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
@@ -294,6 +298,25 @@ class TestNonQuestionViews(TestCase):
         self.assertContains(response, 'attempt')
         self.assertContains(response, 'href="/q/tq1/take/"')
         self.assertTemplateUsed(response, 'quiz/quiz_detail.html')
+
+    def test_anon_session_score(self):
+        request = HttpRequest()
+        engine = import_module(settings.SESSION_ENGINE)
+        request.session = engine.SessionStore(None)
+        score, possible = anon_session_score(request)
+        self.assertEqual((score, possible), (0, 0))
+
+        score, possible = anon_session_score(request, 1, 0)
+        self.assertEqual((score, possible), (0, 0))
+
+        score, possible = anon_session_score(request, 1, 1)
+        self.assertEqual((score, possible), (1, 1))
+
+        score, possible = anon_session_score(request, -0.5, 1)
+        self.assertEqual((score, possible), (0.5, 2))
+
+        score, possible = anon_session_score(request)
+        self.assertEqual((score, possible), (0, 0))
 
 
 class TestQuestionViewsAnon(TestCase):
