@@ -2,10 +2,9 @@
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.sessions.middleware import SessionMiddleware
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.template import Template, Context
 from django.utils.importlib import import_module
 
