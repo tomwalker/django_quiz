@@ -51,7 +51,7 @@
 
 <p class="lead">{{ question.content }}</p>
 
-<form action="" method="get">
+<form action="" method="get">{% csrf_token %}
   <input type=hidden name="question_id" value="{{ question.id }}">
 
   <table class="table table-hover table-bordered" id="answerchoice">

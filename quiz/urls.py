@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 from .views import QuizListView, CategoriesListView,\
-    ViewQuizListByCategory, QuizUserProgressView, QuizDetailView
+    ViewQuizListByCategory, QuizUserProgressView, QuizDetailView, QuizTake
 
 
 urlpatterns = patterns('quiz.views',
@@ -29,5 +29,9 @@ urlpatterns = patterns('quiz.views',
 
                        url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
                            view='quiz_take',
+                           name='quiz_question'),
+
+                       url(regex=r'^x/(?P<quiz_name>[\w-]+)/take/$',
+                           view=QuizTake.as_view(),
                            name='quiz_question'),
                        )

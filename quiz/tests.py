@@ -315,7 +315,7 @@ class TestNonQuestionViews(TestCase):
         self.assertEqual((score, possible), (0.5, 2))
 
         score, possible = anon_session_score(request)
-        self.assertEqual((score, possible), (0, 0))
+        self.assertEqual((score, possible), (0.5, 2))
 
 
 class TestQuestionViewsAnon(TestCase):

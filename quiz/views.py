@@ -4,8 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView, FormView
 
+from .forms import QuestionForm
 from .models import Quiz, Category, Progress, Sitting, Question
 
 
@@ -292,3 +293,54 @@ def final_result_anon(request, quiz, previous):
                                    'session': session_score,
                                    'possible': session_possible},
                                   context_instance=RequestContext(request))
+
+
+def form_test(request, quiz_name):
+    quiz = Quiz.objects.get(url=quiz_name.lower())
+    try:
+        sitting = Sitting.objects.get(user=request.user,
+                                      quiz=quiz,
+                                      complete=False)
+
+    except Sitting.DoesNotExist:
+        sitting = Sitting.objects.new_sitting(request.user, quiz)
+
+    except Sitting.MultipleObjectsReturned:
+        sitting = Sitting.objects.filter(user=request.user,
+                                         quiz=quiz,
+                                         complete=False)[0]
+
+    question = sitting.get_first_question()
+    form = QuestionForm(question=question)
+    return render_to_response('q_test.html', {'form': form,
+                                              'question': question})
+
+
+class QuizTake(FormView):
+    form_class = QuestionForm
+    template_name = 'q_test.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuizTake, self).get_context_data(**kwargs)
+        context['question'] = self.question
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super(QuizTake, self).get_form_kwargs()
+        quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
+
+        try:
+            sitting = Sitting.objects.get(user=self.request.user,
+                                          quiz=quiz,
+                                          complete=False)
+
+        except Sitting.DoesNotExist:
+            sitting = Sitting.objects.new_sitting(self.request.user, quiz)
+
+        except Sitting.MultipleObjectsReturned:
+            sitting = Sitting.objects.filter(user=self.request.user,
+                                             quiz=quiz,
+                                             complete=False)[0]
+
+        self.question = sitting.get_first_question()
+        return dict(kwargs, question=self.question)
