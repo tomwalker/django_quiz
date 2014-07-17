@@ -10,9 +10,9 @@ class TF_Question(Question):
                                             " false.")
 
     def check_if_correct(self, guess):
-        if guess == "T":
+        if guess == "True":
             guess_bool = True
-        elif guess == "F":
+        elif guess == "False":
             guess_bool = False
         else:
             return False
@@ -27,6 +27,9 @@ class TF_Question(Question):
                  'content': 'True'},
                 {'correct': self.check_if_correct('F'),
                  'content': 'False'}]
+
+    def get_answers_list(self):
+        return [(True, True), (False, False)]
 
     class Meta:
         verbose_name = "True/False Question"

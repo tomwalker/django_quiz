@@ -28,10 +28,6 @@ urlpatterns = patterns('quiz.views',
                            name='quiz_start_page'),
 
                        url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
-                           view='quiz_take',
-                           name='quiz_question'),
-
-                       url(regex=r'^x/(?P<quiz_name>[\w-]+)/take/$',
                            view=QuizTake.as_view(),
                            name='quiz_question'),
                        )

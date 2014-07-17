@@ -51,28 +51,24 @@
 
 <p class="lead">{{ question.content }}</p>
 
-<form action="" method="get">{% csrf_token %}
+<form action="" method="POST">{% csrf_token %}
   <input type=hidden name="question_id" value="{{ question.id }}">
 
-  <table class="table table-hover table-bordered" id="answerchoice">
-	<tbody>
+  <ul class="list-group">
 
-	  {% if question_type.TF_Question %}
-	    {% include 'answers_for_tf_question.html' %}
-	  {% endif %}
+	{% for answer in form.answers %}
+	  <li class="list-group-item">
+	  {{ answer }}
+	  </li>
+	{% endfor %}
 
-	  {% if question_type.MCQuestion %}
-	    {% include 'answers_for_mc_question.html' %}
-	  {% endif %}
-
-	</tbody>
-  </table>
+  </ul>
   <input type="submit" value="Check" class="btn btn-large btn-block btn-warning" >
 </form>
 
 {% endif %}
 
 <hr>
-</div>
+	</div>
 
 {% endblock %}

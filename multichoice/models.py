@@ -15,6 +15,10 @@ class MCQuestion(Question):
     def get_answers(self):
         return Answer.objects.filter(question=self)
 
+    def get_answers_list(self):
+        return [(answer.id, answer.content) for answer in
+                Answer.objects.filter(question=self)]
+
     class Meta:
         verbose_name = "Multiple Choice Question"
         verbose_name_plural = "Multiple Choice Questions"

@@ -61,17 +61,51 @@ class QuizUserProgressView(TemplateView):
         return context
 
 
-def quiz_take(request, quiz_name):
-    quiz = Quiz.objects.get(url=quiz_name.lower())
+class QuizTake(FormView):
+    form_class = QuestionForm
+    template_name = 'question.html'
 
-    if request.user.is_authenticated() is True:
-        return user_load_sitting(request, quiz)
+    def dispatch(self, request, *args, **kwargs):
+        self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
 
-    else:  # anon user
-        return anon_load_sitting(request, quiz)
+        if request.user.is_authenticated() is True:
+            self.sitting = user_sitting(self.request, self.quiz)
+        else:
+            anon_load_sitting(self.request, self.quiz)
+
+        return super(QuizTake, self).dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        if self.request.user.is_authenticated() is True:
+            self.question = self.sitting.get_first_question()
+        else:
+            self.question = anon_next_question(self)
+        kwargs = super(QuizTake, self).get_form_kwargs()
+        return dict(kwargs, question=self.question)
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated() is True:
+            form_valid_user(self, form)
+            if self.sitting.get_first_question() is False:
+                return final_result_user(self.request, self.sitting,
+                                         self.quiz, self.previous)
+        else:
+            form_valid_anon(self, form)
+            if not self.request.session[self.quiz.anon_q_list()]:
+                return final_result_anon(self.request,
+                                         self.quiz, self.previous)
+
+        return super(QuizTake, self).get(self, self.request)
+
+    def get_context_data(self, **kwargs):
+        context = super(QuizTake, self).get_context_data(**kwargs)
+        context['question'] = self.question
+        if hasattr(self, 'previous'):
+            context['previous'] = self.previous
+        return context
 
 
-def user_load_sitting(request, quiz):
+def user_sitting(request, quiz):
     if quiz.single_attempt is True and\
        Sitting.objects.filter(user=request.user,
                               quiz=quiz,
@@ -94,47 +128,34 @@ def user_load_sitting(request, quiz):
                                          complete=False)[0]
 
     finally:
-        return user_load_next_question(request, sitting, quiz)
+        return sitting
 
 
-def user_load_next_question(request, sitting, quiz):
-    previous = False
-    if 'guess' in request.GET:
-        progress, created = Progress.objects.get_or_create(user=request.user)
-        guess = request.GET['guess']
-        question = sitting.get_first_question()
-        is_correct = question.check_if_correct(guess)
+def form_valid_user(self, form):
+    progress, created = Progress.objects.get_or_create(
+        user=self.request.user)
+    guess = form.cleaned_data['answers']
+    is_correct = self.question.check_if_correct(guess)
 
-        if is_correct is True:
-            sitting.add_to_score(1)
-            progress.update_score(question.category, 1, 1)
+    if is_correct is True:
+        self.sitting.add_to_score(1)
+        progress.update_score(self.question.category, 1, 1)
 
-        else:
-            sitting.add_incorrect_question(question)
-            progress.update_score(question.category, 0, 1)
+    else:
+        self.sitting.add_incorrect_question(self.question)
+        progress.update_score(self.question.category, 0, 1)
 
-        if quiz.answers_at_end is not True:
-            previous = {'previous_answer': guess,
-                        'previous_outcome': is_correct,
-                        'previous_question': question,
-                        'answers': question.get_answers(),
-                        'question_type': {question.__class__.__name__: True}}
+    if self.quiz.answers_at_end is not True:
+        self.previous = {'previous_answer': guess,
+                         'previous_outcome': is_correct,
+                         'previous_question': self.question,
+                         'answers': self.question.get_answers(),
+                         'question_type': {self.question
+                                           .__class__.__name__: True}}
+    else:
+        self.previous = {}
 
-        sitting.remove_first_question()
-
-    next_q = sitting.get_first_question()
-    if next_q is False:
-        #  no questions left
-        return final_result_user(request, sitting, quiz, previous)
-
-    return render_to_response('question.html',
-                              {'quiz': quiz,
-                               'question': next_q,
-                               'question_type': {next_q.__class__.__name__:
-                                                 True},
-                               'answers': next_q.get_answers(),
-                               'previous': previous},
-                              context_instance=RequestContext(request))
+    self.sitting.remove_first_question()
 
 
 def final_result_user(request, sitting, quiz, previous):
@@ -173,7 +194,7 @@ def anon_load_sitting(request, quiz):
         return render(request, 'single_complete.html')
 
     if quiz.anon_q_list() in request.session:
-        return load_anon_next_question(request, quiz)
+        return request.session[quiz.anon_q_list()]
     else:
         return new_anon_quiz_session(request, quiz)
 
@@ -194,47 +215,35 @@ def new_anon_quiz_session(request, quiz):
     # session list of questions
     request.session[quiz.anon_q_list()] = question_list
 
-    return load_anon_next_question(request, quiz)
+    return request.session[quiz.anon_q_list()]
 
 
-def load_anon_next_question(request, quiz):
-    previous = False
-
-    if 'guess' in request.GET:
-        previous = question_check_anon(request, quiz)
-        request.session[quiz.anon_q_list()] = (request.
-                                               session[quiz.anon_q_list()][1:])
-
-    if not request.session[quiz.anon_q_list()]:
-        return final_result_anon(request, quiz, previous)
-
-    next_question_id = request.session[quiz.anon_q_list()][0]
-    next_question = Question.objects.get_subclass(id=next_question_id)
-    question_type = {next_question.__class__.__name__: True}
-    return render_to_response('question.html',
-                              {'quiz': quiz,
-                               'question': next_question,
-                               'question_type': question_type,
-                               'previous': previous},
-                              context_instance=RequestContext(request))
+def anon_next_question(self):
+    next_question_id = self.request.session[self.quiz.anon_q_list()][0]
+    return Question.objects.get_subclass(id=next_question_id)
 
 
-def question_check_anon(request, quiz):
-    question = Question.objects.get_subclass(id=request.GET['question_id'])
-    is_correct = question.check_if_correct(request.GET['guess'])
+def form_valid_anon(self, form):
+    guess = form.cleaned_data['answers']
+    is_correct = self.question.check_if_correct(guess)
 
     if is_correct is True:
-        request.session[quiz.anon_score_id()] += 1
-        anon_session_score(request, 1, 1)
+        self.request.session[self.quiz.anon_score_id()] += 1
+        anon_session_score(self.request, 1, 1)
     else:
-        anon_session_score(request, 0, 1)
+        anon_session_score(self.request, 0, 1)
 
-    if quiz.answers_at_end is not True:
-        return {'previous_answer': request.GET['guess'],
-                'previous_outcome': is_correct,
-                'previous_question': question}
+    if self.quiz.answers_at_end is not True:
+        self.previous = {'previous_answer': guess,
+                         'previous_outcome': is_correct,
+                         'previous_question': self.question,
+                         'answers': self.question.get_answers(),
+                         'question_type': {self.question
+                                           .__class__.__name__: True}}
     else:
-        return {}
+        self.previous = {}
+    self.request.session[self.quiz.anon_q_list()] =\
+        (self.request.session[self.quiz.anon_q_list()][1:])
 
 
 def anon_session_score(request, to_add=0, possible=0):
@@ -293,54 +302,3 @@ def final_result_anon(request, quiz, previous):
                                    'session': session_score,
                                    'possible': session_possible},
                                   context_instance=RequestContext(request))
-
-
-def form_test(request, quiz_name):
-    quiz = Quiz.objects.get(url=quiz_name.lower())
-    try:
-        sitting = Sitting.objects.get(user=request.user,
-                                      quiz=quiz,
-                                      complete=False)
-
-    except Sitting.DoesNotExist:
-        sitting = Sitting.objects.new_sitting(request.user, quiz)
-
-    except Sitting.MultipleObjectsReturned:
-        sitting = Sitting.objects.filter(user=request.user,
-                                         quiz=quiz,
-                                         complete=False)[0]
-
-    question = sitting.get_first_question()
-    form = QuestionForm(question=question)
-    return render_to_response('q_test.html', {'form': form,
-                                              'question': question})
-
-
-class QuizTake(FormView):
-    form_class = QuestionForm
-    template_name = 'q_test.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(QuizTake, self).get_context_data(**kwargs)
-        context['question'] = self.question
-        return context
-
-    def get_form_kwargs(self):
-        kwargs = super(QuizTake, self).get_form_kwargs()
-        quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
-
-        try:
-            sitting = Sitting.objects.get(user=self.request.user,
-                                          quiz=quiz,
-                                          complete=False)
-
-        except Sitting.DoesNotExist:
-            sitting = Sitting.objects.new_sitting(self.request.user, quiz)
-
-        except Sitting.MultipleObjectsReturned:
-            sitting = Sitting.objects.filter(user=self.request.user,
-                                             quiz=quiz,
-                                             complete=False)[0]
-
-        self.question = sitting.get_first_question()
-        return dict(kwargs, question=self.question)
