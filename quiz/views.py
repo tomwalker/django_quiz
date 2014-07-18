@@ -27,20 +27,24 @@ class ViewQuizListByCategory(ListView):
     model = Quiz
     template_name = 'view_quiz_category.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        self.category = get_object_or_404(Category,
+                                          category=
+                                          self.kwargs['category_name'])
+
+        return super(ViewQuizListByCategory, self).\
+            dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(ViewQuizListByCategory, self)\
             .get_context_data(**kwargs)
 
-        category = get_object_or_404(Category,
-                                     category=self.kwargs['category_name'])
-        context['category'] = category
+        context['category'] = self.category
         return context
 
     def get_queryset(self):
-        category = get_object_or_404(Category,
-                                     category=self.kwargs['category_name'])
         queryset = super(ViewQuizListByCategory, self).get_queryset()
-        return queryset.filter(category=category)
+        return queryset.filter(category=self.category)
 
 
 class QuizUserProgressView(TemplateView):
@@ -53,11 +57,9 @@ class QuizUserProgressView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(QuizUserProgressView, self).get_context_data(**kwargs)
-
-        progress = get_object_or_404(Progress, user=self.request.user)
+        progress, c = Progress.objects.get_or_create(user=self.request.user)
         context['cat_scores'] = progress.list_all_cat_scores()
         context['exams'] = progress.show_exams()
-
         return context
 
 
@@ -71,16 +73,20 @@ class QuizTake(FormView):
         if request.user.is_authenticated() is True:
             self.sitting = user_sitting(self.request, self.quiz)
         else:
-            anon_load_sitting(self.request, self.quiz)
+            self.sitting = anon_load_sitting(self.request, self.quiz)
 
-        return super(QuizTake, self).dispatch(request, *args, **kwargs)
+        if self.sitting is False:
+            return render(request, 'single_complete.html')
+
+        return super(QuizTake, self).dispatch(self.request, *args, **kwargs)
 
     def get_form_kwargs(self):
+        kwargs = super(QuizTake, self).get_form_kwargs()
         if self.request.user.is_authenticated() is True:
             self.question = self.sitting.get_first_question()
         else:
             self.question = anon_next_question(self)
-        kwargs = super(QuizTake, self).get_form_kwargs()
+
         return dict(kwargs, question=self.question)
 
     def form_valid(self, form):
@@ -95,11 +101,13 @@ class QuizTake(FormView):
                 return final_result_anon(self.request,
                                          self.quiz, self.previous)
 
+        self.request.POST = ''
         return super(QuizTake, self).get(self, self.request)
 
     def get_context_data(self, **kwargs):
         context = super(QuizTake, self).get_context_data(**kwargs)
         context['question'] = self.question
+        context['quiz'] = self.quiz
         if hasattr(self, 'previous'):
             context['previous'] = self.previous
         return context
@@ -107,26 +115,22 @@ class QuizTake(FormView):
 
 def user_sitting(request, quiz):
     if quiz.single_attempt is True and\
-       Sitting.objects.filter(user=request.user,
-                              quiz=quiz,
-                              complete=True)\
-                      .count() > 0:
-
-        return render(request, 'single_complete.html')
+        Sitting.objects.filter(user=request.user,
+                               quiz=quiz,
+                               complete=True)\
+                       .count() > 0:
+        return False
 
     try:
         sitting = Sitting.objects.get(user=request.user,
                                       quiz=quiz,
                                       complete=False)
-
     except Sitting.DoesNotExist:
         sitting = Sitting.objects.new_sitting(request.user, quiz)
-
     except Sitting.MultipleObjectsReturned:
         sitting = Sitting.objects.filter(user=request.user,
                                          quiz=quiz,
                                          complete=False)[0]
-
     finally:
         return sitting
 
@@ -191,7 +195,7 @@ def final_result_user(request, sitting, quiz, previous):
 
 def anon_load_sitting(request, quiz):
     if quiz.single_attempt is True:
-        return render(request, 'single_complete.html')
+        return False
 
     if quiz.anon_q_list() in request.session:
         return request.session[quiz.anon_q_list()]
@@ -229,9 +233,9 @@ def form_valid_anon(self, form):
 
     if is_correct is True:
         self.request.session[self.quiz.anon_score_id()] += 1
-        anon_session_score(self.request, 1, 1)
+        anon_session_score(self.request.session, 1, 1)
     else:
-        anon_session_score(self.request, 0, 1)
+        anon_session_score(self.request.session, 0, 1)
 
     if self.quiz.answers_at_end is not True:
         self.previous = {'previous_answer': guess,
@@ -246,7 +250,7 @@ def form_valid_anon(self, form):
         (self.request.session[self.quiz.anon_q_list()][1:])
 
 
-def anon_session_score(request, to_add=0, possible=0):
+def anon_session_score(session, to_add=0, possible=0):
     """
     Returns the session score for non-signed in users.
     If number passed in then add this to the running total and
@@ -258,19 +262,17 @@ def anon_session_score(request, to_add=0, possible=0):
         x, y = anon_session_score() will return the session score
                                     without modification
     """
-    if "session_score" not in request.session:
-        request.session["session_score"] = 0
-        request.session["session_score_possible"] = 0
+    if "session_score" not in session:
+        session["session_score"] = 0
+        session["session_score_possible"] = 0
 
     if possible > 0:
-        request.session["session_score"] = (request.session["session_score"] +
-                                            to_add)
+        session["session_score"] = session["session_score"] + to_add
 
-        request.session["session_score_possible"] = \
-            (request.session["session_score_possible"] + possible)
+        session["session_score_possible"] =\
+            session["session_score_possible"] + possible
 
-    return request.session["session_score"], \
-        request.session["session_score_possible"]
+    return session["session_score"], session["session_score_possible"]
 
 
 def final_result_anon(request, quiz, previous):
@@ -280,7 +282,7 @@ def final_result_anon(request, quiz, previous):
     if score is 0:
         score = "0"
 
-    session_score, session_possible = anon_session_score(request)
+    session_score, session_possible = anon_session_score(request.session)
     del request.session[quiz.anon_q_list()]
 
     if quiz.answers_at_end is False:

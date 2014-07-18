@@ -10,5 +10,9 @@
   <h4>You will only get one attempt at this quiz.</h4>
 {% endif %}
 <p>{{ quiz.description }}</p>
-<p><a href="{% url 'quiz.views.quiz_take' quiz_name=quiz.url %}">Start quiz</a></p>
+<p>
+  <a href="{% url 'quiz_question' quiz_name=quiz.url %}">
+	Start quiz
+  </a>
+</p>
 {% endblock %}

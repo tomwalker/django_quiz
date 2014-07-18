@@ -9,7 +9,7 @@ from django.template import Template, Context
 from django.utils.importlib import import_module
 
 from .models import Category, Quiz, Progress, Sitting
-from .views import quiz_take, anon_session_score
+from .views import anon_session_score, QuizTake
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
@@ -302,19 +302,19 @@ class TestNonQuestionViews(TestCase):
         request = HttpRequest()
         engine = import_module(settings.SESSION_ENGINE)
         request.session = engine.SessionStore(None)
-        score, possible = anon_session_score(request)
+        score, possible = anon_session_score(request.session)
         self.assertEqual((score, possible), (0, 0))
 
-        score, possible = anon_session_score(request, 1, 0)
+        score, possible = anon_session_score(request.session, 1, 0)
         self.assertEqual((score, possible), (0, 0))
 
-        score, possible = anon_session_score(request, 1, 1)
+        score, possible = anon_session_score(request.session, 1, 1)
         self.assertEqual((score, possible), (1, 1))
 
-        score, possible = anon_session_score(request, -0.5, 1)
+        score, possible = anon_session_score(request.session, -0.5, 1)
         self.assertEqual((score, possible), (0.5, 2))
 
-        score, possible = anon_session_score(request)
+        score, possible = anon_session_score(request.session)
         self.assertEqual((score, possible), (0.5, 2))
 
 
@@ -350,7 +350,6 @@ class TestQuestionViewsAnon(TestCase):
     def test_quiz_take_anon_view_only(self):
         found = resolve('/q/tq1/take/')
 
-        self.assertEqual(found.func, quiz_take)
         self.assertEqual(found.kwargs, {'quiz_name': 'tq1'})
         self.assertEqual(found.url_name, 'quiz_question')
 
@@ -363,9 +362,7 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(response.context['quiz'].id, self.quiz1.id)
         self.assertEqual(response.context['question'].content,
                          self.question1.content)
-        self.assertEqual(response.context['question_type'],
-                         {self.question1.__class__.__name__: True})
-        self.assertEqual(response.context['previous'], False)
+        self.assertNotIn('previous', response.context)
         self.assertTemplateUsed('question.html')
 
         session = self.client.session
@@ -381,33 +378,30 @@ class TestQuestionViewsAnon(TestCase):
         # show first question
         response = self.client.get('/q/tq1/take/')
         self.assertNotContains(response, 'previous question')
-        first_question = response.context['question']
-
         # submit first answer
-        response = self.client.get('/q/tq1/take/',
-                                   {'guess': '123',
-                                    'question_id':
-                                    self.client.session['1_q_list'][0]})
+        response = self.client.post('/q/tq1/take/',
+                                    {'answers': '123',
+                                     'question_id':
+                                     self.client.session['1_q_list'][0]})
 
-        self.assertContains(response, 'previous question', status_code=200)
+        self.assertContains(response, 'previous', status_code=200)
         self.assertContains(response, 'incorrect')
         self.assertContains(response, 'Explanation:')
         self.assertContains(response, 'squeek')
         self.assertEqual(self.client.session['1_q_list'], [2])
         self.assertEqual(self.client.session['session_score'], 0)
         self.assertEqual(self.client.session['session_score_possible'], 1)
-        self.assertEqual(response.context['previous'],
-                         {'previous_answer': '123',
-                          'previous_outcome': False,
-                          'previous_question': first_question})
+        self.assertEqual(response.context['previous']['question_type'],
+                         {self.question1.__class__.__name__: True})
+        self.assertIn(self.answer1, response.context['previous']['answers'])
         self.assertTemplateUsed('question.html')
         second_question = response.context['question']
 
         # submit second and final answer of quiz, show final result page
-        response = self.client.get('/q/tq1/take/',
-                                   {'guess': '456',
-                                    'question_id':
-                                    self.client.session['1_q_list'][0]})
+        response = self.client.post('/q/tq1/take/',
+                                    {'answers': '456',
+                                     'question_id':
+                                     self.client.session['1_q_list'][0]})
 
         self.assertContains(response, 'previous question', status_code=200)
         self.assertNotContains(response, 'incorrect')
@@ -419,10 +413,12 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(response.context['percent'], 50)
         self.assertEqual(response.context['session'], 1)
         self.assertEqual(response.context['possible'], 2)
-        self.assertEqual(response.context['previous'],
-                         {'previous_answer': '456',
-                          'previous_outcome': True,
-                          'previous_question': second_question})
+        self.assertEqual(response.context['previous']['previous_answer'],
+                         '456')
+        self.assertEqual(response.context['previous']['previous_outcome'],
+                         True)
+        self.assertEqual(response.context['previous']['previous_question'],
+                         second_question)
         self.assertTemplateUsed('result.html')
 
         # quiz restarts
@@ -430,10 +426,10 @@ class TestQuestionViewsAnon(TestCase):
         self.assertNotContains(response, 'previous question')
 
         # session score continues to increase
-        response = self.client.get('/q/tq1/take/',
-                                   {'guess': '123',
-                                    'question_id':
-                                    self.client.session['1_q_list'][0]})
+        response = self.client.post('/q/tq1/take/',
+                                    {'answers': '123',
+                                     'question_id':
+                                     self.client.session['1_q_list'][0]})
         self.assertEqual(self.client.session['session_score'], 1)
         self.assertEqual(self.client.session['session_score_possible'], 3)
 
@@ -509,9 +505,7 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(response.context['quiz'].id, self.quiz1.id)
         self.assertEqual(response.context['question'].content,
                          self.question1.content)
-        self.assertEqual(response.context['question_type'],
-                         {self.question1.__class__.__name__: True})
-        self.assertEqual(response.context['previous'], False)
+        self.assertNotIn('previous', response.context)
         self.assertTemplateUsed('question.html')
 
         response = self.client.get('/q/tq1/take/')
@@ -538,10 +532,10 @@ class TestQuestionViewsUser(TestCase):
         next_question = Sitting.objects.get(quiz=self.quiz1)\
                                        .get_first_question()
 
-        response = self.client.get('/q/tq1/take/',
-                                   {'guess': '123',
-                                    'question_id':
-                                    next_question.id})
+        response = self.client.post('/q/tq1/take/',
+                                    {'answers': '123',
+                                     'question_id':
+                                     next_question.id})
 
         sitting = Sitting.objects.get(quiz=self.quiz1)
         progress_count = Progress.objects.count()
@@ -560,9 +554,9 @@ class TestQuestionViewsUser(TestCase):
                          self.question2.content)
         self.assertTemplateUsed('question.html')
 
-        response = self.client.get('/q/tq1/take/',
-                                   {'guess': '456',
-                                    'question_id': 2})
+        response = self.client.post('/q/tq1/take/',
+                                    {'answers': '456',
+                                     'question_id': 2})
 
         self.assertEqual(Sitting.objects.count(), 0)
         self.assertTemplateUsed('result.html')
@@ -570,16 +564,14 @@ class TestQuestionViewsUser(TestCase):
 
     def test_quiz_take_user_answer_end(self):
         self.client.login(username='jacob', password='top_secret')
-        response = self.client.get('/q/tq2/take/',
-                                   {'guess': '123',
-                                    'question_id': 1})
-
+        response = self.client.post('/q/tq2/take/',
+                                    {'answers': '123',
+                                     'question_id': 1})
         self.assertNotContains(response, 'previous question')
-        self.assertEqual(response.context['previous'], False)
 
-        response = self.client.get('/q/tq2/take/',
-                                   {'guess': 'T',
-                                    'question_id': 3})
+        response = self.client.post('/q/tq2/take/',
+                                    {'answers': True,
+                                     'question_id': 3})
 
         self.assertEqual(response.context['score'], 1)
         self.assertEqual(response.context['max_score'], 2)
@@ -603,12 +595,12 @@ class TestQuestionViewsUser(TestCase):
         self.quiz2.single_attempt = True
         self.quiz2.save()
         self.client.login(username='jacob', password='top_secret')
-        response = self.client.get('/q/tq2/take/',
-                                   {'guess': '123',
-                                    'question_id': 1})
-        response = self.client.get('/q/tq2/take/',
-                                   {'guess': 'T',
-                                    'question_id': 3})
+        response = self.client.post('/q/tq2/take/',
+                                    {'answers': '123',
+                                     'question_id': 1})
+        response = self.client.post('/q/tq2/take/',
+                                    {'answers': True,
+                                     'question_id': 3})
 
         # quiz complete, trying it again
         response = self.client.get('/q/tq2/take/')

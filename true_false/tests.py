@@ -14,14 +14,14 @@ class TestTrueFalseQuestionModel(TestCase):
 
     def test_true_q(self):
         self.assertEqual(self.red.correct, True)
-        self.assertEqual(self.red.check_if_correct("T"), True)
-        self.assertEqual(self.red.check_if_correct("F"), False)
+        self.assertEqual(self.red.check_if_correct("True"), True)
+        self.assertEqual(self.red.check_if_correct("False"), False)
         self.assertEqual(self.red.check_if_correct("4"), False)
 
     def test_false_q(self):
         self.assertEqual(self.blue.correct, False)
-        self.assertEqual(self.blue.check_if_correct("T"), False)
-        self.assertEqual(self.blue.check_if_correct("F"), True)
+        self.assertEqual(self.blue.check_if_correct("True"), False)
+        self.assertEqual(self.blue.check_if_correct("False"), True)
 
     def test_get_answers(self):
         self.assertEqual(self.red.get_answers(),

@@ -4,7 +4,7 @@ from .views import QuizListView, CategoriesListView,\
     ViewQuizListByCategory, QuizUserProgressView, QuizDetailView, QuizTake
 
 
-urlpatterns = patterns('quiz.views',
+urlpatterns = patterns('',
 
                        url(regex=r'^$',
                            view=QuizListView.as_view(),

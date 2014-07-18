@@ -23,9 +23,9 @@ class TF_Question(Question):
             return False
 
     def get_answers(self):
-        return [{'correct': self.check_if_correct('T'),
+        return [{'correct': self.check_if_correct("True"),
                  'content': 'True'},
-                {'correct': self.check_if_correct('F'),
+                {'correct': self.check_if_correct("False"),
                  'content': 'False'}]
 
     def get_answers_list(self):
