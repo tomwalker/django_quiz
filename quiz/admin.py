@@ -31,21 +31,20 @@ class QuizAdminForm(forms.ModelForm):
         queryset=Question.objects.all().select_subclasses(),
         required=False,
         widget=FilteredSelectMultiple(
-            verbose_name=('Questions'),
+            verbose_name='Questions',
             is_stacked=False))
 
     def __init__(self, *args, **kwargs):
         super(QuizAdminForm, self).__init__(*args, **kwargs)
         if self.instance.pk:
-            self.fields['questions'].initial = self.instance.question_set.all()
+            self.fields['questions'].initial =\
+                self.instance.question_set.all().select_subclasses()
 
     def save(self, commit=True):
         quiz = super(QuizAdminForm, self).save(commit=False)
-        if commit:
-            quiz.save()
-        if quiz.pk:
-            quiz.question_set = self.cleaned_data['questions']
-            self.save_m2m()
+        quiz.save()
+        quiz.question_set = self.cleaned_data['questions']
+        self.save_m2m()
         return quiz
 
 
@@ -66,7 +65,7 @@ class MCQuestionAdmin(admin.ModelAdmin):
     list_filter = ('category',)
     fields = ('content', 'category', 'quiz', 'explanation')
 
-    search_fields = ('content', )
+    search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
 
     inlines = [AnswerInline]
