@@ -1,5 +1,8 @@
 import re
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator
+
 from model_utils.managers import InheritanceManager
 
 
@@ -73,6 +76,13 @@ class Quiz(models.Model):
                                                    " permitted. Non users"
                                                    " cannot sit this exam.")
 
+    pass_mark = models.SmallIntegerField(blank=True,
+                                         default=0,
+                                         help_text="Percentage required to"
+                                                   " pass exam.",
+                                         validators=[
+                                             MaxValueValidator(100)])
+
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         self.url = re.sub('\s+', '-', self.url).lower()
 
@@ -81,6 +91,9 @@ class Quiz(models.Model):
 
         if self.single_attempt is True:
             self.exam_paper = True
+
+        if self.pass_mark > 100:
+            raise ValidationError(u'%s is above 100' % self.pass_mark)
 
         super(Quiz, self).save(force_insert, force_update, *args, **kwargs)
 
@@ -372,6 +385,13 @@ class Sitting(models.Model):
         Returns a list of non empty strings
         """
         return filter(None, self.incorrect_questions.split(','))
+
+    @property
+    def check_if_passed(self):
+        if self.get_percent_correct >= self.quiz.pass_mark:
+            return True
+        else:
+            return False
 
 
 class Question(models.Model):

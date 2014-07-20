@@ -179,6 +179,7 @@ def final_result_user(request, sitting, quiz, previous):
                                    'score': score,
                                    'max_score': max_score,
                                    'percent': percent,
+                                   'sitting': sitting,
                                    'previous': previous},
                                   context_instance=RequestContext(request))
     else:
@@ -188,6 +189,7 @@ def final_result_user(request, sitting, quiz, previous):
                                    'score': score,
                                    'max_score': max_score,
                                    'percent': percent,
+                                   'sitting': sitting,
                                    'questions': questions,
                                    'incorrect_questions': incorrect},
                                   context_instance=RequestContext(request))

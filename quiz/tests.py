@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.test import TestCase
@@ -91,6 +92,14 @@ class TestQuiz(TestCase):
     def test_anon_q_list(self):
         self.assertEqual(self.quiz1.anon_q_list(), '1_q_list')
 
+    def test_pass_mark(self):
+        self.assertEqual(self.quiz1.pass_mark, False)
+        self.quiz1.pass_mark = 50
+        self.assertEqual(self.quiz1.pass_mark, 50)
+        self.quiz1.pass_mark = 101
+        with self.assertRaises(ValidationError):
+            self.quiz1.save()
+
 
 class TestProgress(TestCase):
     def setUp(self):
@@ -163,7 +172,8 @@ class TestSitting(TestCase):
         self.quiz1 = Quiz.objects.create(id=1,
                                          title='test quiz 1',
                                          description='d1',
-                                         url='tq1')
+                                         url='tq1',
+                                         pass_mark=50)
 
         self.question1 = MCQuestion.objects.create(id=1,
                                                    content='squawk')
@@ -195,6 +205,7 @@ class TestSitting(TestCase):
 
     def test_scoring(self):
         self.assertEqual(self.sitting.get_current_score, 0)
+        self.assertEqual(self.sitting.check_if_passed, False)
 
         self.sitting.add_to_score(1)
         self.assertEqual(self.sitting.get_current_score, 1)
@@ -207,6 +218,8 @@ class TestSitting(TestCase):
         self.sitting.add_to_score(1)
         self.assertEqual(self.sitting.get_current_score, 3)
         self.assertEqual(self.sitting.get_percent_correct, 100)
+
+        self.assertEqual(self.sitting.check_if_passed, True)
 
     def test_incorrect_and_complete(self):
         self.assertEqual(self.sitting.get_incorrect_questions(), [])
@@ -451,7 +464,8 @@ class TestQuestionViewsUser(TestCase):
                                          title='test quiz 1',
                                          description='d1',
                                          url='tq1',
-                                         category=self.c1)
+                                         category=self.c1,
+                                         pass_mark=50)
 
         self.quiz2 = Quiz.objects.create(id=2,
                                          title='test quiz 2',
@@ -561,6 +575,7 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(Sitting.objects.count(), 0)
         self.assertTemplateUsed('result.html')
         self.assertEqual(response.context['score'], 1)
+        self.assertContains(response, 'You have passed')
 
     def test_quiz_take_user_answer_end(self):
         self.client.login(username='jacob', password='top_secret')
