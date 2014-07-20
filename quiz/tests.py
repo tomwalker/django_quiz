@@ -10,7 +10,7 @@ from django.template import Template, Context
 from django.utils.importlib import import_module
 
 from .models import Category, Quiz, Progress, Sitting
-from .views import anon_session_score, QuizTake
+from .views import anon_session_score
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
