@@ -2,7 +2,7 @@
 {% block title %}Quizzes related to {{ category.category }}{% endblock %}
 
 {% block content %}
-<h1>Quizzes in {{ category.category }}</h1>
+<h1>Quizzes in the <strong>{{ category.category }} </strong>category</h1>
 
   {% with object_list as quizzes %}
     {% if quizzes %}

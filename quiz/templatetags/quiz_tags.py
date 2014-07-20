@@ -15,7 +15,6 @@ def correct_answer_for_all(context, question):
         user_was_incorrect = True
     else:
         user_was_incorrect = False
-    previous = {'answers': answers}
 
-    return {'previous': previous,
+    return {'previous': {'answers': answers},
             'user_was_incorrect': user_was_incorrect}

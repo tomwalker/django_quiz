@@ -2,7 +2,7 @@
 {% block title %}All Quizzes{% endblock %}
 
 {% block content %}
-<h2>Quiz list</h2>
+<h2>List of quizzes</h2>
     {% if quiz_list %}
         <ul>
         {% for quiz in quiz_list %}
@@ -12,8 +12,4 @@
     {% else %}
         <p>There are no available quizzes.</p>
     {% endif %}
-{% endblock %}
-
-{% block right-sidebar %}
-<h2>Sponsored Advertisements</h2>
 {% endblock %}

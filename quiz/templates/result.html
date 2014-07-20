@@ -2,12 +2,10 @@
 
 {% load quiz_tags %}
 
-{% block title %} Exam Paper Result {% endblock %}
-{% block description %} Exam Results {% endblock %}
+{% block title %} {{ quiz.title}} {% endblock %}
+{% block description %} Exam Results for {{ quiz.title }} {% endblock %}
 
 {% block content %}
-
-<div class="container">
 
   {% if previous %}
 
@@ -85,8 +83,5 @@
 
   {% endif %}
 
-
-
-</div>
 
 {% endblock %}
