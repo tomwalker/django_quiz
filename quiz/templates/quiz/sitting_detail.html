@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}
+Result of {{ sitting.quiz.title }} for {{ sitting.user }}
+{% endblock %}
+
+{% block content %}
+<h2>Quiz title: {{ sitting.quiz.title }}</h2>
+<h3>Category: {{ sitting.quiz.category }}</h3>
+<p>{{ sitting.quiz.description }}</p>
+<hr>
+<p>User: {{ sitting.user }}</p>
+<p>Score: {{ sitting.get_percent_correct }}%</p>
+
+<table class="table table-bordered table-striped">
+
+  <thead>
+	<tr>
+	  <th>Question</th>
+	  <th></th>
+	</tr>
+  </thead>
+
+  <tbody>
+{% for question in questions %}
+
+	<tr>
+	  <td>{{ question.content }}</td>
+	  <td>
+		{% if question.id in incorrect %}
+		  <p>incorrect</p>
+		{% else %}
+		  <p>correct</p>
+		{% endif %}
+	  </td>
+	</tr>
+
+{% endfor %}
+
+  </tbody>
+
+</table>
+{% endblock %}

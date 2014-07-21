@@ -386,11 +386,13 @@ class Sitting(models.Model):
         self.incorrect_questions += str(question.id) + ","
         self.save()
 
+    @property
     def get_incorrect_questions(self):
         """
-        Returns a list of non empty strings
+        Returns a list of non empty integers, representing the pk of
+        questions
         """
-        return filter(None, self.incorrect_questions.split(','))
+        return [int(q) for q in self.incorrect_questions.split(',') if q]
 
     @property
     def check_if_passed(self):

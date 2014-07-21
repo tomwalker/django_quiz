@@ -226,19 +226,19 @@ class TestSitting(TestCase):
         self.assertEqual(self.sitting.result_message, 'Well done')
 
     def test_incorrect_and_complete(self):
-        self.assertEqual(self.sitting.get_incorrect_questions(), [])
+        self.assertEqual(self.sitting.get_incorrect_questions, [])
 
         self.sitting.add_incorrect_question(self.question1)
-        self.assertIn('1', self.sitting.get_incorrect_questions())
+        self.assertIn(1, self.sitting.get_incorrect_questions)
 
         question3 = TF_Question.objects.create(id=3,
                                                content='oink')
         self.sitting.add_incorrect_question(question3)
-        self.assertIn('3', self.sitting.get_incorrect_questions())
+        self.assertIn(3, self.sitting.get_incorrect_questions)
 
         f_test = self.sitting.add_incorrect_question(self.quiz1)
         self.assertEqual(f_test, False)
-        self.assertNotIn('test', self.sitting.get_incorrect_questions())
+        self.assertNotIn('test', self.sitting.get_incorrect_questions)
 
         self.assertEqual(self.sitting.complete, False)
         self.sitting.mark_quiz_complete()
@@ -333,6 +333,36 @@ class TestNonQuestionViews(TestCase):
 
         score, possible = anon_session_score(request.session)
         self.assertEqual((score, possible), (0.5, 2))
+
+    def test_paper_marking_view(self):
+        student = User.objects.create_user(username='luke',
+                                           email='luke@rebels.com',
+                                           password='top_secret')
+        teacher = User.objects.create_user(username='yoda',
+                                           email='yoda@jedis.com',
+                                           password='use_d@_force')
+        question1 = MCQuestion.objects.create(id=1, content='squawk')
+        question1.quiz.add(self.quiz1)
+        sitting1 = Sitting.objects.new_sitting(student, self.quiz1)
+        sitting2 = Sitting.objects.new_sitting(student, self.quiz2)
+        sitting1.complete = True
+        sitting1.incorrect_questions = '1'
+        sitting1.save()
+        sitting2.complete = True
+        sitting2.save()
+
+        response = self.client.get('/q/marking/')
+        self.assertRedirects(response, 'accounts/login/?next=/q/marking/',
+                             status_code=302, target_status_code=404 or 200)
+
+        self.client.login(username='yoda', password='use_d@_force')
+        response = self.client.get('/q/marking/')
+        self.assertContains(response, 'test quiz 1')
+
+        response = self.client.get('/q/marking/1/')
+        self.assertContains(response, 'test quiz 1')
+        self.assertContains(response, 'squawk')
+        self.assertContains(response, 'incorrect')
 
 
 class TestQuestionViewsAnon(TestCase):
@@ -678,7 +708,7 @@ class TestTemplateTags(TestCase):
                             '{% correct_answer_for_all question %}')
 
         context = Context({'question': self.question1,
-                           'incorrect_questions': '1,'})
+                           'incorrect_questions': [1]})
 
         self.assertTemplateUsed('correct_answer.html')
         self.assertIn('bing', template.render(context))

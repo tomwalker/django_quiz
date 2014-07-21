@@ -63,6 +63,33 @@ class QuizUserProgressView(TemplateView):
         return context
 
 
+class QuizMarkingList(ListView):
+    model = Sitting
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(QuizMarkingList, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super(QuizMarkingList, self).get_queryset()
+        return queryset.filter(complete=True)
+
+
+class QuizMarkingDetail(DetailView):
+    model = Sitting
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(QuizMarkingDetail, self)\
+            .dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(QuizMarkingDetail, self).get_context_data(**kwargs)
+        context['questions'] = context['object'].quiz.question_set.all()
+        context['incorrect'] = context['object'].get_incorrect_questions
+        return context
+
+
 class QuizTake(FormView):
     form_class = QuestionForm
     template_name = 'question.html'
@@ -164,7 +191,7 @@ def form_valid_user(self, form):
 
 def final_result_user(request, sitting, quiz, previous):
     score = sitting.get_current_score
-    incorrect = sitting.get_incorrect_questions()
+    incorrect = sitting.get_incorrect_questions
     max_score = quiz.get_max_score
     percent = sitting.get_percent_correct
 

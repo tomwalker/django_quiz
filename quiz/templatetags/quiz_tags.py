@@ -10,8 +10,8 @@ def correct_answer_for_all(context, question):
     if the answer is incorrect, informs the user
     """
     answers = question.get_answers()
-    incorrect_list = context.get('incorrect_questions', '')
-    if str(question.id) in incorrect_list:
+    incorrect_list = context.get('incorrect_questions', [])
+    if question.id in incorrect_list:
         user_was_incorrect = True
     else:
         user_was_incorrect = False

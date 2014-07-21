@@ -23,8 +23,11 @@ Features of each quiz:
 * Questions can be given a category
 * Success rate for each category can be monitored on a progress page
 * Explanation for each question result can be given
+* Pass marks can be set
 * Multiple choice question type
 * True/False question type
+* Custom message displayed for those that pass or fail a quiz
+
 
 
 ![Result page](http://i.imgur.com/UJtRZxo.png "Result picture hosted by Imgur")

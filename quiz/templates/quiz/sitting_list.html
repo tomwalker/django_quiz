@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}All Quizzes{% endblock %}
+
+{% block content %}
+<h2>List of complete exams</h2>
+    {% if sitting_list %}
+
+		<table class="table table-bordered table-striped">
+
+		  <thead>
+			<tr>
+			  <th>User</th>
+			  <th>Quiz</th>
+			  <th>Score (%)</th>
+			  <th></th>
+			</tr>
+		  </thead>
+
+		  <tbody>
+
+        {% for sitting in sitting_list %}
+
+			<tr>
+			  <td>{{ sitting.user }}</td>
+			  <td>{{ sitting.quiz }}</td>
+			  <td>{{ sitting.get_current_score }}</td>
+			  <td>
+				<a href="{% url 'quiz_marking_detail' pk=sitting.id %}">
+				  View details
+				</a>
+			</tr>
+
+        {% endfor %}
+
+		  </tbody>
+
+		</table>
+    {% else %}
+        <p>There are no complete quizzes.</p>
+    {% endif %}
+{% endblock %}
