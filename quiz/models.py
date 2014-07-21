@@ -83,6 +83,12 @@ class Quiz(models.Model):
                                          validators=[
                                              MaxValueValidator(100)])
 
+    success_text = models.TextField(blank=True,
+                                    help_text="Displayed if user passes.")
+
+    fail_text = models.TextField(blank=True,
+                                 help_text="Displayed if user fails.")
+
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         self.url = re.sub('\s+', '-', self.url).lower()
 
@@ -392,6 +398,13 @@ class Sitting(models.Model):
             return True
         else:
             return False
+
+    @property
+    def result_message(self):
+        if self.check_if_passed:
+            return self.quiz.success_text
+        else:
+            return self.quiz.fail_text
 
 
 class Question(models.Model):

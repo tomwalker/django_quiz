@@ -38,13 +38,9 @@
 	</p>
 
 	{% if quiz.pass_mark %}
-
-	  {% if sitting.check_if_passed %}
-        <p class="lead">You have passed this exam.</p>
-	  {% else %}
-	    <p class="lead">You have not passed this exam.</p>
-	  {% endif %}
-
+	<hr>
+        <p class="lead">{{ sitting.result_message }}</p>
+	<hr>
 
 	{% endif %}
 

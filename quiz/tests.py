@@ -173,7 +173,9 @@ class TestSitting(TestCase):
                                          title='test quiz 1',
                                          description='d1',
                                          url='tq1',
-                                         pass_mark=50)
+                                         pass_mark=50,
+                                         success_text="Well done",
+                                         fail_text="Bad luck")
 
         self.question1 = MCQuestion.objects.create(id=1,
                                                    content='squawk')
@@ -206,6 +208,7 @@ class TestSitting(TestCase):
     def test_scoring(self):
         self.assertEqual(self.sitting.get_current_score, 0)
         self.assertEqual(self.sitting.check_if_passed, False)
+        self.assertEqual(self.sitting.result_message, 'Bad luck')
 
         self.sitting.add_to_score(1)
         self.assertEqual(self.sitting.get_current_score, 1)
@@ -220,6 +223,7 @@ class TestSitting(TestCase):
         self.assertEqual(self.sitting.get_percent_correct, 100)
 
         self.assertEqual(self.sitting.check_if_passed, True)
+        self.assertEqual(self.sitting.result_message, 'Well done')
 
     def test_incorrect_and_complete(self):
         self.assertEqual(self.sitting.get_incorrect_questions(), [])
@@ -465,7 +469,8 @@ class TestQuestionViewsUser(TestCase):
                                          description='d1',
                                          url='tq1',
                                          category=self.c1,
-                                         pass_mark=50)
+                                         pass_mark=50,
+                                         success_text="You have passed")
 
         self.quiz2 = Quiz.objects.create(id=2,
                                          title='test quiz 2',
