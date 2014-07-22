@@ -27,6 +27,7 @@ Features of each quiz:
 * Multiple choice question type
 * True/False question type
 * Custom message displayed for those that pass or fail a quiz
+* Custom permission (view_sittings) added, allowing users with that permission to view quiz results from users
 
 
 

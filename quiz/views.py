@@ -1,6 +1,6 @@
 import random
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
@@ -8,6 +8,13 @@ from django.views.generic import DetailView, ListView, TemplateView, FormView
 
 from .forms import QuestionForm
 from .models import Quiz, Category, Progress, Sitting, Question
+
+
+class QuizMarkerMixin(object):
+    @method_decorator(login_required)
+    @method_decorator(permission_required('quiz.view_sittings'))
+    def dispatch(self, *args, **kwargs):
+        return super(QuizMarkerMixin, self).dispatch(*args, **kwargs)
 
 
 class QuizListView(ListView):
@@ -63,10 +70,9 @@ class QuizUserProgressView(TemplateView):
         return context
 
 
-class QuizMarkingList(ListView):
+class QuizMarkingList(QuizMarkerMixin, ListView):
     model = Sitting
 
-    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(QuizMarkingList, self).dispatch(request, *args, **kwargs)
 
@@ -75,10 +81,9 @@ class QuizMarkingList(ListView):
         return queryset.filter(complete=True)
 
 
-class QuizMarkingDetail(DetailView):
+class QuizMarkingDetail(QuizMarkerMixin, DetailView):
     model = Sitting
 
-    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(QuizMarkingDetail, self)\
             .dispatch(request, *args, **kwargs)

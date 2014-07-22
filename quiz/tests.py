@@ -1,7 +1,8 @@
 # -*- coding: iso-8859-15 -*-
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
@@ -356,6 +357,14 @@ class TestNonQuestionViews(TestCase):
                              status_code=302, target_status_code=404 or 200)
 
         self.client.login(username='yoda', password='use_d@_force')
+        response = self.client.get('/q/marking/')
+        self.assertRedirects(response, 'accounts/login/?next=/q/marking/',
+                             status_code=302, target_status_code=404 or 200)
+
+        self.assertFalse(teacher.has_perm('view_sittings', teacher))
+        teacher.user_permissions.add(
+            Permission.objects.get(codename='view_sittings'))
+
         response = self.client.get('/q/marking/')
         self.assertContains(response, 'test quiz 1')
 

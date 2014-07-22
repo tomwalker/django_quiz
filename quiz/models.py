@@ -329,6 +329,9 @@ class Sitting(models.Model):
 
     objects = SittingManager()
 
+    class Meta:
+        permissions = (("view_sittings", "Can see completed exams."),)
+
     def get_first_question(self):
         """
         Returns the next question.
