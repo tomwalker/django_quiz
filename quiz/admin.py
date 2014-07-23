@@ -7,11 +7,6 @@ from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 
 
-class QuestionInline(admin.TabularInline):
-    model = Question.quiz.through
-    filter_horizontal = ('content',)
-
-
 class AnswerInline(admin.TabularInline):
     model = Answer
 

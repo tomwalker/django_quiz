@@ -335,39 +335,87 @@ class TestNonQuestionViews(TestCase):
         score, possible = anon_session_score(request.session)
         self.assertEqual((score, possible), (0.5, 2))
 
-    def test_paper_marking_view(self):
-        student = User.objects.create_user(username='luke',
-                                           email='luke@rebels.com',
-                                           password='top_secret')
-        teacher = User.objects.create_user(username='yoda',
-                                           email='yoda@jedis.com',
-                                           password='use_d@_force')
-        question1 = MCQuestion.objects.create(id=1, content='squawk')
-        question1.quiz.add(self.quiz1)
-        sitting1 = Sitting.objects.new_sitting(student, self.quiz1)
-        sitting2 = Sitting.objects.new_sitting(student, self.quiz2)
+
+class TestQuestionMarking(TestCase):
+
+    def setUp(self):
+        self.c1 = Category.objects.new_category(category='elderberries')
+        self.student = User.objects.create_user(username='luke',
+                                                email='luke@rebels.com',
+                                                password='top_secret')
+        self.teacher = User.objects.create_user(username='yoda',
+                                                email='yoda@jedis.com',
+                                                password='use_d@_force')
+        self.teacher.user_permissions.add(
+            Permission.objects.get(codename='view_sittings'))
+
+        self.quiz1 = Quiz.objects.create(id=1,
+                                         title='test quiz 1',
+                                         description='d1',
+                                         url='tq1',
+                                         category=self.c1,
+                                         single_attempt=True)
+        self.quiz2 = Quiz.objects.create(id=2,
+                                         title='test quiz 2',
+                                         description='d2',
+                                         url='tq2',
+                                         category=self.c1,
+                                         single_attempt=True)
+
+        self.question1 = MCQuestion.objects.create(id=1, content='squawk')
+        self.question1.quiz.add(self.quiz1)
+
+        sitting1 = Sitting.objects.new_sitting(self.student, self.quiz1)
+        sitting2 = Sitting.objects.new_sitting(self.student, self.quiz2)
         sitting1.complete = True
         sitting1.incorrect_questions = '1'
         sitting1.save()
         sitting2.complete = True
         sitting2.save()
 
+    def test_paper_marking_list_view(self):
+        response = self.client.get('/q/marking/')
+        self.assertRedirects(response, 'accounts/login/?next=/q/marking/',
+                             status_code=302, target_status_code=404 or 200)
+
+        self.assertFalse(self.teacher.has_perm('view_sittings', self.student))
+
+        self.client.login(username='luke', password='top_secret')
         response = self.client.get('/q/marking/')
         self.assertRedirects(response, 'accounts/login/?next=/q/marking/',
                              status_code=302, target_status_code=404 or 200)
 
         self.client.login(username='yoda', password='use_d@_force')
         response = self.client.get('/q/marking/')
-        self.assertRedirects(response, 'accounts/login/?next=/q/marking/',
-                             status_code=302, target_status_code=404 or 200)
-
-        self.assertFalse(teacher.has_perm('view_sittings', teacher))
-        teacher.user_permissions.add(
-            Permission.objects.get(codename='view_sittings'))
-
-        response = self.client.get('/q/marking/')
         self.assertContains(response, 'test quiz 1')
+        self.assertContains(response, 'test quiz 2')
+        self.assertContains(response, 'luke')
 
+    def test_paper_marking_list_view_filter_user(self):
+        new_student = User.objects.create_user(username='chewy',
+                                               email='chewy@rebels.com',
+                                               password='maaaawwwww')
+        chewy_sitting = Sitting.objects.new_sitting(new_student, self.quiz1)
+        chewy_sitting.complete = True
+        chewy_sitting.save()
+
+        self.client.login(username='yoda', password='use_d@_force')
+        response = self.client.get('/q/marking/',
+                                   {'user_filter': 'chewy'})
+
+        self.assertContains(response, 'chewy')
+        self.assertNotContains(response, 'luke')
+
+    def test_paper_marking_list_view_filter_quiz(self):
+        self.client.login(username='yoda', password='use_d@_force')
+        response = self.client.get('/q/marking/',
+                                   {'quiz_filter': '1'})
+
+        self.assertContains(response, 'quiz 1')
+        self.assertNotContains(response, 'quiz 2')
+
+    def test_paper_marking_detail_view(self):
+        self.client.login(username='yoda', password='use_d@_force')
         response = self.client.get('/q/marking/1/')
         self.assertContains(response, 'test quiz 1')
         self.assertContains(response, 'squawk')

@@ -1,6 +1,7 @@
 import random
 
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
@@ -77,8 +78,22 @@ class QuizMarkingList(QuizMarkerMixin, ListView):
         return super(QuizMarkingList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = super(QuizMarkingList, self).get_queryset()
-        return queryset.filter(complete=True)
+        queryset = super(QuizMarkingList, self).get_queryset()\
+                                               .filter(complete=True)
+
+        user_filter = self.request.GET.get('user_filter')
+        if user_filter and User.objects\
+                               .filter(username__icontains=user_filter)\
+                               .exists():
+            return queryset.filter(user__username__icontains=user_filter)
+
+        quiz_filter = self.request.GET.get('quiz_filter')
+        if quiz_filter and Quiz.objects\
+                               .filter(title__icontains=quiz_filter)\
+                               .exists():
+            return queryset.filter(quiz__title__icontains=quiz_filter)
+
+        return queryset
 
 
 class QuizMarkingDetail(QuizMarkerMixin, DetailView):
