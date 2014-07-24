@@ -244,7 +244,7 @@ class TestSitting(TestCase):
         self.sitting.mark_quiz_complete()
         self.assertEqual(self.sitting.complete, True)
 
-    def test_user_answers(self):
+    def test_add_user_answer(self):
         self.answer1 = Answer.objects.create(id=123,
                                              question=self.question1,
                                              content='bing',

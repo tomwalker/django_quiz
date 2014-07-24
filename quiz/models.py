@@ -1,4 +1,4 @@
-import re
+import re, json
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
@@ -312,6 +312,9 @@ class Sitting(models.Model):
     Incorrect_questions is a list in the same format.
 
     Sitting deleted when quiz finished unless quiz.exam_paper is true.
+
+    User_answers is a json object in which the question PK is stored
+    with the answer the user gave.
     """
 
     user = models.ForeignKey('auth.User')
@@ -327,7 +330,7 @@ class Sitting(models.Model):
 
     complete = models.BooleanField(default=False, blank=False)
 
-    user_answers = models.TextField(blank=True)
+    user_answers = models.TextField(blank=True, default='{}')
 
     objects = SittingManager()
 
@@ -414,7 +417,9 @@ class Sitting(models.Model):
             return self.quiz.fail_text
 
     def add_user_answer(self, question, guess):
-        pass
+        current = json.loads(self.user_answers)
+        current[question.id] = guess
+        self.user_answers = json.dumps(current)
 
 
 class Question(models.Model):
