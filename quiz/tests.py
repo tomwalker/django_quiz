@@ -2,7 +2,6 @@
 
 from django.conf import settings
 from django.contrib.auth.models import User, Permission
-from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
@@ -253,8 +252,10 @@ Tests relating to views
 
 class TestNonQuestionViews(TestCase):
     '''
-    Starting on questions not directly involved with questions.
+    Starting on views not directly involved with questions.
     '''
+    urls = 'quiz.urls'
+
     def setUp(self):
         self.c1 = Category.objects.new_category(category='elderberries')
         self.c2 = Category.objects.new_category(category='straw.berries')
@@ -272,25 +273,25 @@ class TestNonQuestionViews(TestCase):
                                          url='t q2')
 
     def test_index(self):
-        response = self.client.get('/q/')
+        response = self.client.get('/')
         self.assertContains(response, 'test quiz 1')
         self.assertTemplateUsed('quiz_list.html')
 
     def test_list_categories(self):
-        response = self.client.get('/q/category/')
+        response = self.client.get('/category/')
 
         self.assertContains(response, 'elderberries')
         self.assertContains(response, 'straw.berries')
         self.assertContains(response, 'black-berries')
 
     def test_view_cat(self):
-        response = self.client.get('/q/category/elderberries/')
+        response = self.client.get('/category/elderberries/')
 
         self.assertContains(response, 'test quiz 1')
         self.assertNotContains(response, 'test quiz 2')
 
     def test_progress_anon(self):
-        response = self.client.get('/q/progress/', follow=False)
+        response = self.client.get('/progress/', follow=False)
         self.assertTemplateNotUsed(response, 'progress.html')
 
     def test_progress_user(self):
@@ -301,7 +302,7 @@ class TestNonQuestionViews(TestCase):
         self.client.login(username='jacob', password='top_secret')
         p1 = Progress.objects.new_progress(self.user)
         p1.update_score(self.c1.category, 1, 2)
-        response = self.client.get('/q/progress/')
+        response = self.client.get('/progress/')
 
         self.assertContains(response, 'elderberries')
         self.assertIn('straw.berries', response.context['cat_scores'])
@@ -309,11 +310,11 @@ class TestNonQuestionViews(TestCase):
                          response.context['cat_scores']['elderberries'])
 
     def test_quiz_start_page(self):
-        response = self.client.get('/q/tq1/')
+        response = self.client.get('/tq1/')
 
         self.assertContains(response, 'd1')
         self.assertContains(response, 'attempt')
-        self.assertContains(response, 'href="/q/tq1/take/"')
+        self.assertContains(response, 'href="/tq1/take/"')
         self.assertTemplateUsed(response, 'quiz/quiz_detail.html')
 
     def test_anon_session_score(self):
@@ -337,6 +338,7 @@ class TestNonQuestionViews(TestCase):
 
 
 class TestQuestionMarking(TestCase):
+    urls = 'quiz.urls'
 
     def setUp(self):
         self.c1 = Category.objects.new_category(category='elderberries')
@@ -374,19 +376,19 @@ class TestQuestionMarking(TestCase):
         sitting2.save()
 
     def test_paper_marking_list_view(self):
-        response = self.client.get('/q/marking/')
-        self.assertRedirects(response, 'accounts/login/?next=/q/marking/',
+        response = self.client.get('/marking/')
+        self.assertRedirects(response, 'accounts/login/?next=/marking/',
                              status_code=302, target_status_code=404 or 200)
 
         self.assertFalse(self.teacher.has_perm('view_sittings', self.student))
 
         self.client.login(username='luke', password='top_secret')
-        response = self.client.get('/q/marking/')
-        self.assertRedirects(response, 'accounts/login/?next=/q/marking/',
+        response = self.client.get('/marking/')
+        self.assertRedirects(response, 'accounts/login/?next=/marking/',
                              status_code=302, target_status_code=404 or 200)
 
         self.client.login(username='yoda', password='use_d@_force')
-        response = self.client.get('/q/marking/')
+        response = self.client.get('/marking/')
         self.assertContains(response, 'test quiz 1')
         self.assertContains(response, 'test quiz 2')
         self.assertContains(response, 'luke')
@@ -400,13 +402,13 @@ class TestQuestionMarking(TestCase):
         chewy_sitting.save()
 
         self.client.login(username='yoda', password='use_d@_force')
-        response = self.client.get('/q/marking/',
+        response = self.client.get('/marking/',
                                    {'user_filter': 'Hans'})
 
         self.assertNotContains(response, 'chewy')
         self.assertNotContains(response, 'luke')
 
-        response = self.client.get('/q/marking/',
+        response = self.client.get('/marking/',
                                    {'user_filter': 'chewy'})
 
         self.assertContains(response, 'chewy')
@@ -414,7 +416,7 @@ class TestQuestionMarking(TestCase):
 
     def test_paper_marking_list_view_filter_quiz(self):
         self.client.login(username='yoda', password='use_d@_force')
-        response = self.client.get('/q/marking/',
+        response = self.client.get('/marking/',
                                    {'quiz_filter': '1'})
 
         self.assertContains(response, 'quiz 1')
@@ -422,13 +424,14 @@ class TestQuestionMarking(TestCase):
 
     def test_paper_marking_detail_view(self):
         self.client.login(username='yoda', password='use_d@_force')
-        response = self.client.get('/q/marking/1/')
+        response = self.client.get('/marking/1/')
         self.assertContains(response, 'test quiz 1')
         self.assertContains(response, 'squawk')
         self.assertContains(response, 'incorrect')
 
 
 class TestQuestionViewsAnon(TestCase):
+    urls = 'quiz.urls'
 
     def setUp(self):
         self.c1 = Category.objects.new_category(category='elderberries')
@@ -458,12 +461,12 @@ class TestQuestionViewsAnon(TestCase):
                                              correct=True)
 
     def test_quiz_take_anon_view_only(self):
-        found = resolve('/q/tq1/take/')
+        found = resolve('/tq1/take/')
 
         self.assertEqual(found.kwargs, {'quiz_name': 'tq1'})
         self.assertEqual(found.url_name, 'quiz_question')
 
-        response = self.client.get('/q/tq1/take/')
+        response = self.client.get('/tq1/take/')
 
         self.assertContains(response, 'squawk', status_code=200)
         self.assertEqual(self.client.session.get_expiry_age(), 259200)
@@ -479,17 +482,17 @@ class TestQuestionViewsAnon(TestCase):
         session.set_expiry(1)  # session is set when user first starts a
         session.save()         # quiz, not on subsequent visits
 
-        self.client.get('/q/tq1/take/')
+        self.client.get('/tq1/take/')
         self.assertEqual(self.client.session.get_expiry_age(), 1)
         self.assertEqual(self.client.session['1_q_list'], [1, 2])
         self.assertEqual(self.client.session['1_score'], 0)
 
     def test_quiz_take_anon_submit(self):
         # show first question
-        response = self.client.get('/q/tq1/take/')
+        response = self.client.get('/tq1/take/')
         self.assertNotContains(response, 'previous question')
         # submit first answer
-        response = self.client.post('/q/tq1/take/',
+        response = self.client.post('/tq1/take/',
                                     {'answers': '123',
                                      'question_id':
                                      self.client.session['1_q_list'][0]})
@@ -508,7 +511,7 @@ class TestQuestionViewsAnon(TestCase):
         second_question = response.context['question']
 
         # submit second and final answer of quiz, show final result page
-        response = self.client.post('/q/tq1/take/',
+        response = self.client.post('/tq1/take/',
                                     {'answers': '456',
                                      'question_id':
                                      self.client.session['1_q_list'][0]})
@@ -532,11 +535,11 @@ class TestQuestionViewsAnon(TestCase):
         self.assertTemplateUsed('result.html')
 
         # quiz restarts
-        response = self.client.get('/q/tq1/take/')
+        response = self.client.get('/tq1/take/')
         self.assertNotContains(response, 'previous question')
 
         # session score continues to increase
-        response = self.client.post('/q/tq1/take/',
+        response = self.client.post('/tq1/take/',
                                     {'answers': '123',
                                      'question_id':
                                      self.client.session['1_q_list'][0]})
@@ -546,13 +549,14 @@ class TestQuestionViewsAnon(TestCase):
     def test_anon_cannot_sit_single_attempt(self):
         self.quiz1.single_attempt = True
         self.quiz1.save()
-        response = self.client.get('/q/tq1/take/')
+        response = self.client.get('/tq1/take/')
 
         self.assertContains(response, 'accessible')
         self.assertTemplateUsed('single_complete.html')
 
 
 class TestQuestionViewsUser(TestCase):
+    urls = 'quiz.urls'
 
     def setUp(self):
         self.c1 = Category.objects.new_category(category='elderberries')
@@ -606,7 +610,7 @@ class TestQuestionViewsUser(TestCase):
         self.assertEqual(sittings_before, 0)
 
         self.client.login(username='jacob', password='top_secret')
-        response = self.client.get('/q/tq1/take/')
+        response = self.client.get('/tq1/take/')
         sitting = Sitting.objects.get(quiz=self.quiz1)
         sittings_after = Sitting.objects.count()
 
@@ -620,7 +624,7 @@ class TestQuestionViewsUser(TestCase):
         self.assertNotIn('previous', response.context)
         self.assertTemplateUsed('question.html')
 
-        response = self.client.get('/q/tq1/take/')
+        response = self.client.get('/tq1/take/')
         sittings_after = Sitting.objects.count()
 
         self.assertEqual(sittings_after, 1)  # new sitting not made
@@ -629,13 +633,13 @@ class TestQuestionViewsUser(TestCase):
 
         self.assertEqual(Sitting.objects.count(), 2)
 
-        response = self.client.get('/q/tq1/take/')
+        response = self.client.get('/tq1/take/')
         sitting = Sitting.objects.filter(quiz=self.quiz1)[0]
         self.assertEqual(sitting.question_list, '1,2,')
 
     def test_quiz_take_user_submit(self):
         self.client.login(username='jacob', password='top_secret')
-        response = self.client.get('/q/tq1/take/')
+        response = self.client.get('/tq1/take/')
         progress_count = Progress.objects.count()
 
         self.assertNotContains(response, 'previous question')
@@ -644,7 +648,7 @@ class TestQuestionViewsUser(TestCase):
         next_question = Sitting.objects.get(quiz=self.quiz1)\
                                        .get_first_question()
 
-        response = self.client.post('/q/tq1/take/',
+        response = self.client.post('/tq1/take/',
                                     {'answers': '123',
                                      'question_id':
                                      next_question.id})
@@ -666,7 +670,7 @@ class TestQuestionViewsUser(TestCase):
                          self.question2.content)
         self.assertTemplateUsed('question.html')
 
-        response = self.client.post('/q/tq1/take/',
+        response = self.client.post('/tq1/take/',
                                     {'answers': '456',
                                      'question_id': 2})
 
@@ -677,12 +681,12 @@ class TestQuestionViewsUser(TestCase):
 
     def test_quiz_take_user_answer_end(self):
         self.client.login(username='jacob', password='top_secret')
-        response = self.client.post('/q/tq2/take/',
+        response = self.client.post('/tq2/take/',
                                     {'answers': '123',
                                      'question_id': 1})
         self.assertNotContains(response, 'previous question')
 
-        response = self.client.post('/q/tq2/take/',
+        response = self.client.post('/tq2/take/',
                                     {'answers': True,
                                      'question_id': 3})
 
@@ -708,15 +712,15 @@ class TestQuestionViewsUser(TestCase):
         self.quiz2.single_attempt = True
         self.quiz2.save()
         self.client.login(username='jacob', password='top_secret')
-        response = self.client.post('/q/tq2/take/',
+        response = self.client.post('/tq2/take/',
                                     {'answers': '123',
                                      'question_id': 1})
-        response = self.client.post('/q/tq2/take/',
+        response = self.client.post('/tq2/take/',
                                     {'answers': True,
                                      'question_id': 3})
 
         # quiz complete, trying it again
-        response = self.client.get('/q/tq2/take/')
+        response = self.client.get('/tq2/take/')
 
         self.assertContains(response, 'only one sitting is permitted.')
         self.assertTemplateUsed('single_complete.html')
