@@ -1,7 +1,6 @@
 import random
 
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.utils.decorators import method_decorator

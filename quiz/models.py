@@ -327,6 +327,8 @@ class Sitting(models.Model):
 
     complete = models.BooleanField(default=False, blank=False)
 
+    user_answers = models.TextField(blank=True)
+
     objects = SittingManager()
 
     class Meta:
@@ -410,6 +412,9 @@ class Sitting(models.Model):
             return self.quiz.success_text
         else:
             return self.quiz.fail_text
+
+    def add_user_answer(self, question, guess):
+        pass
 
 
 class Question(models.Model):

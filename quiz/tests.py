@@ -244,6 +244,16 @@ class TestSitting(TestCase):
         self.sitting.mark_quiz_complete()
         self.assertEqual(self.sitting.complete, True)
 
+    def test_user_answers(self):
+        self.answer1 = Answer.objects.create(id=123,
+                                             question=self.question1,
+                                             content='bing',
+                                             correct=False)
+        guess = '123'
+        self.sitting.add_user_answer(self.question1, guess)
+
+        self.assertIn('123', self.sitting.user_answers)
+
 
 '''
 Tests relating to views
