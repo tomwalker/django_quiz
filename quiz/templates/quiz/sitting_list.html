@@ -32,7 +32,7 @@
 			<tr>
 			  <td>{{ sitting.user }}</td>
 			  <td>{{ sitting.quiz }}</td>
-			  <td>{{ sitting.get_current_score }}</td>
+			  <td>{{ sitting.get_percent_correct }}</td>
 			  <td>
 				<a href="{% url 'quiz_marking_detail' pk=sitting.id %}">
 				  View details
