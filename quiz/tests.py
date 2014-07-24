@@ -401,6 +401,12 @@ class TestQuestionMarking(TestCase):
 
         self.client.login(username='yoda', password='use_d@_force')
         response = self.client.get('/q/marking/',
+                                   {'user_filter': 'Hans'})
+
+        self.assertNotContains(response, 'chewy')
+        self.assertNotContains(response, 'luke')
+
+        response = self.client.get('/q/marking/',
                                    {'user_filter': 'chewy'})
 
         self.assertContains(response, 'chewy')

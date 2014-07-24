@@ -17,6 +17,15 @@
 		  </thead>
 
 		  <tbody>
+			<tr>
+			  <form action="" method="GET">
+				<td><input type="text" name="user_filter" /></td>
+				<td><input type="text" name="quiz_filter" /></td>
+				<td></td>
+				<td><button type="submit">Filter</button></td>
+			  </form>
+			</tr>
+
 
         {% for sitting in sitting_list %}
 
@@ -36,6 +45,6 @@
 
 		</table>
     {% else %}
-        <p>There are no complete quizzes.</p>
+        <p>There are no matching quizzes.</p>
     {% endif %}
 {% endblock %}

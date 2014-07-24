@@ -82,16 +82,12 @@ class QuizMarkingList(QuizMarkerMixin, ListView):
                                                .filter(complete=True)
 
         user_filter = self.request.GET.get('user_filter')
-        if user_filter and User.objects\
-                               .filter(username__icontains=user_filter)\
-                               .exists():
-            return queryset.filter(user__username__icontains=user_filter)
+        if user_filter:
+            queryset = queryset.filter(user__username__icontains=user_filter)
 
         quiz_filter = self.request.GET.get('quiz_filter')
-        if quiz_filter and Quiz.objects\
-                               .filter(title__icontains=quiz_filter)\
-                               .exists():
-            return queryset.filter(quiz__title__icontains=quiz_filter)
+        if quiz_filter:
+            queryset = queryset.filter(quiz__title__icontains=quiz_filter)
 
         return queryset
 
