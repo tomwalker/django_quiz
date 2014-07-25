@@ -101,7 +101,6 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(QuizMarkingDetail, self).get_context_data(**kwargs)
-        # context['questions'] = context['object'].quiz.question_set.all()
         context['questions'] = context['object'].questions_with_user_answers()
         context['incorrect'] = context['object'].get_incorrect_questions
         return context
