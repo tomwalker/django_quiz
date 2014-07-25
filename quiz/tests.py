@@ -181,9 +181,19 @@ class TestSitting(TestCase):
                                                    content='squawk')
         self.question1.quiz.add(self.quiz1)
 
+        self.answer1 = Answer.objects.create(id=123,
+                                             question=self.question1,
+                                             content='bing',
+                                             correct=False)
+
         self.question2 = MCQuestion.objects.create(id=2,
                                                    content='squeek')
         self.question2.quiz.add(self.quiz1)
+
+        self.answer2 = Answer.objects.create(id=456,
+                                             question=self.question2,
+                                             content='bong',
+                                             correct=True)
 
         self.user = User.objects.create_user(username='jacob',
                                              email='jacob@jacob.com',
@@ -245,14 +255,18 @@ class TestSitting(TestCase):
         self.assertEqual(self.sitting.complete, True)
 
     def test_add_user_answer(self):
-        self.answer1 = Answer.objects.create(id=123,
-                                             question=self.question1,
-                                             content='bing',
-                                             correct=False)
         guess = '123'
         self.sitting.add_user_answer(self.question1, guess)
 
         self.assertIn('123', self.sitting.user_answers)
+
+    def test_return_questions_with_answers(self):
+        self.sitting.add_user_answer(self.question1, '123')
+        self.sitting.add_user_answer(self.question2, '456')
+
+        user_answers = self.sitting.questions_with_user_answers()
+        self.assertEqual('123', user_answers[self.question1])
+        self.assertEqual('456', user_answers[self.question2])
 
 
 '''

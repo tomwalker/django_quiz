@@ -31,6 +31,9 @@ class TF_Question(Question):
     def get_answers_list(self):
         return [(True, True), (False, False)]
 
+    def answer_choice_to_string(self, guess):
+        return str(guess)
+
     class Meta:
         verbose_name = "True/False Question"
         verbose_name_plural = "True/False Questions"

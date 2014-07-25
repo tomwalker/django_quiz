@@ -19,6 +19,9 @@ class MCQuestion(Question):
         return [(answer.id, answer.content) for answer in
                 Answer.objects.filter(question=self)]
 
+    def answer_choice_to_string(self, guess):
+        return Answer.objects.get(id=guess).content
+
     class Meta:
         verbose_name = "Multiple Choice Question"
         verbose_name_plural = "Multiple Choice Questions"

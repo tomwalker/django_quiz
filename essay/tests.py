@@ -12,3 +12,7 @@ class TestEssayQuestionModel(TestCase):
         self.assertEqual(self.essay.check_if_correct(), False)
         self.assertEqual(self.essay.get_answers(), False)
         self.assertEqual(self.essay.get_answers_list(), False)
+
+    def test_returns_guess(self):
+        guess = "To be or not to be"
+        self.assertEqual(self.essay.answer_choice_to_string(guess), guess)

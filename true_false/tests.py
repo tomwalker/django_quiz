@@ -29,3 +29,4 @@ class TestTrueFalseQuestionModel(TestCase):
                            'content': 'True'},
                           {'correct': False,
                            'content': 'False'}])
+        self.assertEqual(self.red.answer_choice_to_string('True'), 'True')

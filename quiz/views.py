@@ -6,9 +6,9 @@ from django.template import RequestContext
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
 
-from .forms import QuestionForm
+from .forms import QuestionForm, EssayForm
 from .models import Quiz, Category, Progress, Sitting, Question
-
+from Essay_Question.models import Essay_Question
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
@@ -120,15 +120,20 @@ class QuizTake(FormView):
         if self.sitting is False:
             return render(request, 'single_complete.html')
 
-        return super(QuizTake, self).dispatch(self.request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super(QuizTake, self).get_form_kwargs()
         if self.request.user.is_authenticated() is True:
             self.question = self.sitting.get_first_question()
         else:
             self.question = anon_next_question(self)
 
+        return super(QuizTake, self).dispatch(self.request, *args, **kwargs)
+
+    def get_form(self, form_class):
+        if self.question.__class__ is Essay_Question:
+            form_class = EssayForm
+        return form_class(**self.get_form_kwargs())
+
+    def get_form_kwargs(self):
+        kwargs = super(QuizTake, self).get_form_kwargs()
         return dict(kwargs, question=self.question)
 
     def form_valid(self, form):

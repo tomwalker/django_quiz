@@ -296,7 +296,8 @@ class SittingManager(models.Manager):
                                   question_list=questions,
                                   incorrect_questions="",
                                   current_score=0,
-                                  complete=False)
+                                  complete=False,
+                                  user_answers='{}')
         new_sitting.save()
         return new_sitting
 
@@ -420,6 +421,15 @@ class Sitting(models.Model):
         current = json.loads(self.user_answers)
         current[question.id] = guess
         self.user_answers = json.dumps(current)
+
+    def questions_with_user_answers(self):
+        output = {}
+        user_answers = json.loads(self.user_answers)
+        questions = self.quiz.question_set.all().select_subclasses()
+        for question in questions:
+            output[question] = user_answers[unicode(question.id)]
+
+        return output
 
 
 class Question(models.Model):

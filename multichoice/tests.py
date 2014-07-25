@@ -32,3 +32,5 @@ class TestMCQuestionModel(TestCase):
         self.assertEqual(self.q.check_if_correct(123), False)
         self.assertEqual(self.q.check_if_correct(456), True)
         self.assertEqual(answers_by_method.count(), 2)
+        self.assertEqual(self.q.answer_choice_to_string(123),
+                         self.answer1.content)
