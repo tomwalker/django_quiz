@@ -8,7 +8,8 @@ from django.views.generic import DetailView, ListView, TemplateView, FormView
 
 from .forms import QuestionForm, EssayForm
 from .models import Quiz, Category, Progress, Sitting, Question
-from Essay_Question.models import Essay_Question
+from essay.models import Essay_Question
+
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
@@ -100,7 +101,8 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(QuizMarkingDetail, self).get_context_data(**kwargs)
-        context['questions'] = context['object'].quiz.question_set.all()
+        # context['questions'] = context['object'].quiz.question_set.all()
+        context['questions'] = context['object'].questions_with_user_answers()
         context['incorrect'] = context['object'].get_incorrect_questions
         return context
 
@@ -113,27 +115,29 @@ class QuizTake(FormView):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
 
         if request.user.is_authenticated() is True:
-            self.sitting = user_sitting(self.request, self.quiz)
+            self.sitting = user_sitting(request, self.quiz)
         else:
-            self.sitting = anon_load_sitting(self.request, self.quiz)
+            self.sitting = anon_load_sitting(request, self.quiz)
 
         if self.sitting is False:
             return render(request, 'single_complete.html')
 
+        return super(QuizTake, self).dispatch(request, *args, **kwargs)
+
+    def get_form(self, form_class):
         if self.request.user.is_authenticated() is True:
             self.question = self.sitting.get_first_question()
         else:
             self.question = anon_next_question(self)
 
-        return super(QuizTake, self).dispatch(self.request, *args, **kwargs)
-
-    def get_form(self, form_class):
         if self.question.__class__ is Essay_Question:
             form_class = EssayForm
+
         return form_class(**self.get_form_kwargs())
 
     def get_form_kwargs(self):
         kwargs = super(QuizTake, self).get_form_kwargs()
+
         return dict(kwargs, question=self.question)
 
     def form_valid(self, form):
@@ -205,6 +209,7 @@ def form_valid_user(self, form):
     else:
         self.previous = {}
 
+    self.sitting.add_user_answer(self.question, guess)
     self.sitting.remove_first_question()
 
 
@@ -295,7 +300,7 @@ def form_valid_anon(self, form):
     else:
         self.previous = {}
     self.request.session[self.quiz.anon_q_list()] =\
-        (self.request.session[self.quiz.anon_q_list()][1:])
+        self.request.session[self.quiz.anon_q_list()][1:]
 
 
 def anon_session_score(session, to_add=0, possible=0):

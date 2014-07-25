@@ -16,15 +16,17 @@ Result of {{ sitting.quiz.title }} for {{ sitting.user }}
   <thead>
 	<tr>
 	  <th>Question</th>
+	  <th>User answer</th>
 	  <th></th>
 	</tr>
   </thead>
-
+n
   <tbody>
-{% for question in questions %}
+{% for question, user_name in questions.items %}
 
 	<tr>
 	  <td>{{ question.content }}</td>
+	  <td>{{ user_name }}</td>
 	  <td>
 		{% if question.id in incorrect %}
 		  <p>incorrect</p>

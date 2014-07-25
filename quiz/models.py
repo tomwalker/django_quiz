@@ -67,7 +67,8 @@ class Quiz(models.Model):
                                      default=False,
                                      help_text="If yes, the result of each"
                                                " attempt by a user will be"
-                                               " stored.")
+                                               " stored. Necessary for"
+                                               " marking.")
 
     single_attempt = models.BooleanField(blank=False,
                                          default=False,
@@ -421,12 +422,12 @@ class Sitting(models.Model):
         current = json.loads(self.user_answers)
         current[question.id] = guess
         self.user_answers = json.dumps(current)
+        self.save()
 
     def questions_with_user_answers(self):
         output = {}
         user_answers = json.loads(self.user_answers)
-        questions = self.quiz.question_set.all().select_subclasses()
-        for question in questions:
+        for question in self.quiz.question_set.all().select_subclasses():
             output[question] = user_answers[unicode(question.id)]
 
         return output

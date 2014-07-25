@@ -3,7 +3,7 @@ from quiz.models import Question
 
 class Essay_Question(Question):
 
-    def check_if_correct(self):
+    def check_if_correct(self, guess):
         return False
 
     def get_answers(self):

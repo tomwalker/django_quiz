@@ -9,7 +9,7 @@ class TestEssayQuestionModel(TestCase):
                                                    explanation="Wow!")
 
     def test_always_false(self):
-        self.assertEqual(self.essay.check_if_correct(), False)
+        self.assertEqual(self.essay.check_if_correct('spam'), False)
         self.assertEqual(self.essay.get_answers(), False)
         self.assertEqual(self.essay.get_answers_list(), False)
 

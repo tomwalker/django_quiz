@@ -53,12 +53,11 @@
 
   <ul class="list-group">
 
-	{{ form }}
-	<!--  {% for answer in form.answers %} -->
-<!--	  <li class="list-group-item">  -->
-	<!--  {{ answer }} -->
-<!--	  </li> -->
-<!--	{% endfor %} -->
+	{% for answer in form.answers %}
+	  <li class="list-group-item">
+	    {{ answer }}
+	  </li>
+	{% endfor %}
 
   </ul>
   <input type="submit" value="Check" class="btn btn-large btn-block btn-warning" >

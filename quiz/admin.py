@@ -5,7 +5,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from .models import Quiz, Category, Progress, Question
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
-
+from essay.models import Essay_Question
 
 class AnswerInline(admin.TabularInline):
     model = Answer
@@ -82,8 +82,16 @@ class TFQuestionAdmin(admin.ModelAdmin):
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
 
+class EssayQuestionAdmin(admin.ModelAdmin):
+    list_display = ('content', 'category', )
+    list_filter = ('category',)
+    fields = ('content', 'category', 'quiz', 'explanation', )
+    search_fields = ('content', 'explanation')
+    filter_horizontal = ('quiz',)
+
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(MCQuestion, MCQuestionAdmin)
 admin.site.register(Progress, ProgressAdmin)
 admin.site.register(TF_Question, TFQuestionAdmin)
+admin.site.register(Essay_Question, EssayQuestionAdmin)

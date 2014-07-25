@@ -399,6 +399,9 @@ class TestQuestionMarking(TestCase):
         sitting2.complete = True
         sitting2.save()
 
+        sitting1.add_user_answer(self.question1, '123')
+        # sitting1.add_user_answer(self.question2, '456')
+
     def test_paper_marking_list_view(self):
         response = self.client.get('/marking/')
         self.assertRedirects(response, 'accounts/login/?next=/marking/',
@@ -449,6 +452,7 @@ class TestQuestionMarking(TestCase):
     def test_paper_marking_detail_view(self):
         self.client.login(username='yoda', password='use_d@_force')
         response = self.client.get('/marking/1/')
+
         self.assertContains(response, 'test quiz 1')
         self.assertContains(response, 'squawk')
         self.assertContains(response, 'incorrect')
