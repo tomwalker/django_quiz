@@ -39,4 +39,4 @@ urlpatterns = patterns('',
                        url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
                            view=QuizTake.as_view(),
                            name='quiz_question'),
-                      )
+)
