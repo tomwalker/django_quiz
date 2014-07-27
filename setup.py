@@ -29,4 +29,5 @@ setup(
         'django-model-utils == 2.0.3',
         'Django >= 1.5.1',
     ],
+    test_suite='runtests.runtests'
 )
