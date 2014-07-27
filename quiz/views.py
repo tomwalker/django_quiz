@@ -36,9 +36,10 @@ class ViewQuizListByCategory(ListView):
     template_name = 'view_quiz_category.html'
 
     def dispatch(self, request, *args, **kwargs):
-        self.category = get_object_or_404(Category,
-                                          category=
-                                          self.kwargs['category_name'])
+        self.category = get_object_or_404(
+            Category,
+            category=self.kwargs['category_name']
+        )
 
         return super(ViewQuizListByCategory, self).\
             dispatch(request, *args, **kwargs)

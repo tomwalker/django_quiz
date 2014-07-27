@@ -277,11 +277,6 @@ class TestSitting(TestCase):
         self.assertEqual(self.sitting.current_score, 1)
 
 
-'''
-Tests relating to views
-'''
-
-
 class TestNonQuestionViews(TestCase):
     '''
     Starting on views not directly involved with questions.
@@ -781,6 +776,26 @@ class TestQuestionViewsUser(TestCase):
 
         self.assertContains(response, 'only one sitting is permitted.')
         self.assertTemplateUsed('single_complete.html')
+
+    def test_essay_question(self):
+        quiz3 = Quiz.objects.create(id=3,
+                                    title='test quiz 3',
+                                    description='d3',
+                                    url='tq3',
+                                    category=self.c1,
+                                    answers_at_end=True,
+                                    exam_paper=True)
+        essay = Essay_Question.objects.create(id=4, content='tell all')
+        essay.quiz.add(quiz3)
+        self.client.login(username='jacob', password='top_secret')
+
+        response = self.client.post('/tq3/take/')
+        self.assertContains(response, '<textarea')
+
+        response = self.client.post('/tq3/take/',
+                                    {'answers': 'The meaning of life is...',
+                                     'question_id': 4})
+        self.assertContains(response, 'result')
 
 
 class TestTemplateTags(TestCase):

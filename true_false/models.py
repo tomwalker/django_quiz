@@ -38,6 +38,3 @@ class TF_Question(Question):
         verbose_name = "True/False Question"
         verbose_name_plural = "True/False Questions"
         ordering = ['category']
-
-    def __unicode__(self):
-        return unicode(self.content)

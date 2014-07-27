@@ -1,4 +1,6 @@
-import re, json
+import re
+import json
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
@@ -124,11 +126,6 @@ class Quiz(models.Model):
     def anon_q_list(self):
         return str(self.id) + "_q_list"
 
-"""
-Progress is used to track an individual signed in users score on different
-quiz's and categories
-"""
-
 
 class ProgressManager(models.Manager):
 
@@ -141,8 +138,8 @@ class ProgressManager(models.Manager):
 
 class Progress(models.Model):
     """
-    Currently stores the score for each category, max possible they could
-    have got, and previous exam paper scores.
+    Progress is used to track an individual signed in users score on different
+    quiz's and categories
 
     Data stored in csv using the format:
         category, score, possible, category, score, possible, ...
@@ -194,10 +191,7 @@ class Progress(models.Model):
                 output[cat.category] = [0, 0]
 
         if len(self.score) > len(score_before):
-            """
-            If a new category has been added, save changes. Otherwise nothing
-            will be saved.
-            """
+            # If a new category has been added, save changes.
             self.save()
 
         return output
@@ -260,9 +254,7 @@ class Progress(models.Model):
             self.save()
 
         else:
-            """
-            if not present but existing category, add with the points passed in
-            """
+            #  if not present but existing, add with the points passed in
             self.score += (str(category) + "," +
                            str(score_to_add) + "," +
                            str(possible_to_add) + ",")
@@ -393,7 +385,7 @@ class Sitting(models.Model):
         """
         if len(self.incorrect_questions) > 0:
             self.incorrect_questions += ','
-        self.incorrect_questions +=  str(question.id) + ","
+        self.incorrect_questions += str(question.id) + ","
         if self.complete:
             self.add_to_score(-1)
         self.save()

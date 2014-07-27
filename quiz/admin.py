@@ -7,18 +7,19 @@ from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 from essay.models import Essay_Question
 
+
 class AnswerInline(admin.TabularInline):
     model = Answer
 
-"""
-below is from
-http://stackoverflow.com/questions/11657682/
-django-admin-interface-using-horizontal-filter-with-
-inline-manytomany-field
-"""
-
 
 class QuizAdminForm(forms.ModelForm):
+    """
+    below is from
+    http://stackoverflow.com/questions/11657682/
+    django-admin-interface-using-horizontal-filter-with-
+    inline-manytomany-field
+    """
+
     class Meta:
         model = Quiz
 
@@ -81,6 +82,7 @@ class TFQuestionAdmin(admin.ModelAdmin):
 
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
+
 
 class EssayQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
