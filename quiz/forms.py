@@ -13,4 +13,5 @@ class QuestionForm(forms.Form):
 class EssayForm(forms.Form):
     def __init__(self, question, *args, **kwargs):
         super(EssayForm, self).__init__(*args, **kwargs)
-        self.fields["answers"] = forms.CharField(widget=Textarea)
+        self.fields["answers"] = forms.CharField(
+            widget=Textarea(attrs={'style': 'width:100%'}))

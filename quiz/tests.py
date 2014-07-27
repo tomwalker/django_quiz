@@ -13,6 +13,7 @@ from .models import Category, Quiz, Progress, Sitting
 from .views import anon_session_score
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
+from essay.models import Essay_Question
 
 
 class TestCategory(TestCase):
@@ -246,13 +247,13 @@ class TestSitting(TestCase):
         self.sitting.add_incorrect_question(question3)
         self.assertIn(3, self.sitting.get_incorrect_questions)
 
-        f_test = self.sitting.add_incorrect_question(self.quiz1)
-        self.assertEqual(f_test, False)
-        self.assertNotIn('test', self.sitting.get_incorrect_questions)
-
         self.assertEqual(self.sitting.complete, False)
         self.sitting.mark_quiz_complete()
         self.assertEqual(self.sitting.complete, True)
+
+        self.assertEqual(self.sitting.current_score, 0)
+        self.sitting.add_incorrect_question(self.question2)
+        self.assertEqual(self.sitting.current_score, -1)
 
     def test_add_user_answer(self):
         guess = '123'
@@ -267,6 +268,13 @@ class TestSitting(TestCase):
         user_answers = self.sitting.questions_with_user_answers()
         self.assertEqual('123', user_answers[self.question1])
         self.assertEqual('456', user_answers[self.question2])
+
+    def test_remove_incorrect_answer(self):
+        self.sitting.add_incorrect_question(self.question1)
+        self.sitting.add_incorrect_question(self.question2)
+        self.sitting.remove_incorrect_question(self.question1)
+        self.assertEqual(self.sitting.incorrect_questions, '2')
+        self.assertEqual(self.sitting.current_score, 1)
 
 
 '''
@@ -400,7 +408,6 @@ class TestQuestionMarking(TestCase):
         sitting2.save()
 
         sitting1.add_user_answer(self.question1, '123')
-        # sitting1.add_user_answer(self.question2, '456')
 
     def test_paper_marking_list_view(self):
         response = self.client.get('/marking/')
@@ -456,6 +463,28 @@ class TestQuestionMarking(TestCase):
         self.assertContains(response, 'test quiz 1')
         self.assertContains(response, 'squawk')
         self.assertContains(response, 'incorrect')
+
+    def test_paper_marking_detail_toggle_correct(self):
+        question2 = Essay_Question.objects.create(id=3, content='scribble')
+        question2.quiz.add(self.quiz1)
+
+        sitting3 = Sitting.objects.new_sitting(self.student, self.quiz1)
+        sitting3.complete = True
+        sitting3.incorrect_questions = '1,2,3'
+        sitting3.add_user_answer(self.question1, '123')
+        sitting3.add_user_answer(question2, 'Blah blah blah')
+        sitting3.save()
+
+        self.client.login(username='yoda', password='use_d@_force')
+        response = self.client.get('/marking/3/')
+        self.assertContains(response, 'button')
+        self.assertNotContains(response, 'Correct')
+
+        response = self.client.get('/marking/3/', {'id': 3})
+        self.assertContains(response, 'Correct')
+
+        response = self.client.get('/marking/3/', {'id': 3})
+        self.assertNotContains(response, 'Correct')
 
 
 class TestQuestionViewsAnon(TestCase):

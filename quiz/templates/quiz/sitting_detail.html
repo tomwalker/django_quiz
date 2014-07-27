@@ -18,9 +18,10 @@ Result of {{ sitting.quiz.title }} for {{ sitting.user }}
 	  <th>Question</th>
 	  <th>User answer</th>
 	  <th></th>
+	  <th></th>
 	</tr>
   </thead>
-n
+
   <tbody>
 {% for question, user_name in questions.items %}
 
@@ -31,8 +32,14 @@ n
 		{% if question.id in incorrect %}
 		  <p>incorrect</p>
 		{% else %}
-		  <p>correct</p>
+		  <p>Correct</p>
 		{% endif %}
+	  </td>
+	  <td>
+		<form action="" method="get">
+		  <input type=hidden name="id" value="{{ question.id }}">
+		  <button type="submit">Toggle whether correct</button>
+		</form>
 	  </td>
 	</tr>
 

@@ -358,7 +358,7 @@ class Sitting(models.Model):
             self.save()
 
     def add_to_score(self, points):
-        self.current_score = self.get_current_score + int(points)
+        self.current_score += int(points)
         self.save()
 
     @property
@@ -391,9 +391,11 @@ class Sitting(models.Model):
         Adds uid of incorrect question to the list.
         The question object must be passed in.
         """
-        if isinstance(question, Question) is False:
-            return False
-        self.incorrect_questions += str(question.id) + ","
+        if len(self.incorrect_questions) > 0:
+            self.incorrect_questions += ','
+        self.incorrect_questions +=  str(question.id) + ","
+        if self.complete:
+            self.add_to_score(-1)
         self.save()
 
     @property
@@ -403,6 +405,13 @@ class Sitting(models.Model):
         questions
         """
         return [int(q) for q in self.incorrect_questions.split(',') if q]
+
+    def remove_incorrect_question(self, question):
+        current = self.get_incorrect_questions
+        current.remove(question.id)
+        self.incorrect_questions = ','.join(map(str, current))
+        self.add_to_score(1)
+        self.save()
 
     @property
     def check_if_passed(self):
@@ -429,7 +438,6 @@ class Sitting(models.Model):
         user_answers = json.loads(self.user_answers)
         for question in self.quiz.question_set.all().select_subclasses():
             output[question] = user_answers[unicode(question.id)]
-
         return output
 
 

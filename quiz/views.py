@@ -95,9 +95,18 @@ class QuizMarkingList(QuizMarkerMixin, ListView):
 class QuizMarkingDetail(QuizMarkerMixin, DetailView):
     model = Sitting
 
-    def dispatch(self, request, *args, **kwargs):
-        return super(QuizMarkingDetail, self)\
-            .dispatch(request, *args, **kwargs)
+    def get_object(self, queryset=None):
+        sitting = super(QuizMarkingDetail, self).get_object()
+
+        q_to_toggle = self.request.GET.get('id')
+        if q_to_toggle:
+            q = Question.objects.get_subclass(id=int(q_to_toggle))
+            if int(q_to_toggle) in sitting.get_incorrect_questions:
+                sitting.remove_incorrect_question(q)
+            else:
+                sitting.add_incorrect_question(q)
+
+        return sitting
 
     def get_context_data(self, **kwargs):
         context = super(QuizMarkingDetail, self).get_context_data(**kwargs)

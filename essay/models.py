@@ -15,5 +15,8 @@ class Essay_Question(Question):
     def answer_choice_to_string(self, guess):
         return str(guess)
 
+    def __unicode__(self):
+        return unicode(self.content)
+
     class Meta:
         verbose_name = "Essay style question"
