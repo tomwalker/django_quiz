@@ -17,6 +17,15 @@ class QuizMarkerMixin(object):
     def dispatch(self, *args, **kwargs):
         return super(QuizMarkerMixin, self).dispatch(*args, **kwargs)
 
+class QuizFilterByTitleMixin(object):
+    def get_queryset(self):
+        queryset = super(QuizFilterByTitleMixin, self).get_queryset()
+        quiz_filter = self.request.GET.get('quiz_filter')
+        if quiz_filter:
+            queryset = queryset.filter(quiz__title__icontains=quiz_filter)
+
+        return queryset
+
 
 class QuizListView(ListView):
     model = Quiz
@@ -72,11 +81,8 @@ class QuizUserProgressView(TemplateView):
         return context
 
 
-class QuizMarkingList(QuizMarkerMixin, ListView):
+class QuizMarkingList(QuizMarkerMixin, QuizFilterByTitleMixin, ListView):
     model = Sitting
-
-    def dispatch(self, request, *args, **kwargs):
-        return super(QuizMarkingList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = super(QuizMarkingList, self).get_queryset()\
@@ -85,10 +91,6 @@ class QuizMarkingList(QuizMarkerMixin, ListView):
         user_filter = self.request.GET.get('user_filter')
         if user_filter:
             queryset = queryset.filter(user__username__icontains=user_filter)
-
-        quiz_filter = self.request.GET.get('quiz_filter')
-        if quiz_filter:
-            queryset = queryset.filter(quiz__title__icontains=quiz_filter)
 
         return queryset
 
@@ -109,12 +111,6 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
         return sitting
 
-    def get_context_data(self, **kwargs):
-        context = super(QuizMarkingDetail, self).get_context_data(**kwargs)
-        context['questions'] = context['object'].questions_with_user_answers()
-        context['incorrect'] = context['object'].get_incorrect_questions
-        return context
-
 
 class QuizTake(FormView):
     form_class = QuestionForm
@@ -123,7 +119,7 @@ class QuizTake(FormView):
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
 
-        if request.user.is_authenticated() is True:
+        if request.user.is_authenticated():
             self.sitting = user_sitting(request, self.quiz)
         else:
             self.sitting = anon_load_sitting(request, self.quiz)

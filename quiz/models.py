@@ -425,6 +425,7 @@ class Sitting(models.Model):
         self.user_answers = json.dumps(current)
         self.save()
 
+    @property
     def questions_with_user_answers(self):
         output = {}
         user_answers = json.loads(self.user_answers)

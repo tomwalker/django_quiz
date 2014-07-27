@@ -265,7 +265,7 @@ class TestSitting(TestCase):
         self.sitting.add_user_answer(self.question1, '123')
         self.sitting.add_user_answer(self.question2, '456')
 
-        user_answers = self.sitting.questions_with_user_answers()
+        user_answers = self.sitting.questions_with_user_answers
         self.assertEqual('123', user_answers[self.question1])
         self.assertEqual('456', user_answers[self.question2])
 

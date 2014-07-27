@@ -23,13 +23,13 @@ Result of {{ sitting.quiz.title }} for {{ sitting.user }}
   </thead>
 
   <tbody>
-{% for question, user_name in questions.items %}
+{% for question, user_name in sitting.questions_with_user_answers.items %}
 
 	<tr>
 	  <td>{{ question.content }}</td>
 	  <td>{{ user_name }}</td>
 	  <td>
-		{% if question.id in incorrect %}
+		{% if question.id in sitting.get_incorrect_questions %}
 		  <p>incorrect</p>
 		{% else %}
 		  <p>Correct</p>

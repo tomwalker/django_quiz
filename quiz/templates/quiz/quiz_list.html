@@ -4,12 +4,39 @@
 {% block content %}
 <h2>List of quizzes</h2>
     {% if quiz_list %}
-        <ul>
+		<table class="table table-bordered table-striped">
+
+		  <thead>
+			<tr>
+			  <th>Title</th>
+			  <th>Category</th>
+			  <th>Exam</th>
+			  <th>Single attempt</th>
+			  <th></th>
+			</tr>
+		  </thead>
+
+		  <tbody>
+
         {% for quiz in quiz_list %}
-            <li><a href="{% url 'quiz_start_page' slug=quiz.url %}">{{ quiz.title }}</a></li>
+
+  			<tr>
+			  <td>{{ quiz.title }}</td>
+			  <td>{{ quiz.category }}</td>
+			  <td>{{ quiz.exam_paper }}</td>
+			  <td>{{ quiz.single_attempt }}</td>
+			  <td>
+				<a href="{% url 'quiz_start_page' slug=quiz.url %}">
+				  View details
+				</a>
+			</tr>
+
         {% endfor %}
-        </ul>
-    {% else %}
+		  </tbody>
+
+		</table>
+
+	{% else %}
         <p>There are no available quizzes.</p>
     {% endif %}
 {% endblock %}
