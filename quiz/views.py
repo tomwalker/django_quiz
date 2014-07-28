@@ -118,8 +118,9 @@ class QuizTake(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
+        self.logged_in_user = self.request.user.is_authenticated()
 
-        if request.user.is_authenticated():
+        if self.logged_in_user:
             self.sitting = Sitting.objects.user_sitting(request.user,
                                                         self.quiz)
         else:
@@ -131,7 +132,7 @@ class QuizTake(FormView):
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class):
-        if self.request.user.is_authenticated():
+        if self.logged_in_user:
             self.question = self.sitting.get_first_question()
         else:
             self.question = anon_next_question(self)
@@ -147,7 +148,7 @@ class QuizTake(FormView):
         return dict(kwargs, question=self.question)
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated() is True:
+        if self.logged_in_user:
             form_valid_user(self, form)
             if self.sitting.get_first_question() is False:
                 return final_result_user(self.request, self.sitting,
