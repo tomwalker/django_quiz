@@ -1,8 +1,7 @@
 import random
 
 from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import get_object_or_404, render, render_to_response
-from django.template import RequestContext
+from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
 
@@ -16,6 +15,7 @@ class QuizMarkerMixin(object):
     @method_decorator(permission_required('quiz.view_sittings'))
     def dispatch(self, *args, **kwargs):
         return super(QuizMarkerMixin, self).dispatch(*args, **kwargs)
+
 
 class SittingFilterTitleMixin(object):
     def get_queryset(self):
@@ -198,36 +198,25 @@ def form_valid_user(self, form):
 
 
 def final_result_user(request, sitting, quiz, previous):
-    score = sitting.get_current_score
-    incorrect = sitting.get_incorrect_questions
-    max_score = quiz.get_max_score
-    percent = sitting.get_percent_correct
+    results = {
+        'quiz': quiz,
+        'score': sitting.get_current_score,
+        'max_score': quiz.get_max_score,
+        'percent': sitting.get_percent_correct,
+        'sitting': sitting,
+        'previous': previous,
+    }
 
     sitting.mark_quiz_complete()
 
-    if quiz.exam_paper is False:  # if we do not plan to store the outcome
+    if quiz.exam_paper is False:
         sitting.delete()
 
-    if quiz.answers_at_end is False:
-        return render_to_response('result.html',
-                                  {'quiz': quiz,
-                                   'score': score,
-                                   'max_score': max_score,
-                                   'percent': percent,
-                                   'sitting': sitting,
-                                   'previous': previous},
-                                  context_instance=RequestContext(request))
-    else:
-        questions = quiz.get_questions()
-        return render_to_response('result.html',
-                                  {'quiz': quiz,
-                                   'score': score,
-                                   'max_score': max_score,
-                                   'percent': percent,
-                                   'sitting': sitting,
-                                   'questions': questions,
-                                   'incorrect_questions': incorrect},
-                                  context_instance=RequestContext(request))
+    if quiz.answers_at_end:
+        results['questions'] = quiz.get_questions()
+        results['incorrect_questions'] = sitting.get_incorrect_questions
+
+    return render(request, 'result.html', results)
 
 
 def anon_load_sitting(request, quiz):
@@ -269,7 +258,7 @@ def form_valid_anon(self, form):
     guess = form.cleaned_data['answers']
     is_correct = self.question.check_if_correct(guess)
 
-    if is_correct is True:
+    if is_correct:
         self.request.session[self.quiz.anon_score_id()] += 1
         anon_session_score(self.request.session, 1, 1)
     else:
@@ -301,14 +290,11 @@ def anon_session_score(session, to_add=0, possible=0):
                                     without modification
     """
     if "session_score" not in session:
-        session["session_score"] = 0
-        session["session_score_possible"] = 0
+        session["session_score"], session["session_score_possible"] = 0, 0
 
     if possible > 0:
-        session["session_score"] = session["session_score"] + to_add
-
-        session["session_score_possible"] =\
-            session["session_score_possible"] + possible
+        session["session_score"] += to_add
+        session["session_score_possible"] += possible
 
     return session["session_score"], session["session_score_possible"]
 
@@ -317,28 +303,23 @@ def final_result_anon(request, quiz, previous):
     score = request.session[quiz.anon_score_id()]
     max_score = quiz.get_max_score
     percent = int(round((float(score) / max_score) * 100))
+    session_score, session_possible = anon_session_score(request.session)
     if score is 0:
         score = "0"
 
-    session_score, session_possible = anon_session_score(request.session)
+    results = {
+        'score': score,
+        'max_score': max_score,
+        'percent': percent,
+        'session': session_score,
+        'possible': session_possible
+    }
+
     del request.session[quiz.anon_q_list()]
 
-    if quiz.answers_at_end is False:
-        return render_to_response('result.html',
-                                  {'score': score,
-                                   'max_score': max_score,
-                                   'percent': percent,
-                                   'previous': previous,
-                                   'session': session_score,
-                                   'possible': session_possible},
-                                  context_instance=RequestContext(request))
+    if quiz.answers_at_end:
+        results['questions'] = quiz.get_questions()
     else:
-        questions = quiz.get_questions()
-        return render_to_response('result.html',
-                                  {'score': score,
-                                   'max_score': max_score,
-                                   'percent': percent,
-                                   'questions': questions,
-                                   'session': session_score,
-                                   'possible': session_possible},
-                                  context_instance=RequestContext(request))
+        results['previous'] = previous
+
+    return render(request, 'result.html', results)
