@@ -17,9 +17,9 @@ class QuizMarkerMixin(object):
     def dispatch(self, *args, **kwargs):
         return super(QuizMarkerMixin, self).dispatch(*args, **kwargs)
 
-class QuizFilterByTitleMixin(object):
+class SittingFilterTitleMixin(object):
     def get_queryset(self):
-        queryset = super(QuizFilterByTitleMixin, self).get_queryset()
+        queryset = super(SittingFilterTitleMixin, self).get_queryset()
         quiz_filter = self.request.GET.get('quiz_filter')
         if quiz_filter:
             queryset = queryset.filter(quiz__title__icontains=quiz_filter)
@@ -81,7 +81,7 @@ class QuizUserProgressView(TemplateView):
         return context
 
 
-class QuizMarkingList(QuizMarkerMixin, QuizFilterByTitleMixin, ListView):
+class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
     model = Sitting
 
     def get_queryset(self):
@@ -120,7 +120,8 @@ class QuizTake(FormView):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
 
         if request.user.is_authenticated():
-            self.sitting = user_sitting(request, self.quiz)
+            self.sitting = Sitting.objects.user_sitting(request.user,
+                                                        self.quiz)
         else:
             self.sitting = anon_load_sitting(request, self.quiz)
 
@@ -130,7 +131,7 @@ class QuizTake(FormView):
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class):
-        if self.request.user.is_authenticated() is True:
+        if self.request.user.is_authenticated():
             self.question = self.sitting.get_first_question()
         else:
             self.question = anon_next_question(self)
@@ -167,28 +168,6 @@ class QuizTake(FormView):
         if hasattr(self, 'previous'):
             context['previous'] = self.previous
         return context
-
-
-def user_sitting(request, quiz):
-    if quiz.single_attempt is True and\
-        Sitting.objects.filter(user=request.user,
-                               quiz=quiz,
-                               complete=True)\
-                       .count() > 0:
-        return False
-
-    try:
-        sitting = Sitting.objects.get(user=request.user,
-                                      quiz=quiz,
-                                      complete=False)
-    except Sitting.DoesNotExist:
-        sitting = Sitting.objects.new_sitting(request.user, quiz)
-    except Sitting.MultipleObjectsReturned:
-        sitting = Sitting.objects.filter(user=request.user,
-                                         quiz=quiz,
-                                         complete=False)[0]
-    finally:
-        return sitting
 
 
 def form_valid_user(self, form):
@@ -264,6 +243,7 @@ def anon_load_sitting(request, quiz):
 def new_anon_quiz_session(request, quiz):
     """
     Sets the session variables when starting a quiz for the first time
+    as a non signed-in user
     """
     request.session.set_expiry(259200)  # expires after 3 days
     questions = quiz.get_questions()

@@ -276,6 +276,10 @@ class TestSitting(TestCase):
         self.assertEqual(self.sitting.incorrect_questions, '2')
         self.assertEqual(self.sitting.current_score, 1)
 
+    def test_return_user_sitting(self):
+        via_manager = Sitting.objects.user_sitting(self.user, self.quiz1)
+        self.assertEqual(self.sitting, via_manager)
+
 
 class TestNonQuestionViews(TestCase):
     '''

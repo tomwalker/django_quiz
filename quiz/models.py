@@ -294,6 +294,22 @@ class SittingManager(models.Manager):
         new_sitting.save()
         return new_sitting
 
+    def user_sitting(self, user, quiz):
+        if quiz.single_attempt is True and self.filter(user=user,
+                                                       quiz=quiz,
+                                                       complete=True)\
+                                               .count() > 0:
+            return False
+
+        try:
+            sitting = self.get(user=user, quiz=quiz, complete=False)
+        except Sitting.DoesNotExist:
+            sitting = self.new_sitting(user, quiz)
+        except Sitting.MultipleObjectsReturned:
+            sitting = self.filter(user=user, quiz=quiz, complete=False)[0]
+        finally:
+            return sitting
+
 
 class Sitting(models.Model):
     """
