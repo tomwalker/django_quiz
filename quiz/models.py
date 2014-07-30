@@ -473,7 +473,6 @@ class Question(models.Model):
                                          "you want displayed",
                                verbose_name='Question')
 
-
     explanation = models.TextField(max_length=2000,
                                    blank=True,
                                    help_text="Explanation to be shown "
