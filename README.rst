@@ -2,24 +2,10 @@
 Django quiz app
 ===============
 
-.. image:: https://travis-ci.org/tomwalker/django_quiz.svg?branch=master
-    :target: https://travis-ci.org/tomwalker/django_quiz
-
 This is a configurable quiz app for Django.
-
-I use it to run a few medical revision websites. Here is an `example
-website`_
-
-My websites have used twitter bootstrap for the front end and I have
-tried to strip out anything from the template files that are dependant
-on bootstrap.
-
-.. image:: http://i.imgur.com/VRYx3OV.png
-
 
 Current features
 ----------------
-
 * Question order randomisation
 * Storing of quiz results under each user
 * Previous quiz scores can be viewed on category page
@@ -29,10 +15,14 @@ Current features
 * Questions can be given a category
 * Success rate for each category can be monitored on a progress page
 * Explanation for each question result can be given
+* Pass marks can be set
 * Multiple choice question type
 * True/False question type
+* Essay question type
+* Custom message displayed for those that pass or fail a quiz
+* Custom permission (view_sittings) added, allowing users with that permission to view quiz results from users
+* A marking page which lists completed quizzes, can be filtered by quiz or user, and is used to mark essay questions
 
-.. image:: http://i.imgur.com/UJtRZxo.png
 
 Requirements
 ------------
@@ -44,36 +34,28 @@ It was developed using Django 1.6.5
 Installation
 ------------
 
-Clone the repo with
-    .. code-block:: bash
-	    ``git clone https://github.com/tomwalker/django_quiz.git``.
+  git clone https://github.com/tomwalker/django_quiz.git
 
-Run ``pip install -r requirements.txt``.
+  pip install -r requirements.txt
 
-Add ``'quiz', 'multichoice', 'true_false',`` to your ``INSTALLED_APPS``
-setting.
+Add 'quiz', 'multichoice', 'true_false', and 'essay' to your 'INSTALLED_APPS' setting.
 
-    .. code-block:: python
-        INSTALLED_APPS = (
-            ...
-            'quiz',
-            'multichoice',
-            'true_false',
-            ...
-        )
+  INSTALLED_APPS = (
+      ...
+      'quiz',
+      'multichoice',
+      'true_false',
+      ...
+  )
 
-Add the following to your projects ``urls.py`` file, substituting ``q``
+Add the following to your projects 'urls.py' file, substituting 'q'
 for whatever you want the quiz base url to be.
 
-    .. code-block:: python
-        urlpatterns = patterns('',
-            ...
-            url(r'^q/', include('quiz.urls')),
-            ...
-        )
-
-This is my first open source project so please forgive any problems
-and/or dreadful code!
+  urlpatterns = patterns('',
+      ...
+      url(r'^q/', include('quiz.urls')),
+      ...
+  )
 
 MIT License (MIT) Copyright (c) 2012 - 2014 Dr Tom Walker
 
@@ -95,5 +77,3 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-.. _example website: http://www.revisemrcp.com/

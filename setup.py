@@ -4,8 +4,8 @@ readme = open('README.rst').read()
 
 setup(
     name='django-quiz-app',
-    version='0.4.0',
-    packages=['quiz', 'multichoice', 'true_false'],
+    version='0.5.0',
+    packages=['quiz', 'multichoice', 'true_false', 'essay'],
     include_package_data=True,
     license='MIT License',
     description='A configurable quiz app for Django.',
