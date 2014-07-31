@@ -34,6 +34,24 @@ class Category(models.Model):
     def __unicode__(self):
         return unicode(self.category)
 
+class Sub_Category(models.Model):
+
+    sub_category = models.CharField(max_length=250,
+                                blank=True,
+                                # choices=CATEGORY_CHOICES,
+                                null=True)
+    
+    category = models.ForeignKey(Category,
+                                 null=True,
+                                 blank=True)
+    objects = CategoryManager()
+
+    class Meta:
+        verbose_name = "Sub-Category"
+        verbose_name_plural = "Sub-Categories"
+
+    def __unicode__(self):
+        return unicode(self.sub_category + " (" + self.category.category + ")" )
 
 class Quiz(models.Model):
 
@@ -460,6 +478,10 @@ class Question(models.Model):
                                   blank=True)
 
     category = models.ForeignKey(Category,
+                                 blank=True,
+                                 null=True)
+
+    sub_category = models.ForeignKey(Sub_Category,
                                  blank=True,
                                  null=True)
 
