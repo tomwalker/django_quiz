@@ -1,8 +1,10 @@
 # -*- coding: iso-8859-15 -*-
+from StringIO import StringIO
 
 from django.conf import settings
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.test import TestCase
@@ -548,6 +550,19 @@ class TestQuestionViewsAnon(TestCase):
         self.assertEqual(self.client.session.get_expiry_age(), 1)
         self.assertEqual(self.client.session['1_q_list'], [1, 2])
         self.assertEqual(self.client.session['1_score'], 0)
+
+    def test_image_in_question(self):
+        imgfile = StringIO(
+            'GIF87a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00ccc,'
+            '\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;')
+        imgfile.name = 'test_img_file.gif'
+
+        self.question1.figure.save('image', ContentFile(imgfile.read()))
+        response = self.client.get('/tq1/take/')
+
+        self.assertContains(response, '<img src=')
+        self.assertContains(response,
+                            'alt="' + str(self.question1.content))
 
     def test_quiz_take_anon_submit(self):
         # show first question
