@@ -59,7 +59,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class MCQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'quiz', 'explanation')
+    fields = ('content', 'category', 'figure', 'quiz', 'explanation')
 
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
@@ -78,7 +78,7 @@ class ProgressAdmin(admin.ModelAdmin):
 class TFQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'quiz', 'explanation', 'correct',)
+    fields = ('content', 'category', 'figure', 'quiz', 'explanation', 'correct',)
 
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)

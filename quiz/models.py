@@ -463,6 +463,10 @@ class Question(models.Model):
                                  blank=True,
                                  null=True)
 
+    figure = models.ImageField(upload_to='uploads/%Y/%m/%d', 
+                                 blank=True, 
+                                 null=True)
+
     content = models.CharField(max_length=1000,
                                blank=False,
                                help_text="Enter the question text that "
