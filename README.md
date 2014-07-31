@@ -21,13 +21,14 @@ Features of each quiz:
 * Correct answers can be shown after each question or all at once at the end
 * Logged in users can return to an incomplete quiz to finish it and non-logged in users can complete a quiz if their session persists
 * The quiz can be limited to one attempt per user
-* Questions can be given a category
+* Questions can be given a category and subcategory
 * Success rate for each category can be monitored on a progress page
 * Explanation for each question result can be given
 * Pass marks can be set
 * Multiple choice question type
 * True/False question type
 * Essay question type
+* Display an image alongside the question
 * Custom message displayed for those that pass or fail a quiz
 * Custom permission (view_sittings) added, allowing users with that permission to view quiz results from users
 * A marking page which lists completed quizzes, can be filtered by quiz or user, and is used to mark essay questions
@@ -39,6 +40,8 @@ Features of each quiz:
 Requirements
 ------------
 django-model-utils 2.0.3
+
+Pillow 2.5.0
 
 It was developed using Django 1.6.5
 
@@ -68,6 +71,10 @@ Add the following to your projects `urls.py` file, substituting `q` for whatever
     )
 
 
+Contributors
+------------
+[https://github.com/certifiedloud](https://github.com/certifiedloud)
+[https://github.com/crackjack](https://github.com/crackjack)
 
 This is my first open source project so please forgive any problems and/or dreadful code!
 
