@@ -48,6 +48,10 @@
 
 <p class="lead">{{ question.content }}</p>
 
+{% if question.figure %}
+    <a src="{{ question.figure.url }}" />
+{% endif %}
+
 <form action="" method="POST">{% csrf_token %}
   <input type=hidden name="question_id" value="{{ question.id }}">
 
