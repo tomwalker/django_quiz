@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import Quiz, Category, Sub_Category, Progress, Question
+from .models import Quiz, Category, SubCategory, Progress, Question
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 from essay.models import Essay_Question
@@ -55,13 +55,16 @@ class QuizAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('category', )
 
+
 class SubCategoryAdmin(admin.ModelAdmin):
-    search_fields = ('sub_category', )
+    search_fields = ('subcategory', )
+
 
 class MCQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'sub_category', 'figure', 'quiz', 'explanation')
+    fields = ('content', 'category', 'subcategory',
+              'figure', 'quiz', 'explanation')
 
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
@@ -80,7 +83,8 @@ class ProgressAdmin(admin.ModelAdmin):
 class TFQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'sub_category', 'figure', 'quiz', 'explanation', 'correct',)
+    fields = ('content', 'category', 'subcategory',
+              'figure', 'quiz', 'explanation', 'correct',)
 
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
@@ -95,7 +99,7 @@ class EssayQuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Sub_Category, SubCategoryAdmin)
+admin.site.register(SubCategory, SubCategoryAdmin)
 admin.site.register(MCQuestion, MCQuestionAdmin)
 admin.site.register(Progress, ProgressAdmin)
 admin.site.register(TF_Question, TFQuestionAdmin)

@@ -34,13 +34,13 @@ class Category(models.Model):
     def __unicode__(self):
         return unicode(self.category)
 
-class Sub_Category(models.Model):
+
+class SubCategory(models.Model):
 
     sub_category = models.CharField(max_length=250,
-                                blank=True,
-                                # choices=CATEGORY_CHOICES,
-                                null=True)
-    
+                                    blank=True,
+                                    null=True)
+
     category = models.ForeignKey(Category,
                                  null=True,
                                  blank=True)
@@ -51,7 +51,8 @@ class Sub_Category(models.Model):
         verbose_name_plural = "Sub-Categories"
 
     def __unicode__(self):
-        return unicode(self.sub_category + " (" + self.category.category + ")" )
+        return unicode(self.sub_category + " (" + self.category.category + ")")
+
 
 class Quiz(models.Model):
 
@@ -481,13 +482,13 @@ class Question(models.Model):
                                  blank=True,
                                  null=True)
 
-    sub_category = models.ForeignKey(Sub_Category,
-                                 blank=True,
-                                 null=True)
+    sub_category = models.ForeignKey(SubCategory,
+                                     blank=True,
+                                     null=True)
 
-    figure = models.ImageField(upload_to='uploads/%Y/%m/%d', 
-                                 blank=True, 
-                                 null=True)
+    figure = models.ImageField(upload_to='uploads/%Y/%m/%d',
+                               blank=True,
+                               null=True)
 
     content = models.CharField(max_length=1000,
                                blank=False,

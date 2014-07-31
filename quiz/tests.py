@@ -9,7 +9,7 @@ from django.test import TestCase
 from django.template import Template, Context
 from django.utils.importlib import import_module
 
-from .models import Category, Quiz, Progress, Sitting
+from .models import Category, Quiz, Progress, Sitting, SubCategory
 from .views import anon_session_score
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
@@ -23,12 +23,18 @@ class TestCategory(TestCase):
         self.c3 = Category.objects.new_category(category='black berries')
         self.c4 = Category.objects.new_category(category='squishy   berries')
 
+        self.sub1 = SubCategory.objects.create(sub_category='Red',
+                                               category=self.c1)
+
     def test_categories(self):
 
         self.assertEqual(self.c1.category, 'elderberries')
         self.assertEqual(self.c2.category, 'straw.berries')
         self.assertEqual(self.c3.category, 'black-berries')
         self.assertEqual(self.c4.category, 'squishy-berries')
+
+    def test_sub_categories(self):
+        self.assertEqual(self.sub1.category, self.c1)
 
 
 class TestQuiz(TestCase):
