@@ -57,13 +57,15 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class SubCategoryAdmin(admin.ModelAdmin):
-    search_fields = ('subcategory', )
+    search_fields = ('sub_category', )
+    list_display = ('sub_category', 'category',)
+    list_filter = ('category',)
 
 
 class MCQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'subcategory',
+    fields = ('content', 'category', 'sub_category',
               'figure', 'quiz', 'explanation')
 
     search_fields = ('content', 'explanation')
@@ -83,7 +85,7 @@ class ProgressAdmin(admin.ModelAdmin):
 class TFQuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'category', )
     list_filter = ('category',)
-    fields = ('content', 'category', 'subcategory',
+    fields = ('content', 'category', 'sub_category',
               'figure', 'quiz', 'explanation', 'correct',)
 
     search_fields = ('content', 'explanation')
