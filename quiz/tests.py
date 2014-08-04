@@ -119,60 +119,54 @@ class TestProgress(TestCase):
                                          description='d1',
                                          url='tq1')
 
+        self.question1 = MCQuestion.objects.create(content='squawk',
+                                                   category=self.c1)
+
         self.user = User.objects.create_user(username='jacob',
                                              email='jacob@jacob.com',
                                              password='top_secret')
 
+        self.p1 = Progress.objects.new_progress(self.user)
+
     def test_list_all_empty(self):
-        p1 = Progress.objects.new_progress(self.user)
-        self.assertEqual(p1.score, '')
+        self.assertEqual(self.p1.score, '')
 
-        category_dict = p1.list_all_cat_scores()
+        category_dict = self.p1.list_all_cat_scores
 
-        self.assertIn(str(category_dict.keys()[0]), p1.score)
+        self.assertIn(str(category_dict.keys()[0]), self.p1.score)
 
-        self.assertIn(self.c1.category, p1.score)
-
-        Category.objects.new_category(category='cheese')
-
-        p1.list_all_cat_scores()
-
-        self.assertIn('cheese', p1.score)
-
-    def test_check_cat(self):
-        p1 = Progress.objects.new_progress(self.user)
-        elderberry_score = p1.check_cat_score('elderberries')
-
-        self.assertEqual(elderberry_score, (0, 0))
-
-        fake_score = p1.check_cat_score('monkey')
-
-        self.assertEqual(fake_score, ('error', 'category does not exist'))
+        self.assertIn(self.c1.category, self.p1.score)
 
         Category.objects.new_category(category='cheese')
-        cheese_score = p1.check_cat_score('cheese')
 
-        self.assertEqual(cheese_score, (0, 0))
-        self.assertIn('cheese', p1.score)
+        self.p1.list_all_cat_scores
+
+        self.assertIn('cheese', self.p1.score)
+
+    def test_subcategory_all_empty(self):
+        SubCategory.objects.create(sub_category='pickles',
+                                   category=self.c1)
+        self.p1.list_all_cat_scores
+
+        # self.assertIn('pickles', self.p1.score)
 
     def test_update_score(self):
-        p1 = Progress.objects.new_progress(self.user)
-        p1.list_all_cat_scores()
-        p1.update_score('elderberries', 1, 2)
-        elderberry_score = p1.check_cat_score('elderberries')
+        self.p1.list_all_cat_scores
+        self.p1.update_score(self.question1, 1, 2)
+        self.assertIn('elderberries', self.p1.list_all_cat_scores)
 
-        self.assertEqual(elderberry_score, (1, 2))
+        cheese = Category.objects.new_category(category='cheese')
+        question2 = MCQuestion.objects.create(content='squeek',
+                                              category=cheese)
+        self.p1.update_score(question2, 3, 4)
 
-        Category.objects.new_category(category='cheese')
-        p1.update_score('cheese', 3, 4)
-        cheese_score = p1.check_cat_score('cheese')
+        self.assertIn('cheese', self.p1.list_all_cat_scores)
+        self.assertEqual([3, 4, 75], self.p1.list_all_cat_scores['cheese'])
 
-        self.assertEqual(cheese_score, (3, 4))
+        with self.assertRaises(AttributeError):
+            self.p1.update_score('hamster', 3, 4)
 
-        fake_cat = p1.update_score('hamster', 3, 4)
-        self.assertIn('error', str(fake_cat))
-
-        non_int = p1.update_score('cheese', '1', 'a')
+        non_int = self.p1.update_score(question2, '1', 'a')
         self.assertIn('error', str(non_int))
 
 
@@ -334,13 +328,15 @@ class TestNonQuestionViews(TestCase):
         self.assertTemplateNotUsed(response, 'progress.html')
 
     def test_progress_user(self):
-        self.user = User.objects.create_user(username='jacob',
-                                             email='jacob@jacob.com',
-                                             password='top_secret')
+        user = User.objects.create_user(username='jacob',
+                                        email='jacob@jacob.com',
+                                        password='top_secret')
+        question1 = MCQuestion.objects.create(content='squawk',
+                                              category=self.c1)
 
         self.client.login(username='jacob', password='top_secret')
-        p1 = Progress.objects.new_progress(self.user)
-        p1.update_score(self.c1.category, 1, 2)
+        p1 = Progress.objects.new_progress(user)
+        p1.update_score(question1, 1, 2)
         response = self.client.get('/progress/')
 
         self.assertContains(response, 'elderberries')
@@ -732,8 +728,7 @@ class TestQuestionViewsUser(TestCase):
 
         sitting = Sitting.objects.get(quiz=self.quiz1)
         progress_count = Progress.objects.count()
-        progress = Progress.objects.get(user=sitting.user)\
-                                   .list_all_cat_scores()
+        progress = Progress.objects.get(user=sitting.user).list_all_cat_scores
 
         self.assertContains(response, 'previous question', status_code=200)
         self.assertEqual(sitting.current_score, 0)

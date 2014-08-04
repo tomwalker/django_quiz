@@ -76,7 +76,7 @@ class QuizUserProgressView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(QuizUserProgressView, self).get_context_data(**kwargs)
         progress, c = Progress.objects.get_or_create(user=self.request.user)
-        context['cat_scores'] = progress.list_all_cat_scores()
+        context['cat_scores'] = progress.list_all_cat_scores
         context['exams'] = progress.show_exams()
         return context
 
@@ -175,10 +175,10 @@ class QuizTake(FormView):
 
         if is_correct is True:
             self.sitting.add_to_score(1)
-            progress.update_score(self.question.category, 1, 1)
+            progress.update_score(self.question, 1, 1)
         else:
             self.sitting.add_incorrect_question(self.question)
-            progress.update_score(self.question.category, 0, 1)
+            progress.update_score(self.question, 0, 1)
 
         if self.quiz.answers_at_end is not True:
             self.previous = {'previous_answer': guess,

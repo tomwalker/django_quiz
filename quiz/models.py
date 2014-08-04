@@ -173,6 +173,7 @@ class Progress(models.Model):
         verbose_name = "User Progress"
         verbose_name_plural = "User progress records"
 
+    @property
     def list_all_cat_scores(self):
         """
         Returns a dict in which the key is the category name and the item is
@@ -215,46 +216,24 @@ class Progress(models.Model):
 
         return output
 
-    def check_cat_score(self, category_queried):
+    def update_score(self, question, score_to_add=0, possible_to_add=0):
         """
-        Pass in a category, get the users score and possible maximum score
-        as the integers x,y respectively
-        """
-        category_test = Category.objects.filter(category=category_queried) \
-                                        .exists()
-
-        if category_test is False:
-            return "error", "category does not exist"
-
-        to_find = re.escape(category_queried) +\
-            r",(?P<score>\d+),(?P<possible>\d+),"
-        match = re.search(to_find, self.score, re.IGNORECASE)
-
-        if match:
-            return int(match.group('score')), int(match.group('possible'))
-
-        else:  # if not found but category exists, add category with 0 points
-            self.score += category_queried + ",0,0,"
-            self.save()
-
-            return 0, 0
-
-    def update_score(self, category, score_to_add=0, possible_to_add=0):
-        """
-        Pass in string of the category name, amount to increase score
+        Pass in question object, amount to increase score
         and max possible.
 
         Does not return anything.
         """
-        category_test = Category.objects.filter(category=category) \
+        category_test = Category.objects.filter(category=question.category)\
                                         .exists()
 
-        if any([category_test is False, score_to_add is False,
-                possible_to_add is False, str(score_to_add).isdigit() is False,
+        if any([category_test is False,
+                score_to_add is False,
+                possible_to_add is False,
+                str(score_to_add).isdigit() is False,
                 str(possible_to_add).isdigit() is False]):
             return "error", "category does not exist or invalid score"
 
-        to_find = re.escape(str(category)) +\
+        to_find = re.escape(str(question.category)) +\
             r",(?P<score>\d+),(?P<possible>\d+),"
 
         match = re.search(to_find, self.score, re.IGNORECASE)
@@ -264,7 +243,7 @@ class Progress(models.Model):
             updated_possible = int(match.group('possible')) +\
                 abs(possible_to_add)
 
-            new_score = (str(category) + "," +
+            new_score = (str(question.category) + "," +
                          str(updated_score) + "," +
                          str(updated_possible) + ",")
 
@@ -274,7 +253,7 @@ class Progress(models.Model):
 
         else:
             #  if not present but existing, add with the points passed in
-            self.score += (str(category) + "," +
+            self.score += (str(question.category) + "," +
                            str(score_to_add) + "," +
                            str(possible_to_add) + ",")
             self.save()
