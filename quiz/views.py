@@ -197,7 +197,7 @@ class QuizTake(FormView):
         results = {
             'quiz': self.quiz,
             'score': self.sitting.get_current_score,
-            'max_score': self.quiz.get_max_score,
+            'max_score': self.sitting.get_max_score,
             'percent': self.sitting.get_percent_correct,
             'sitting': self.sitting,
             'previous': self.previous,
@@ -205,13 +205,13 @@ class QuizTake(FormView):
 
         self.sitting.mark_quiz_complete()
 
-        if self.quiz.exam_paper is False:
-            self.sitting.delete()
-
         if self.quiz.answers_at_end:
-            results['questions'] = self.quiz.get_questions()
+            results['questions'] = self.sitting.get_questions()
             results['incorrect_questions'] =\
                 self.sitting.get_incorrect_questions
+
+        if self.quiz.exam_paper is False:
+            self.sitting.delete()
 
         return render(self.request, 'result.html', results)
 

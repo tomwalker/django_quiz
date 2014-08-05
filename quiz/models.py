@@ -77,6 +77,10 @@ class Quiz(models.Model):
                                                  "a random order or as they "
                                                  "are set?")
 
+    max_questions = models.PositiveIntegerField(blank=True, null=True,
+                                                help_text="Number of questions to be "
+                                                          "answered on each attempt")
+
     answers_at_end = models.BooleanField(blank=False,
                                          default=False,
                                          help_text="Correct answer is NOT"
@@ -278,12 +282,16 @@ class SittingManager(models.Manager):
             question_set = quiz.question_set.all() \
                                             .select_subclasses()
 
+        if quiz.max_questions and quiz.max_questions < len(question_set):
+            question_set = question_set[:quiz.max_questions]
+
         questions = ""
         for question in question_set:
             questions += str(question.id) + ","
 
         new_sitting = self.create(user=user,
                                   quiz=quiz,
+                                  question_order=questions,
                                   question_list=questions,
                                   incorrect_questions="",
                                   current_score=0,
@@ -314,6 +322,9 @@ class Sitting(models.Model):
     Used to store the progress of logged in users sitting a quiz.
     Replaces the session system used by anon users.
 
+    Question_order is a list of integer pks of all the questions in the
+    quiz, in order.
+
     Question_list is a list of integers which represent id's of
     the unanswered questions in csv format.
 
@@ -328,6 +339,8 @@ class Sitting(models.Model):
     user = models.ForeignKey('auth.User')
 
     quiz = models.ForeignKey(Quiz)
+
+    question_order = models.CommaSeparatedIntegerField(max_length=1024)
 
     question_list = models.CommaSeparatedIntegerField(max_length=1024)
 
@@ -371,10 +384,13 @@ class Sitting(models.Model):
     def get_current_score(self):
         return self.current_score
 
+    def _question_ids(self):
+        return [int(n) for n in self.question_order.split(',') if n]
+
     @property
     def get_percent_correct(self):
         dividend = float(self.current_score)
-        divisor = self.quiz.question_set.all().select_subclasses().count()
+        divisor = len(self._question_ids())
         if divisor < 1:
             return 0            # prevent divide by zero error
 
@@ -439,14 +455,23 @@ class Sitting(models.Model):
         self.user_answers = json.dumps(current)
         self.save()
 
+    def get_questions(self):
+        question_ids = self._question_ids()
+        return sorted(
+            self.quiz.question_set.filter(id__in=question_ids).select_subclasses(),
+            key=lambda q: question_ids.index(q.id))
+
     @property
     def questions_with_user_answers(self):
         output = {}
         user_answers = json.loads(self.user_answers)
-        for question in self.quiz.question_set.all().select_subclasses():
+        for question in self.get_questions():
             output[question] = user_answers[unicode(question.id)]
         return output
 
+    @property
+    def get_max_score(self):
+        return len(self._question_ids())
 
 class Question(models.Model):
     """
