@@ -149,6 +149,9 @@ class Quiz(models.Model):
     def anon_q_list(self):
         return str(self.id) + "_q_list"
 
+    def anon_q_data(self):
+        return str(self.id) + "_data"
+
 
 class ProgressManager(models.Manager):
 

@@ -234,12 +234,20 @@ class QuizTake(FormView):
         question_list = [question.id for question in questions]
         if self.quiz.random_order is True:
             random.shuffle(question_list)
+        if self.quiz.max_questions and self.quiz.max_questions < len(question_list):
+            question_list = question_list[:self.quiz.max_questions]
 
         # session score for anon users
         self.request.session[self.quiz.anon_score_id()] = 0
 
         # session list of questions
         self.request.session[self.quiz.anon_q_list()] = question_list
+
+        # session list of question order and incorrect questions
+        self.request.session[self.quiz.anon_q_data()] = dict(
+            incorrect_questions = [],
+            order = question_list,
+        )
 
         return self.request.session[self.quiz.anon_q_list()]
 
@@ -256,6 +264,7 @@ class QuizTake(FormView):
             anon_session_score(self.request.session, 1, 1)
         else:
             anon_session_score(self.request.session, 0, 1)
+            self.request.session[self.quiz.anon_q_data()]['incorrect_questions'].append(self.question.id)
 
         self.previous = {}
         if self.quiz.answers_at_end is not True:
@@ -271,7 +280,8 @@ class QuizTake(FormView):
 
     def final_result_anon(self):
         score = self.request.session[self.quiz.anon_score_id()]
-        max_score = self.quiz.get_max_score
+        q_order = self.request.session[self.quiz.anon_q_data()]['order']
+        max_score = len(q_order)
         percent = int(round((float(score) / max_score) * 100))
         session, session_possible = anon_session_score(self.request.session)
         if score is 0:
@@ -288,9 +298,15 @@ class QuizTake(FormView):
         del self.request.session[self.quiz.anon_q_list()]
 
         if self.quiz.answers_at_end:
-            results['questions'] = self.quiz.get_questions()
+            results['questions'] = sorted(
+                self.quiz.question_set.filter(id__in=q_order).select_subclasses(),
+                key=lambda q: q_order.index(q.id)
+                )
+            results['incorrect_questions'] = self.request.session[self.quiz.anon_q_data()]['incorrect_questions']
         else:
             results['previous'] = self.previous
+
+        del self.request.session[self.quiz.anon_q_data()]
 
         return render(self.request, 'result.html', results)
 
