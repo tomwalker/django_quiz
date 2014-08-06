@@ -232,9 +232,12 @@ class QuizTake(FormView):
         self.request.session.set_expiry(259200)  # expires after 3 days
         questions = self.quiz.get_questions()
         question_list = [question.id for question in questions]
+
         if self.quiz.random_order is True:
             random.shuffle(question_list)
-        if self.quiz.max_questions and self.quiz.max_questions < len(question_list):
+
+        if all(self.quiz.max_questions,
+               self.quiz.max_questions < len(question_list)):
             question_list = question_list[:self.quiz.max_questions]
 
         # session score for anon users
@@ -245,8 +248,8 @@ class QuizTake(FormView):
 
         # session list of question order and incorrect questions
         self.request.session[self.quiz.anon_q_data()] = dict(
-            incorrect_questions = [],
-            order = question_list,
+            incorrect_questions=[],
+            order=question_list,
         )
 
         return self.request.session[self.quiz.anon_q_list()]
@@ -264,7 +267,9 @@ class QuizTake(FormView):
             anon_session_score(self.request.session, 1, 1)
         else:
             anon_session_score(self.request.session, 0, 1)
-            self.request.session[self.quiz.anon_q_data()]['incorrect_questions'].append(self.question.id)
+            self.request\
+                .session[self.quiz.anon_q_data()]['incorrect_questions']\
+                .append(self.question.id)
 
         self.previous = {}
         if self.quiz.answers_at_end is not True:
@@ -299,10 +304,14 @@ class QuizTake(FormView):
 
         if self.quiz.answers_at_end:
             results['questions'] = sorted(
-                self.quiz.question_set.filter(id__in=q_order).select_subclasses(),
-                key=lambda q: q_order.index(q.id)
-                )
-            results['incorrect_questions'] = self.request.session[self.quiz.anon_q_data()]['incorrect_questions']
+                self.quiz.question_set.filter(id__in=q_order)
+                                      .select_subclasses(),
+                key=lambda q: q_order.index(q.id))
+
+            results['incorrect_questions'] = (
+                self.request
+                    .session[self.quiz.anon_q_data()]['incorrect_questions'])
+
         else:
             results['previous'] = self.previous
 

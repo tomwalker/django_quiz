@@ -402,6 +402,11 @@ class TestQuestionMarking(TestCase):
         self.question1 = MCQuestion.objects.create(id=1, content='squawk')
         self.question1.quiz.add(self.quiz1)
 
+        self.answer1 = Answer.objects.create(id=123,
+                                             question=self.question1,
+                                             content='bing',
+                                             correct=False)
+
         sitting1 = Sitting.objects.new_sitting(self.student, self.quiz1)
         sitting2 = Sitting.objects.new_sitting(self.student, self.quiz2)
         sitting1.complete = True
@@ -483,10 +488,10 @@ class TestQuestionMarking(TestCase):
         self.assertContains(response, 'button')
         self.assertNotContains(response, 'Correct')
 
-        response = self.client.get('/marking/3/', {'id': 3})
+        response = self.client.post('/marking/3/', {'qid': 3})
         self.assertContains(response, 'Correct')
 
-        response = self.client.get('/marking/3/', {'id': 3})
+        response = self.client.post('/marking/3/', {'qid': 3})
         self.assertNotContains(response, 'Correct')
 
 

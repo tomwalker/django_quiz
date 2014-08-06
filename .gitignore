@@ -13,3 +13,4 @@ build*
 /.coveragerc
 /coverage_html_report/
 /htmlcov/
+/uploads/

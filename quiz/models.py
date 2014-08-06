@@ -79,8 +79,9 @@ class Quiz(models.Model):
                                                  "are set?")
 
     max_questions = models.PositiveIntegerField(blank=True, null=True,
-                                                help_text="Number of questions to be "
-                                                          "answered on each attempt")
+                                                help_text="Number of questions"
+                                                          " to be answered on"
+                                                          " each attempt.")
 
     answers_at_end = models.BooleanField(blank=False,
                                          default=False,
@@ -466,7 +467,8 @@ class Sitting(models.Model):
     def get_questions(self):
         question_ids = self._question_ids()
         return sorted(
-            self.quiz.question_set.filter(id__in=question_ids).select_subclasses(),
+            self.quiz.question_set.filter(id__in=question_ids)
+                                  .select_subclasses(),
             key=lambda q: question_ids.index(q.id))
 
     @property
@@ -480,6 +482,7 @@ class Sitting(models.Model):
     @property
     def get_max_score(self):
         return len(self._question_ids())
+
 
 class Question(models.Model):
     """

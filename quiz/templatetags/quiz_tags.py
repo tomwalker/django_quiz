@@ -19,6 +19,7 @@ def correct_answer_for_all(context, question):
     return {'previous': {'answers': answers},
             'user_was_incorrect': user_was_incorrect}
 
+
 @register.filter
 def answer_choice_to_string(question, answer):
     return question.answer_choice_to_string(answer)
