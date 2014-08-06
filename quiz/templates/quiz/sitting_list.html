@@ -11,6 +11,7 @@
 			<tr>
 			  <th>User</th>
 			  <th>Quiz</th>
+			  <th>Completed</th>
 			  <th>Score (%)</th>
 			  <th></th>
 			</tr>
@@ -22,6 +23,7 @@
 				<td><input type="text" name="user_filter" /></td>
 				<td><input type="text" name="quiz_filter" /></td>
 				<td></td>
+				<td></td>
 				<td><button type="submit">Filter</button></td>
 			  </form>
 			</tr>
@@ -32,6 +34,7 @@
 			<tr>
 			  <td>{{ sitting.user }}</td>
 			  <td>{{ sitting.quiz }}</td>
+			  <td>{{ sitting.end|date }}</td>
 			  <td>{{ sitting.get_percent_correct }}</td>
 			  <td>
 				<a href="{% url 'quiz_marking_detail' pk=sitting.id %}">

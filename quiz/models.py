@@ -4,6 +4,7 @@ import json
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
+from django.utils.timezone import now
 
 from model_utils.managers import InheritanceManager
 
@@ -358,6 +359,9 @@ class Sitting(models.Model):
 
     objects = SittingManager()
 
+    start = models.DateTimeField(auto_now_add=True)
+    end = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         permissions = (("view_sittings", "Can see completed exams."),)
 
@@ -409,6 +413,7 @@ class Sitting(models.Model):
 
     def mark_quiz_complete(self):
         self.complete = True
+        self.end = now()
         self.save()
 
     def add_incorrect_question(self, question):
