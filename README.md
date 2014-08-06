@@ -73,8 +73,9 @@ Add the following to your projects `urls.py` file, substituting `q` for whatever
 
 Contributors
 ------------
-[https://github.com/certifiedloud](https://github.com/certifiedloud)
-[https://github.com/crackjack](https://github.com/crackjack)
+* [https://github.com/certifiedloud](https://github.com/certifiedloud)
+* [https://github.com/crackjack](https://github.com/crackjack)
+* [https://github.com/richardmansfield](https://github.com/richardmansfield)
 
 This is my first open source project so please forgive any problems and/or dreadful code!
 
