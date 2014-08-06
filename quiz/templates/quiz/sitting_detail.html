@@ -36,8 +36,8 @@ Result of {{ sitting.quiz.title }} for {{ sitting.user }}
 		{% endif %}
 	  </td>
 	  <td>
-		<form action="" method="get">
-		  <input type=hidden name="id" value="{{ question.id }}">
+		<form action="" method="POST">{% csrf_token %}
+		  <input type=hidden name="qid" value="{{ question.id }}">
 		  <button type="submit">Toggle whether correct</button>
 		</form>
 	  </td>
