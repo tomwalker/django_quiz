@@ -9,6 +9,7 @@ Result of {{ sitting.quiz.title }} for {{ sitting.user }}
 <p>{{ sitting.quiz.description }}</p>
 <hr>
 <p>User: {{ sitting.user }}</p>
+<p>Completed: {{ sitting.end|date }}</p>
 <p>Score: {{ sitting.get_percent_correct }}%</p>
 
 <table class="table table-bordered table-striped">
