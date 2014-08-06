@@ -48,3 +48,6 @@ class TestMCQuestionModel(TestCase):
 
         self.q.figure.save('image', ContentFile(imgfile.read()))
         self.assertIsInstance(self.q.figure, ImageFieldFile)
+
+    def test_answer_to_string(self):
+        self.assertEqual('African', self.q.answer_choice_to_string(123))

@@ -204,6 +204,18 @@ class TestSitting(TestCase):
 
         self.sitting = Sitting.objects.new_sitting(self.user, self.quiz1)
 
+    def test_max_questions_subsetting(self):
+        quiz2 = Quiz.objects.create(id=2,
+                                    title='test quiz 2',
+                                    description='d2',
+                                    url='tq2',
+                                    max_questions=1)
+        self.question1.quiz.add(quiz2)
+        self.question2.quiz.add(quiz2)
+        sub_sitting = Sitting.objects.new_sitting(self.user, quiz2)
+
+        self.assertNotIn('2', sub_sitting.question_list)
+
     def test_get_next_remove_first(self):
         self.assertEqual(self.sitting.get_first_question(),
                          self.question1)
@@ -877,3 +889,13 @@ class TestTemplateTags(TestCase):
         self.assertTemplateUsed('correct_answer.html')
         self.assertIn('bing', template.render(context))
         self.assertIn('incorrectly', template.render(context))
+
+    def test_answer_to_string(self):
+        template = Template('{% load quiz_tags %}' +
+                            '{{ question|answer_choice_to_string:answer }}')
+
+        context = Context({'question': self.question1,
+                           'answer': self.answer1.id,
+                           'incorrect_questions': [1]})
+
+        self.assertIn('bing', template.render(context))

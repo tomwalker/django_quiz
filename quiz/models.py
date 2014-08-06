@@ -78,7 +78,8 @@ class Quiz(models.Model):
                                                  "a random order or as they "
                                                  "are set?")
 
-    max_questions = models.PositiveIntegerField(blank=True, null=True,
+    max_questions = models.PositiveIntegerField(blank=True,
+                                                null=True,
                                                 help_text="Number of questions"
                                                           " to be answered on"
                                                           " each attempt.")
@@ -358,10 +359,11 @@ class Sitting(models.Model):
 
     user_answers = models.TextField(blank=True, default='{}')
 
-    objects = SittingManager()
-
     start = models.DateTimeField(auto_now_add=True)
+
     end = models.DateTimeField(null=True, blank=True)
+
+    objects = SittingManager()
 
     class Meta:
         permissions = (("view_sittings", "Can see completed exams."),)
