@@ -157,7 +157,6 @@ class QuizTake(FormView):
             if not self.request.session[self.quiz.anon_q_list()]:
                 return self.final_result_anon()
 
-        self.request.POST = ''
         return super(QuizTake, self).get(self, self.request)
 
     def get_context_data(self, **kwargs):
