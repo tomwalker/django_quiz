@@ -41,6 +41,12 @@
 
 {% if question %}
 
+{% if progress %}
+<div style="float: right;">
+Question {{ progress.0|add:1 }} of {{ progress.1 }}
+</div>
+{% endif %}
+
 <p>
   <small class="muted">Question category:</small>
   <strong>{{ question.category }}</strong>

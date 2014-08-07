@@ -485,6 +485,15 @@ class Sitting(models.Model):
     def get_max_score(self):
         return len(self._question_ids())
 
+    def progress(self):
+        """
+        Returns the number of questions answered so far and the total number of
+        questions.
+        """
+        answered = len(json.loads(self.user_answers))
+        total = self.get_max_score
+        return (answered, total)
+
 
 class Question(models.Model):
     """
