@@ -294,6 +294,11 @@ class TestSitting(TestCase):
         via_manager = Sitting.objects.user_sitting(self.user, self.quiz1)
         self.assertEqual(self.sitting, via_manager)
 
+    def test_progress_tracker(self):
+        self.assertEqual(self.sitting.progress(), (0, 2))
+        self.sitting.add_user_answer(self.question1, '123')
+        self.assertEqual(self.sitting.progress(), (1, 2))
+
 
 class TestNonQuestionViews(TestCase):
     '''
@@ -644,6 +649,15 @@ class TestQuestionViewsAnon(TestCase):
         self.assertContains(response, 'accessible')
         self.assertTemplateUsed('single_complete.html')
 
+    def test_anon_progress(self):
+        response = self.client.get('/tq1/take/')
+        self.assertEqual(response.context['progress'], (0, 2))
+        response = self.client.post('/tq1/take/',
+                                    {'answers': '123',
+                                     'question_id':
+                                     self.client.session['1_q_list'][0]})
+        self.assertEqual(response.context['progress'], (1, 2))
+
 
 class TestQuestionViewsUser(TestCase):
     urls = 'quiz.urls'
@@ -833,6 +847,15 @@ class TestQuestionViewsUser(TestCase):
                                     {'answers': 'The meaning of life is...',
                                      'question_id': 4})
         self.assertContains(response, 'result')
+
+    def test_user_progress(self):
+        response = self.client.get('/tq1/take/')
+        self.assertEqual(response.context['progress'], (0, 2))
+        response = self.client.post('/tq1/take/',
+                                    {'answers': '123',
+                                     'question_id':
+                                     self.client.session['1_q_list'][0]})
+        self.assertEqual(response.context['progress'], (1, 2))
 
 
 class TestTemplateTags(TestCase):
