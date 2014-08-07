@@ -134,8 +134,10 @@ class QuizTake(FormView):
     def get_form(self, form_class):
         if self.logged_in_user:
             self.question = self.sitting.get_first_question()
+            self.progress = self.sitting.progress()
         else:
             self.question = self.anon_next_question()
+            self.progress = self.anon_sitting_progress()
 
         if self.question.__class__ is Essay_Question:
             form_class = EssayForm
@@ -158,6 +160,7 @@ class QuizTake(FormView):
                 return self.final_result_anon()
 
         self.request.POST = {}
+
         return super(QuizTake, self).get(self, self.request)
 
     def get_context_data(self, **kwargs):
@@ -166,6 +169,8 @@ class QuizTake(FormView):
         context['quiz'] = self.quiz
         if hasattr(self, 'previous'):
             context['previous'] = self.previous
+        if hasattr(self, 'progress'):
+            context['progress'] = self.progress
         return context
 
     def form_valid_user(self, form):
@@ -257,6 +262,11 @@ class QuizTake(FormView):
     def anon_next_question(self):
         next_question_id = self.request.session[self.quiz.anon_q_list()][0]
         return Question.objects.get_subclass(id=next_question_id)
+
+    def anon_sitting_progress(self):
+        total = len(self.request.session[self.quiz.anon_q_data()]['order'])
+        answered = total - len(self.request.session[self.quiz.anon_q_list()])
+        return (answered, total)
 
     def form_valid_anon(self, form):
         guess = form.cleaned_data['answers']
