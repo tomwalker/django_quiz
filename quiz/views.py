@@ -111,6 +111,10 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
         return self.get(request)
 
+    def get_context_data(self, **kwargs):
+        context = super(QuizMarkingDetail, self).get_context_data(**kwargs)
+        context['questions'] = context['sitting'].get_questions(with_answers=True)
+        return context
 
 class QuizTake(FormView):
     form_class = QuestionForm

@@ -25,7 +25,7 @@ Result of {{ sitting.quiz.title }} for {{ sitting.user }}
   </thead>
 
   <tbody>
-{% for question, answer in sitting.questions_with_user_answers.items %}
+{% for question in questions %}
 
 	<tr>
       <td>
@@ -34,7 +34,7 @@ Result of {{ sitting.quiz.title }} for {{ sitting.user }}
         <div style="max-width: 100px;"><img src="{{ question.figure.url }}" alt="{{ question.figure }}"/></div>
         {% endif %}
       </td>
-	  <td>{{ question|answer_choice_to_string:answer }}</td>
+	  <td>{{ question|answer_choice_to_string:question.user_answer }}</td>
 	  <td>
 		{% if question.id in sitting.get_incorrect_questions %}
 		  <p>incorrect</p>
