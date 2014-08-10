@@ -79,6 +79,10 @@
 
 	  {% correct_answer_for_all question %}
 
+      {% if question.user_answer %}
+      <p>Your answer: {{ question|answer_choice_to_string:question.user_answer }}</p>
+      {% endif %}
+
 	  <p><strong>Explanation:</strong></p>
 	  <div class="well " style="background-color: #fcf8e3;">
 		<p>{{ question.explanation }}</p>

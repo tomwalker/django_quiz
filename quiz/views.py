@@ -215,7 +215,7 @@ class QuizTake(FormView):
         self.sitting.mark_quiz_complete()
 
         if self.quiz.answers_at_end:
-            results['questions'] = self.sitting.get_questions()
+            results['questions'] = self.sitting.get_questions(with_answers=True)
             results['incorrect_questions'] =\
                 self.sitting.get_incorrect_questions
 
