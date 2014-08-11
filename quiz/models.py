@@ -466,20 +466,23 @@ class Sitting(models.Model):
         self.user_answers = json.dumps(current)
         self.save()
 
-    def get_questions(self):
+    def get_questions(self, with_answers=False):
         question_ids = self._question_ids()
-        return sorted(
+        questions = sorted(
             self.quiz.question_set.filter(id__in=question_ids)
                                   .select_subclasses(),
             key=lambda q: question_ids.index(q.id))
 
+        if with_answers:
+            user_answers = json.loads(self.user_answers)
+            for question in questions:
+                question.user_answer = user_answers[unicode(question.id)]
+
+        return questions
+
     @property
     def questions_with_user_answers(self):
-        output = {}
-        user_answers = json.loads(self.user_answers)
-        for question in self.get_questions():
-            output[question] = user_answers[unicode(question.id)]
-        return output
+        return {q : q.user_answer for q in self.get_questions(with_answers=True)}
 
     @property
     def get_max_score(self):
