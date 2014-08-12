@@ -276,6 +276,9 @@ class TestSitting(TestCase):
         self.assertIn('123', self.sitting.user_answers)
 
     def test_return_questions_with_answers(self):
+        '''
+        Also tests sitting.get_questions(with_answers=True)
+        '''
         self.sitting.add_user_answer(self.question1, '123')
         self.sitting.add_user_answer(self.question2, '456')
 

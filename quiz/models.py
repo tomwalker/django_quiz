@@ -482,7 +482,9 @@ class Sitting(models.Model):
 
     @property
     def questions_with_user_answers(self):
-        return {q : q.user_answer for q in self.get_questions(with_answers=True)}
+        return {
+            q: q.user_answer for q in self.get_questions(with_answers=True)
+        }
 
     @property
     def get_max_score(self):
