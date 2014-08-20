@@ -7,12 +7,14 @@ ANSWER_ORDER_OPTIONS = (
     ('none', 'None'),
 )
 
+
 class MCQuestion(Question):
 
     answer_order = models.CharField(max_length=30, null=True, blank=True,
                                     choices=ANSWER_ORDER_OPTIONS,
-                                    help_text="The order in which multichoice answer "
-                                              "options are displayed to the user")
+                                    help_text="The order in which multichoice "
+                                              "answer options are displayed "
+                                              "to the user")
 
     def check_if_correct(self, guess):
         answer = Answer.objects.get(id=guess)
