@@ -1,6 +1,7 @@
 import random
 
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
@@ -30,11 +31,22 @@ class SittingFilterTitleMixin(object):
 class QuizListView(ListView):
     model = Quiz
 
+    def get_queryset(self):
+        queryset = super(QuizListView, self).get_queryset()
+        return queryset.filter(draft=False)
 
 class QuizDetailView(DetailView):
     model = Quiz
     slug_field = 'url'
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.draft and not request.user.has_perm('quiz.change_quiz'):
+            raise PermissionDenied
+
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
 class CategoriesListView(ListView):
     model = Category
@@ -62,7 +74,7 @@ class ViewQuizListByCategory(ListView):
 
     def get_queryset(self):
         queryset = super(ViewQuizListByCategory, self).get_queryset()
-        return queryset.filter(category=self.category)
+        return queryset.filter(category=self.category, draft=False)
 
 
 class QuizUserProgressView(TemplateView):
@@ -124,6 +136,9 @@ class QuizTake(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
+        if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
+            raise PermissionDenied
+
         self.logged_in_user = self.request.user.is_authenticated()
 
         if self.logged_in_user:

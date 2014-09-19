@@ -118,6 +118,13 @@ class Quiz(models.Model):
     fail_text = models.TextField(blank=True,
                                  help_text="Displayed if user fails.")
 
+    draft = models.BooleanField(blank=True,
+                                default=False,
+                                help_text="If yes, the quiz is not displayed"
+                                          " in the quiz list and can only be"
+                                          " taken by users who can edit"
+                                          " quizzes.")
+
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         self.url = re.sub('\s+', '-', self.url).lower()
 
