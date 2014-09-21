@@ -12,7 +12,9 @@ from django.template import Template, Context
 from django.utils.importlib import import_module
 
 from .models import Category, Quiz, Progress, Sitting, SubCategory
-from .views import anon_session_score
+from .views import (anon_session_score, QuizListView, CategoriesListView,
+                    QuizDetailView)
+
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 from essay.models import Essay_Question
@@ -147,8 +149,8 @@ class TestProgress(TestCase):
         SubCategory.objects.create(sub_category='pickles',
                                    category=self.c1)
         self.p1.list_all_cat_scores
-
         # self.assertIn('pickles', self.p1.score)
+        # TODO: test after implementing subcategory scoring on progress page
 
     def test_update_score(self):
         self.p1.list_all_cat_scores
@@ -326,11 +328,32 @@ class TestNonQuestionViews(TestCase):
                                          url='t q2')
 
     def test_index(self):
+        # unit
+        view = QuizListView()
+        self.assertEqual(view.get_queryset().count(), 2)
+
+        # integration test
         response = self.client.get('/')
         self.assertContains(response, 'test quiz 1')
         self.assertTemplateUsed('quiz_list.html')
 
+    def test_index_with_drafts(self):
+        self.quiz3 = Quiz.objects.create(id=3,
+                                         title='test quiz 3',
+                                         description='draft',
+                                         url='draft',
+                                         draft=True)
+
+        view = QuizListView()
+        self.assertEqual(view.get_queryset().count(), 2)
+
+
     def test_list_categories(self):
+        # unit
+        view = CategoriesListView()
+        self.assertEqual(view.get_queryset().count(), 3)
+
+        # integration test
         response = self.client.get('/category/')
 
         self.assertContains(response, 'elderberries')
@@ -338,6 +361,11 @@ class TestNonQuestionViews(TestCase):
         self.assertContains(response, 'black-berries')
 
     def test_view_cat(self):
+        # unit
+        view = CategoriesListView()
+        self.assertEqual(view.get_queryset().count(), 3)
+
+        # integration test
         response = self.client.get('/category/elderberries/')
 
         self.assertContains(response, 'test quiz 1')
@@ -357,6 +385,7 @@ class TestNonQuestionViews(TestCase):
         self.client.login(username='jacob', password='top_secret')
         p1 = Progress.objects.new_progress(user)
         p1.update_score(question1, 1, 2)
+
         response = self.client.get('/progress/')
 
         self.assertContains(response, 'elderberries')
@@ -365,6 +394,12 @@ class TestNonQuestionViews(TestCase):
                          response.context['cat_scores']['elderberries'])
 
     def test_quiz_start_page(self):
+        # unit
+        view = QuizDetailView()
+        view.kwargs = dict(slug='tq1')
+        self.assertEqual(view.get_object().category, self.c1)
+
+        # integration test
         response = self.client.get('/tq1/')
 
         self.assertContains(response, 'd1')
@@ -688,6 +723,10 @@ class TestQuestionViewsUser(TestCase):
                                              email='jacob@jacob.com',
                                              password='top_secret')
 
+        self.quiz_writer = User.objects.create_user(username='writer',
+                                                    email='writer@x.com',
+                                                    password='secret_top')
+
         self.question1 = MCQuestion.objects.create(id=1,
                                                    content='squawk')
         self.question1.quiz.add(self.quiz1)
@@ -830,6 +869,25 @@ class TestQuestionViewsUser(TestCase):
 
         self.assertContains(response, 'only one sitting is permitted.')
         self.assertTemplateUsed('single_complete.html')
+
+    def test_normal_user_cannot_view_draft_quiz(self):
+        draft_quiz = Quiz.objects.create(id=10,
+                                         title='draft quiz',
+                                         description='draft',
+                                         url='draft',
+                                         draft=True)
+
+        self.client.login(username='writer', password='secret_top')
+
+        # load without permission
+        response_without_perm = self.client.get('/draft/')
+        self.assertEqual(response_without_perm.status_code, 403)
+
+        # load with permission
+        self.quiz_writer.user_permissions.add(
+            Permission.objects.get(codename='change_quiz'))
+        response_with_perm = self.client.get('/draft/')
+        self.assertEqual(response_with_perm.status_code, 200)
 
     def test_essay_question(self):
         quiz3 = Quiz.objects.create(id=3,
