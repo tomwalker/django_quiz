@@ -347,7 +347,6 @@ class TestNonQuestionViews(TestCase):
         view = QuizListView()
         self.assertEqual(view.get_queryset().count(), 2)
 
-
     def test_list_categories(self):
         # unit
         view = CategoriesListView()
@@ -871,11 +870,11 @@ class TestQuestionViewsUser(TestCase):
         self.assertTemplateUsed('single_complete.html')
 
     def test_normal_user_cannot_view_draft_quiz(self):
-        draft_quiz = Quiz.objects.create(id=10,
-                                         title='draft quiz',
-                                         description='draft',
-                                         url='draft',
-                                         draft=True)
+        Quiz.objects.create(id=10,
+                            title='draft quiz',
+                            description='draft',
+                            url='draft',
+                            draft=True)
 
         self.client.login(username='writer', password='secret_top')
 
