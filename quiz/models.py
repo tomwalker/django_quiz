@@ -243,11 +243,11 @@ class Progress(models.Model):
         category_test = Category.objects.filter(category=question.category)\
                                         .exists()
 
-        if any([category_test is False,
-                score_to_add is False,
-                possible_to_add is False,
-                str(score_to_add).isdigit() is False,
-                str(possible_to_add).isdigit() is False]):
+        if any([item is False for item in [category_test,
+                                           score_to_add,
+                                           possible_to_add,
+                                           isinstance(score_to_add, int),
+                                           isinstance(possible_to_add, int)]]):
             return "error", "category does not exist or invalid score"
 
         to_find = re.escape(str(question.category)) +\

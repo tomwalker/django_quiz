@@ -165,11 +165,20 @@ class TestProgress(TestCase):
         self.assertIn('cheese', self.p1.list_all_cat_scores)
         self.assertEqual([3, 4, 75], self.p1.list_all_cat_scores['cheese'])
 
+        # pass in string instead of question instance
         with self.assertRaises(AttributeError):
             self.p1.update_score('hamster', 3, 4)
 
-        non_int = self.p1.update_score(question2, '1', 'a')
+        non_int = self.p1.update_score(question2, '1', 2)
         self.assertIn('error', str(non_int))
+
+        # negative possible score
+        self.p1.update_score(question2, 0, -1)
+        self.assertEqual([3, 5, 60], self.p1.list_all_cat_scores['cheese'])
+
+        # negative added score
+        self.p1.update_score(question2, -1, 1)
+        self.assertEqual([4, 6, 67], self.p1.list_all_cat_scores['cheese'])
 
 
 class TestSitting(TestCase):
