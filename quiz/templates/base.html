@@ -19,18 +19,7 @@
 
 <body>
 
-{% if user.is_authenticated %}
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <a href="{% url "quiz_index" %}"><button class="btn navbar-btn">Тесты</button></a>
-        <a href="{% url "quiz_progress" %}"><button class="btn navbar-btn">Прогресс</button></a>
-        {% if user.is_superuser %}
-            <a href="{% url "quiz_marking" %}"><button class="btn navbar-btn">Результаты</button></a>
-        {% endif %}
-        <a href="{% url "logout-then-login"  %}"><button class="btn navbar-btn navbar-right">Выход</button></a>
-    </div>
-</nav>
-{% endif %}
+
 <!-- Before the quiz content -->
 
 <div class="container">
