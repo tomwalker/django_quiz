@@ -1,15 +1,16 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% load quiz_tags %}
 
 {% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} Exam Results for {{ quiz.title }} {% endblock %}
+{% block description %} {% trans "Exam Results for" %} {{ quiz.title }} {% endblock %}
 
 {% block content %}
 
   {% if previous.answers %}
 
-  <p class="muted"><small>The previous question:</small></p>
+  <p class="muted"><small>{% trans "The previous question" %}:</small></p>
   <p>{{ previous.previous_question }}</p>
   <p>Your answer was
 	<strong>
@@ -17,7 +18,7 @@
 	</strong>
   </p>
   {% include 'correct_answer.html' %}
-  <p><strong>Explanation:</strong></p>
+  <p><strong>{% trans "Explanation" %}:</strong></p>
   <div class="well " style="background-color: #fcf8e3;">
     <p>{{ previous.previous_question.explanation }}</p>
   </div>
@@ -28,13 +29,13 @@
   {% if max_score %}
 
   <div>
-	<h2>Exam results</h2>
+	<h2>{% trans "Exam results" %}</h2>
 	<p>
-	  <small class="muted">Exam title: </small>
+	  <small class="muted">{% trans "Exam title" %}: </small>
 	  <strong>{{ quiz.title }}</strong></p>
 
 	<p class="lead">
-	  You answered {{ score }} questions correctly out of {{ max_score }}, giving you {{ percent }} percent correct
+	  {% trans "You answered" %} {{ score }} {% trans "questions correctly out of" %} {{ max_score }}, {% trans "giving you" %} {{ percent }} {% trans "percent correct" %}
 	</p>
 
 	{% if quiz.pass_mark %}
@@ -44,11 +45,11 @@
 
 	{% endif %}
 
-	<p>Review the questions below and try the exam again in the future.</p>
+	<p>{% trans "Review the questions below and try the exam again in the future"%}.</p>
 
 	{% if user.is_authenticated %}
 
-	  <p>The result of this exam will be stored in your progress section so you can review and monitor your progression.</p>
+	  <p>{% trans "The result of this exam will be stored in your progress section so you can review and monitor your progression" %}.</p>
 
 	{% endif %}
   </div>
@@ -62,7 +63,7 @@
   {% if possible %}
 
   <p class="lead">
-	Your session score is {{ session }} out of a possible {{ possible }}
+	{% trans "Your session score is" %} {{ session }} {% trans "out of a possible" %} {{ possible }}
   </p>
 
   <hr>
@@ -80,10 +81,10 @@
 	  {% correct_answer_for_all question %}
 
       {% if question.user_answer %}
-      <p>Your answer: {{ question|answer_choice_to_string:question.user_answer }}</p>
+      <p>{% trans "Your answer" %}: {{ question|answer_choice_to_string:question.user_answer }}</p>
       {% endif %}
 
-	  <p><strong>Explanation:</strong></p>
+	  <p><strong>{% trans "Explanation" %}:</strong></p>
 	  <div class="well " style="background-color: #fcf8e3;">
 		<p>{{ question.explanation }}</p>
 	  </div>

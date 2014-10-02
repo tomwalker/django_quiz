@@ -1,8 +1,9 @@
+{% load i18n %}
 {% if previous.answers %}
 
   {% if user_was_incorrect %}
     <div class="alert alert-error">
-  	  <strong>You answered the above question incorrectly</strong>
+  	  <strong>{% trans "You answered the above question incorrectly" %}</strong>
     </div>
   {% endif %}
 
@@ -12,14 +13,14 @@
         {% if answer.correct %}
   	    <tr class="success">
   		  <td>{{ answer.content }}</td>
-  		  <td><strong>This is the correct answer</strong></td>
+  		  <td><strong>{% trans "This is the correct answer" %}</strong></td>
         {% else %}
   		<tr>
       	  <td>{{ answer.content }}</td>
   		  <td>
   			{% if previous.question_type.MCQuestion %}
   			  {% if answer.id|add:"0" == previous.previous_answer|add:"0" %}
-  			    This was your answer.
+  			    {% trans "This was your answer." %}
   			  {% endif %}
   			{% endif %}
   		  </td>
