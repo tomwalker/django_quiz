@@ -12,12 +12,13 @@ ANSWER_ORDER_OPTIONS = (
 
 class MCQuestion(Question):
 
-    answer_order = models.CharField(max_length=30, null=True, blank=True,
-                                    choices=ANSWER_ORDER_OPTIONS,
-                                    help_text=_("The order in which multichoice "
-                                                "answer options are displayed "
-                                                "to the user"),
-                                    verbose_name=_("Answer Order"))
+    answer_order = models.CharField(
+        max_length=30, null=True, blank=True,
+        choices=ANSWER_ORDER_OPTIONS,
+        help_text=_("The order in which multichoice "
+                    "answer options are displayed "
+                    "to the user"),
+        verbose_name=_("Answer Order"))
 
     def check_if_correct(self, guess):
         answer = Answer.objects.get(id=guess)

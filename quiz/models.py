@@ -185,7 +185,8 @@ class Progress(models.Model):
     """
     user = models.OneToOneField("auth.User", verbose_name=_("User"))
 
-    score = models.CommaSeparatedIntegerField(max_length=1024, verbose_name=_("Score"))
+    score = models.CommaSeparatedIntegerField(max_length=1024,
+                                              verbose_name=_("Score"))
 
     objects = ProgressManager()
 
