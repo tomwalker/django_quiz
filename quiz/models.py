@@ -280,8 +280,7 @@ class Progress(models.Model):
         Finds the previous quizzes marked as 'exam papers'.
         Returns a queryset of complete exams.
         """
-        return Sitting.objects.filter(user=self.user) \
-                              .filter(complete=True)
+        return Sitting.objects.filter(user=self.user, complete=True)
 
 
 class SittingManager(models.Manager):
@@ -295,12 +294,11 @@ class SittingManager(models.Manager):
             question_set = quiz.question_set.all() \
                                             .select_subclasses()
 
+        question_set = question_set.values_list('id', flat=True)
         if quiz.max_questions and quiz.max_questions < len(question_set):
             question_set = question_set[:quiz.max_questions]
 
-        questions = ""
-        for question in question_set:
-            questions += str(question.id) + ","
+        questions = ",".join(map(str, question_set)) + ","
 
         new_sitting = self.create(user=user,
                                   quiz=quiz,
@@ -310,14 +308,13 @@ class SittingManager(models.Manager):
                                   current_score=0,
                                   complete=False,
                                   user_answers='{}')
-        new_sitting.save()
         return new_sitting
 
     def user_sitting(self, user, quiz):
         if quiz.single_attempt is True and self.filter(user=user,
                                                        quiz=quiz,
                                                        complete=True)\
-                                               .count() > 0:
+                                               .exists():
             return False
 
         try:
@@ -326,8 +323,7 @@ class SittingManager(models.Manager):
             sitting = self.new_sitting(user, quiz)
         except Sitting.MultipleObjectsReturned:
             sitting = self.filter(user=user, quiz=quiz, complete=False)[0]
-        finally:
-            return sitting
+        return sitting
 
 
 class Sitting(models.Model):
@@ -381,17 +377,20 @@ class Sitting(models.Model):
         If no question is found, returns False
         Does NOT remove the question from the front of the list.
         """
-        first_comma = self.question_list.find(',')
-        if first_comma == -1 or first_comma == 0:
+        if not self.question_list:
             return False
-        question_id = int(self.question_list[:first_comma])
+
+        first, _ = self.question_list.split(',', 1)
+        question_id = int(first)
         return Question.objects.get_subclass(id=question_id)
 
     def remove_first_question(self):
-        first_comma = self.question_list.find(',')
-        if first_comma != -1 or first_comma != 0:
-            self.question_list = self.question_list[first_comma + 1:]
-            self.save()
+        if not self.question_list:
+            return
+
+        _, others = self.question_list.split(',', 1)
+        self.question_list = others
+        self.save()
 
     def add_to_score(self, points):
         self.current_score += int(points)
@@ -455,10 +454,7 @@ class Sitting(models.Model):
 
     @property
     def check_if_passed(self):
-        if self.get_percent_correct >= self.quiz.pass_mark:
-            return True
-        else:
-            return False
+        return self.get_percent_correct >= self.quiz.pass_mark
 
     @property
     def result_message(self):
@@ -504,7 +500,7 @@ class Sitting(models.Model):
         """
         answered = len(json.loads(self.user_answers))
         total = self.get_max_score
-        return (answered, total)
+        return answered, total
 
 
 class Question(models.Model):
