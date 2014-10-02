@@ -35,6 +35,7 @@ class QuizListView(ListView):
         queryset = super(QuizListView, self).get_queryset()
         return queryset.filter(draft=False)
 
+
 class QuizDetailView(DetailView):
     model = Quiz
     slug_field = 'url'
@@ -47,6 +48,7 @@ class QuizDetailView(DetailView):
 
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
+
 
 class CategoriesListView(ListView):
     model = Category

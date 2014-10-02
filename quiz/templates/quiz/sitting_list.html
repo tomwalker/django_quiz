@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}All Quizzes{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "All Quizzes" %}{% endblock %}
 
 {% block content %}
-<h2>List of complete exams</h2>
+<h2>{% trans "List of complete exams" %}</h2>
     {% if sitting_list %}
 
 		<table class="table table-bordered table-striped">
 
 		  <thead>
 			<tr>
-			  <th>User</th>
-			  <th>Quiz</th>
-			  <th>Completed</th>
-			  <th>Score (%)</th>
+			  <th>{% trans "User" %}</th>
+			  <th>{% trans "Quiz" %}</th>
+			  <th>{% trans "Completed" %}</th>
+			  <th>{% trans "Score" %}(%)</th>
 			  <th></th>
 			</tr>
 		  </thead>
@@ -24,7 +25,7 @@
 				<td><input type="text" name="quiz_filter" /></td>
 				<td></td>
 				<td></td>
-				<td><button type="submit">Filter</button></td>
+				<td><button type="submit" class="btn btn-default">{% trans "Filter"%}</button></td>
 			  </form>
 			</tr>
 
@@ -38,7 +39,7 @@
 			  <td>{{ sitting.get_percent_correct }}</td>
 			  <td>
 				<a href="{% url 'quiz_marking_detail' pk=sitting.id %}">
-				  View details
+				  {% trans "View details" %}
 				</a>
 			</tr>
 
@@ -48,6 +49,6 @@
 
 		</table>
     {% else %}
-        <p>There are no matching quizzes.</p>
+        <p>{% trans "There are no matching quizzes" %}.</p>
     {% endif %}
 {% endblock %}

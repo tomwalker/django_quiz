@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}All Quizzes{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "All Quizzes" %}{% endblock %}
 
 {% block content %}
-<h2>Category list</h2>
+<h2>{% trans "Category list" %}</h2>
 
 <ul>
   {% for cat in category_list %}

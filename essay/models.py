@@ -1,3 +1,4 @@
+from django.utils.translation import ugettext as _
 from quiz.models import Question
 
 
@@ -19,4 +20,5 @@ class Essay_Question(Question):
         return unicode(self.content)
 
     class Meta:
-        verbose_name = "Essay style question"
+        verbose_name = _("Essay style question")
+        verbose_name_plural = _("Essay style questions")

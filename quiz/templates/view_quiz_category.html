@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}Quizzes related to {{ category.category }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Quizzes related to" %} {{ category.category }}{% endblock %}
 
 {% block content %}
-<h1>Quizzes in the <strong>{{ category.category }} </strong>category</h1>
+<h1>{% trans "Quizzes in the" %} <strong>{{ category.category }} </strong>{% trans "category" %}</h1>
 
   {% with object_list as quizzes %}
     {% if quizzes %}
@@ -16,7 +17,7 @@
         {% endfor %}
         </ul>
     {% else %}
-        <p>There are no quizzes</p>
+        <p>{% trans "There are no quizzes" %}</p>
     {% endif %}
   {% endwith %}
 {% endblock %}
