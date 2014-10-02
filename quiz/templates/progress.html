@@ -1,23 +1,24 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% load quiz_tags %}
 
-{% block title %} Progress Page {% endblock %}
-{% block description %} User Progress Page {% endblock %}
+{% block title %} {% trans "Progress Page" %} {% endblock %}
+{% block description %} {% trans "User Progress Page" %} {% endblock %}
 
 {% block content %}
 
   {% if cat_scores %}
 
-  <h1>Question Category Scores</h1>
+  <h1>{% trans "Question Category Scores" %}</h1>
 
   <table class="table table-bordered table-striped">
 
 	<thead>
 	  <tr>
-		<th>Category</th>
-		<th>Correctly answererd</th>
-		<th>Incorrect</th>
+		<th>{% trans "Category" %}</th>
+		<th>{% trans "Correctly answererd" %}</th>
+		<th>{% trans "Incorrect" %}</th>
 		<th>%</th>
 	  </tr>
 	</thead>
@@ -46,18 +47,18 @@
 
   <hr>
 
-  <h1>Previous exam papers</h1>
+  <h1>{% trans "Previous exam papers" %}</h1>
   <p class="lead">
-	Below are the results of exams that you have sat.
+	{% trans "Below are the results of exams that you have sat." %}
   </p>
 
   <table class="table table-bordered table-striped">
 
 	<thead>
 	  <tr>
-		<th>Quiz Title</th>
-		<th>Score</th>
-		<th>Possible Score</th>
+		<th>{% trans "Quiz Title" %}</th>
+		<th>{% trans "Score" %}</th>
+		<th>{% trans "Possible Score" %}</th>
 		<th>%</th>
 	  </tr>
 	</thead>

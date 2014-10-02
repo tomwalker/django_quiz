@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
-{% block title %}All Quizzes{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "All Quizzes" %}{% endblock %}
 
 {% block content %}
-<h2>List of quizzes</h2>
+<h2>{% trans "List of quizzes" %}</h2>
     {% if quiz_list %}
 		<table class="table table-bordered table-striped">
 
 		  <thead>
 			<tr>
-			  <th>Title</th>
-			  <th>Category</th>
-			  <th>Exam</th>
-			  <th>Single attempt</th>
+			  <th>{% trans "Title" %}</th>
+			  <th>{% trans "Category" %}</th>
+			  <th>{% trans "Exam" %}</th>
+			  <th>{% trans "Single attempt" %}</th>
 			  <th></th>
 			</tr>
 		  </thead>
@@ -27,7 +28,7 @@
 			  <td>{{ quiz.single_attempt }}</td>
 			  <td>
 				<a href="{% url 'quiz_start_page' slug=quiz.url %}">
-				  View details
+				  {% trans "View details" %}
 				</a>
 			</tr>
 
@@ -37,6 +38,6 @@
 		</table>
 
 	{% else %}
-        <p>There are no available quizzes.</p>
+        <p>{% trans "There are no available quizzes" %}.</p>
     {% endif %}
 {% endblock %}

@@ -1,24 +1,25 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load quiz_tags %}
 {% block title %}
-Result of {{ sitting.quiz.title }} for {{ sitting.user }}
+{% trans "Result of" %} {{ sitting.quiz.title }} {% trans "for" %} {{ sitting.user }}
 {% endblock %}
 
 {% block content %}
-<h2>Quiz title: {{ sitting.quiz.title }}</h2>
-<h3>Category: {{ sitting.quiz.category }}</h3>
+<h2>{% trans "Quiz title" %}: {{ sitting.quiz.title }}</h2>
+<h3>{% trans "Category" %}: {{ sitting.quiz.category }}</h3>
 <p>{{ sitting.quiz.description }}</p>
 <hr>
-<p>User: {{ sitting.user }}</p>
-<p>Completed: {{ sitting.end|date }}</p>
-<p>Score: {{ sitting.get_percent_correct }}%</p>
+<p>{% trans "User" %}: {{ sitting.user }}</p>
+<p>{% trans "Completed" %}: {{ sitting.end|date }}</p>
+<p>{% trans "Score" %}: {{ sitting.get_percent_correct }}%</p>
 
 <table class="table table-bordered table-striped">
 
   <thead>
 	<tr>
-	  <th>Question</th>
-	  <th>User answer</th>
+	  <th>{% trans "Question" %}</th>
+	  <th>{% trans "User answer" %}</th>
 	  <th></th>
 	  <th></th>
 	</tr>
@@ -37,15 +38,15 @@ Result of {{ sitting.quiz.title }} for {{ sitting.user }}
 	  <td>{{ question|answer_choice_to_string:question.user_answer }}</td>
 	  <td>
 		{% if question.id in sitting.get_incorrect_questions %}
-		  <p>incorrect</p>
+		  <p>{% trans "incorrect" %}</p>
 		{% else %}
-		  <p>Correct</p>
+		  <p>{% trans "Correct" %}</p>
 		{% endif %}
 	  </td>
 	  <td>
 		<form action="" method="POST">{% csrf_token %}
 		  <input type=hidden name="qid" value="{{ question.id }}">
-		  <button type="submit">Toggle whether correct</button>
+		  <button type="submit" class="btn btn-warning">{% trans "Toggle whether correct" %}</button>
 		</form>
 	  </td>
 	</tr>
