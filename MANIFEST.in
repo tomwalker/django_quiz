@@ -3,3 +3,7 @@ include README.rst
 recursive-include quiz/templates *
 recursive-include multichoice/templates *
 recursive-include true_false/templates *
+recursive-include quiz/locale *
+recursive-include multichoice/locale *
+recursive-include true_false/locale *
+recursive-include essay/locale *

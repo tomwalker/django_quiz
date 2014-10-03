@@ -13,6 +13,7 @@ setup(
     url='https://github.com/tomwalker/django_quiz',
     author='Tom Walker',
     author_email='tomwalker0472@gmail.com',
+    zip_safe=False,
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -27,7 +28,7 @@ setup(
     ],
     install_requires=[
         'django-model-utils == 2.0.3',
-        'Django >= 1.5.1, <= 1.7',
+        'Django >= 1.5.1',
         'Pillow == 2.5.0'
     ],
     test_suite='runtests.runtests'
