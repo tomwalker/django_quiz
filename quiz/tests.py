@@ -991,3 +991,9 @@ class TestTemplateTags(TestCase):
                            'incorrect_questions': [1]})
 
         self.assertIn('bing', template.render(context))
+
+
+class AjaxQuestionTests(TestCase):
+    """
+    Tests specifically for AJAX question submission.
+    """
