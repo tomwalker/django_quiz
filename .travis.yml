@@ -8,6 +8,10 @@ env:
 
 
 install:
+  -  python setup.py sdist
+  -  cd dist
+  -  easy_install "$(ls .)"
+  -  cd ..
   -  pip install -r requirements.txt
 script:
   -  python setup.py test
