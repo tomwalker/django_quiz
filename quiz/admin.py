@@ -22,6 +22,7 @@ class QuizAdminForm(forms.ModelForm):
 
     class Meta:
         model = Quiz
+        exclude = []
 
     questions = forms.ModelMultipleChoiceField(
         queryset=Question.objects.all().select_subclasses(),
