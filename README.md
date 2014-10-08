@@ -47,7 +47,7 @@ django-model-utils 2.0.3
 
 Pillow 2.5.0
 
-It was developed using Django 1.6.5
+It was developed using Django 1.6.5 and has been tested under Django 1.7
 
 Installation
 ------------
