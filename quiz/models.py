@@ -1,3 +1,4 @@
+from __future__ import unicode_literals # for Py2 & Py3 compatibility
 import re
 import json
 
@@ -6,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
+from django.utils.encoding import python_2_unicode_compatible
 
 from model_utils.managers import InheritanceManager
 
@@ -20,6 +22,7 @@ class CategoryManager(models.Manager):
         return new_category
 
 
+@python_2_unicode_compatible
 class Category(models.Model):
 
     category = models.CharField(
@@ -33,10 +36,12 @@ class Category(models.Model):
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
 
-    def __unicode__(self):
-        return unicode(self.category)
+    # Changed __unicode__() to __str__() for Py2 & Py3 compatibility
+    def __str__(self):
+        return self.category
 
 
+@python_2_unicode_compatible
 class SubCategory(models.Model):
 
     sub_category = models.CharField(
@@ -52,11 +57,13 @@ class SubCategory(models.Model):
     class Meta:
         verbose_name = _("Sub-Category")
         verbose_name_plural = _("Sub-Categories")
+    
+    # Changed __unicode__() to __str__() for Py2 & Py3 compatibility
+    def __str__(self):
+        return self.sub_category + " (" + self.category.category + ")"
 
-    def __unicode__(self):
-        return unicode(self.sub_category + " (" + self.category.category + ")")
 
-
+@python_2_unicode_compatible
 class Quiz(models.Model):
 
     title = models.CharField(
@@ -138,7 +145,7 @@ class Quiz(models.Model):
             self.exam_paper = True
 
         if self.pass_mark > 100:
-            raise ValidationError(u'%s is above 100' % self.pass_mark)
+            raise ValidationError('%s is above 100' % self.pass_mark)
 
         super(Quiz, self).save(force_insert, force_update, *args, **kwargs)
 
@@ -146,8 +153,9 @@ class Quiz(models.Model):
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
 
-    def __unicode__(self):
-        return unicode(self.title)
+    # Changed __unicode__() to __str__() for Py2 & Py3 compatibility
+    def __str__(self):
+        return self.title
 
     def get_questions(self):
         return self.question_set.all().select_subclasses()
@@ -264,11 +272,11 @@ class Progress(models.Model):
             updated_possible = int(match.group('possible')) +\
                 abs(possible_to_add)
 
-            new_score = u",".join(
+            new_score = ",".join(
                 [
-                    unicode(question.category),
-                    unicode(updated_score),
-                    unicode(updated_possible), u""
+                    str(question.category),
+                    str(updated_score),
+                    str(updated_possible), ""
                 ])
 
             # swap old score for the new one
@@ -277,12 +285,12 @@ class Progress(models.Model):
 
         else:
             #  if not present but existing, add with the points passed in
-            self.score += u",".join(
+            self.score += ",".join(
                 [
-                    unicode(question.category),
-                    unicode(score_to_add),
-                    unicode(possible_to_add),
-                    u""
+                    str(question.category),
+                    str(score_to_add),
+                    str(possible_to_add),
+                    ""
                 ])
             self.save()
 
@@ -495,7 +503,7 @@ class Sitting(models.Model):
         if with_answers:
             user_answers = json.loads(self.user_answers)
             for question in questions:
-                question.user_answer = user_answers[unicode(question.id)]
+                question.user_answer = user_answers[str(question.id)]
 
         return questions
 
@@ -518,7 +526,7 @@ class Sitting(models.Model):
         total = self.get_max_score
         return answered, total
 
-
+@python_2_unicode_compatible
 class Question(models.Model):
     """
     Base class for all question types.
@@ -564,5 +572,7 @@ class Question(models.Model):
         verbose_name_plural = _("Questions")
         ordering = ['category']
 
-    def __unicode__(self):
-        return unicode(self.content)
+    # Changed __unicode__() to __str__() for Py2 & Py3 compatibility
+    def __str__(self):
+        return self.content
+

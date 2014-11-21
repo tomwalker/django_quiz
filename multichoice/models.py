@@ -1,3 +1,5 @@
+from __future__ import unicode_literals # for Py2 & Py3 compatibility
+from django.utils.encoding import python_2_unicode_compatible # ditto
 from django.utils.translation import ugettext as _
 from django.db import models
 from quiz.models import Question
@@ -52,6 +54,7 @@ class MCQuestion(Question):
         verbose_name_plural = _("Multiple Choice Questions")
 
 
+@python_2_unicode_compatible
 class Answer(models.Model):
     question = models.ForeignKey(MCQuestion, verbose_name=_("Question"))
 
@@ -66,9 +69,10 @@ class Answer(models.Model):
                                   help_text=_("Is this a correct answer?"),
                                   verbose_name=_("Correct"))
 
-    def __unicode__(self):
-        return unicode(self.content)
+    def __str__(self):
+        return self.content
 
     class Meta:
         verbose_name = _("Answer")
         verbose_name_plural = _("Answers")
+
