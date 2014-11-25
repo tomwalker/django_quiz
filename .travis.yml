@@ -8,8 +8,3 @@ install:
 - pip install tox
 script:
 - tox -e $TOX_ENV
-matrix:
-  fast_finish: true
-  allow_failures:
-  - env: TOX_ENV=py33
-  - env: TOX_ENV=py34
