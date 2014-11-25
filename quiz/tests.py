@@ -135,7 +135,7 @@ class TestProgress(TestCase):
 
         category_dict = self.p1.list_all_cat_scores
 
-        self.assertIn(str(category_dict.keys()[0]), self.p1.score)
+        self.assertIn(str(list(category_dict.keys())[0]), self.p1.score)
 
         self.assertIn(self.c1.category, self.p1.score)
 

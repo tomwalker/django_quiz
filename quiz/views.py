@@ -265,8 +265,8 @@ class QuizTake(FormView):
         if self.quiz.random_order is True:
             random.shuffle(question_list)
 
-        if all([self.quiz.max_questions,
-               self.quiz.max_questions < len(question_list)]):
+        if self.quiz.max_questions and (self.quiz.max_questions
+                                        < len(question_list)):
             question_list = question_list[:self.quiz.max_questions]
 
         # session score for anon users
