@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-15 -*-
-from StringIO import StringIO
 
 from django.conf import settings
 from django.contrib.auth.models import User, Permission
@@ -10,6 +9,7 @@ from django.http import HttpRequest
 from django.test import TestCase
 from django.template import Template, Context
 from django.utils.importlib import import_module
+from six import StringIO
 
 from .models import Category, Quiz, Progress, Sitting, SubCategory
 from .views import (anon_session_score, QuizListView, CategoriesListView,

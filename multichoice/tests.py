@@ -1,8 +1,7 @@
-from StringIO import StringIO
-
 from django.db.models.fields.files import ImageFieldFile
 from django.core.files.base import ContentFile
 from django.test import TestCase
+from six import StringIO
 
 from .models import MCQuestion, Answer
 
