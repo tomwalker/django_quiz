@@ -6,10 +6,10 @@ from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
-from django.test import TestCase
 from django.template import Template, Context
+from django.test import TestCase
 from django.utils.importlib import import_module
-from six import StringIO
+from django.utils.six import StringIO
 
 from .models import Category, Quiz, Progress, Sitting, SubCategory
 from .views import (anon_session_score, QuizListView, CategoriesListView,
