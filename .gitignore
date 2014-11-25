@@ -14,3 +14,4 @@ build*
 /coverage_html_report/
 /htmlcov/
 /uploads/
+.tox
