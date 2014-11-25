@@ -1,17 +1,15 @@
 language: python
-
-python:
-  - "2.7"
-
+python: "2.7"
 env:
-  - DJANGO="django==1.6.5"
-
-
+- TOX_ENV=py27
+- TOX_ENV=py33
+- TOX_ENV=py34
 install:
-  -  python setup.py sdist
-  -  cd dist
-  -  easy_install "$(ls .)"
-  -  cd ..
-  -  pip install -r requirements.txt
+- pip install tox
 script:
-  -  python setup.py test
+- tox -e $TOX_ENV
+matrix:
+  fast_finish: true
+  allow_failures:
+  - env: TOX_ENV=py33
+  - env: TOX_ENV=py34
