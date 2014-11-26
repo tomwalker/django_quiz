@@ -1,4 +1,4 @@
-from __future__ import unicode_literals # for Py2 & Py3 compatibility
+from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from quiz.models import Question

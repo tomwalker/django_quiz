@@ -1,4 +1,4 @@
-from __future__ import unicode_literals # for Py2 & Py3 compatibility
+from __future__ import unicode_literals
 import re
 import json
 
@@ -36,7 +36,6 @@ class Category(models.Model):
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
 
-    # Changed __unicode__() to __str__() for Py2 & Py3 compatibility
     def __str__(self):
         return self.category
 
@@ -57,8 +56,7 @@ class SubCategory(models.Model):
     class Meta:
         verbose_name = _("Sub-Category")
         verbose_name_plural = _("Sub-Categories")
-    
-    # Changed __unicode__() to __str__() for Py2 & Py3 compatibility
+
     def __str__(self):
         return self.sub_category + " (" + self.category.category + ")"
 
@@ -153,7 +151,6 @@ class Quiz(models.Model):
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
 
-    # Changed __unicode__() to __str__() for Py2 & Py3 compatibility
     def __str__(self):
         return self.title
 
@@ -526,6 +523,7 @@ class Sitting(models.Model):
         total = self.get_max_score
         return answered, total
 
+
 @python_2_unicode_compatible
 class Question(models.Model):
     """
@@ -572,7 +570,5 @@ class Question(models.Model):
         verbose_name_plural = _("Questions")
         ordering = ['category']
 
-    # Changed __unicode__() to __str__() for Py2 & Py3 compatibility
     def __str__(self):
         return self.content
-
