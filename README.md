@@ -43,11 +43,11 @@ Features of each quiz:
 
 Requirements
 ------------
-django-model-utils 2.0.3
+django-model-utils
 
-Pillow 2.5.0
+Pillow
 
-It was developed using Django 1.6.5 and has been tested under Django 1.7
+Tests are included and pass for Django versions 1.5, 1.6 and 1.7, running with Python 2.7, 3.3 and 3.4
 
 Installation
 ------------
@@ -81,8 +81,11 @@ Contributors
 * [https://github.com/crackjack](https://github.com/crackjack)
 * [https://github.com/richardmansfield](https://github.com/richardmansfield)
 * [https://github.com/rkashapov](https://github.com/rkashapov)
+* [https://github.com/zamphatta](https://github.com/zamphatta)
+* [https://github.com/d0ugal](https://github.com/d0ugal)
 
-This is my first open source project so please forgive any problems and/or dreadful code!
+
+
 
 MIT License (MIT)
 Copyright (c) 2012 - 2014 Dr Tom Walker
