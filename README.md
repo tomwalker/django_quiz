@@ -47,7 +47,7 @@ django-model-utils
 
 Pillow
 
-Tests are included and pass for Django versions 1.5, 1.6 and 1.7, running with Python 2.7, 3.3 and 3.4
+Tests are included and pass for Django versions 1.5, 1.6, 1.7 and 1.8, running with Python 2.7, 3.3 and 3.4
 
 Installation
 ------------
