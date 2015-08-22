@@ -314,7 +314,8 @@ class SittingManager(models.Manager):
         question_set = question_set.values_list('id', flat=True)
 
         if len(question_set) == 0:
-            raise ImproperlyConfigured('Question set of the quiz is empty. Please configure questions properly')
+            raise ImproperlyConfigured('Question set of the quiz is empty. '
+                                       'Please configure questions properly')
 
         if quiz.max_questions and quiz.max_questions < len(question_set):
             question_set = question_set[:quiz.max_questions]
