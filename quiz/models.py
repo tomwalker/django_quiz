@@ -3,7 +3,7 @@ import re
 import json
 
 from django.db import models
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import MaxValueValidator
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
@@ -312,6 +312,11 @@ class SittingManager(models.Manager):
                                             .select_subclasses()
 
         question_set = question_set.values_list('id', flat=True)
+
+        if len(question_set) == 0:
+            raise ImproperlyConfigured('Question set of the quiz is empty. '
+                                       'Please configure questions properly')
+
         if quiz.max_questions and quiz.max_questions < len(question_set):
             question_set = question_set[:quiz.max_questions]
 

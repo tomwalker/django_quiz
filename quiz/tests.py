@@ -458,6 +458,9 @@ class TestQuestionMarking(TestCase):
         self.question1 = MCQuestion.objects.create(id=1, content='squawk')
         self.question1.quiz.add(self.quiz1)
 
+        self.question2 = MCQuestion.objects.create(id=2, content='shriek')
+        self.question2.quiz.add(self.quiz2)
+
         self.answer1 = Answer.objects.create(id=123,
                                              question=self.question1,
                                              content='bing',
