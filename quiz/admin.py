@@ -51,6 +51,7 @@ class QuizAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', )
     list_filter = ('category',)
     search_fields = ('description', 'category', )
+    prepopulated_fields = {'url':('title',)}
 
 
 class CategoryAdmin(admin.ModelAdmin):
