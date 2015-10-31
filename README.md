@@ -34,7 +34,8 @@ Features of each quiz:
 * A marking page which lists completed quizzes, can be filtered by quiz or user, and is used to mark essay questions
 * After selecting a larger pool of questions, a quiz can be set to show a random subset rather than all within the pool
 * Start and end times for sitting exams are recorded
-* i18n support and Russian language translation
+* i18n support
+* Russian and Italian language translation
 
 
 

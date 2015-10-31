@@ -1,0 +1,479 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-31 22:44+0000\n"
+"PO-Revision-Date: 2015-10-31 22:43+0000\n"
+"Last-Translator: b'  <>'\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.7.6\n"
+
+#: apps/quiz/models.py:30 apps/quiz/models.py:37 apps/quiz/models.py:53
+#: apps/quiz/models.py:83 apps/quiz/models.py:545
+#: apps/quiz/templates/progress.html:19
+#: apps/quiz/templates/quiz/quiz_detail.html:9
+#: apps/quiz/templates/quiz/quiz_list.html:13
+#: apps/quiz/templates/quiz/sitting_detail.html:10
+msgid "Category"
+msgstr "Categoria"
+
+#: apps/quiz/models.py:38
+msgid "Categories"
+msgstr "Categorie"
+
+#: apps/quiz/models.py:48 apps/quiz/models.py:58 apps/quiz/models.py:550
+msgid "Sub-Category"
+msgstr "Sotto-Categoria"
+
+#: apps/quiz/models.py:59
+msgid "Sub-Categories"
+msgstr "Sotto-categorie"
+
+#: apps/quiz/models.py:69 apps/quiz/templates/quiz/quiz_list.html:12
+msgid "Title"
+msgstr "Titolo"
+
+#: apps/quiz/models.py:73
+msgid "Description"
+msgstr "Descrizione"
+
+#: apps/quiz/models.py:74
+msgid "a description of the quiz"
+msgstr "una descrizione del quiz"
+
+#: apps/quiz/models.py:78
+msgid "a user friendly url"
+msgstr "un url amichevole"
+
+#: apps/quiz/models.py:79
+msgid "user friendly url"
+msgstr "url amichevole"
+
+#: apps/quiz/models.py:87
+msgid "Random Order"
+msgstr "Ordine Casuale"
+
+#: apps/quiz/models.py:88
+msgid "Display the questions in a random order or as they are set?"
+msgstr ""
+"Visualizzare le domande in un ordine casuale o nell'ordine in cui sono state "
+"inserite?"
+
+#: apps/quiz/models.py:93
+msgid "Max Questions"
+msgstr "Numero massimo di domande"
+
+#: apps/quiz/models.py:94
+msgid "Number of questions to be answered on each attempt."
+msgstr "Numero di domande cui rispondere in ogni tentativo."
+
+#: apps/quiz/models.py:98
+msgid ""
+"Correct answer is NOT shown after question. Answers displayed at the end."
+msgstr ""
+"La risposta corretta NON è visualizzata dopo la domanda. Le risposte vengono "
+"visualizzate alla fine."
+
+#: apps/quiz/models.py:100
+msgid "Answers at end"
+msgstr "Risposte alla fine"
+
+#: apps/quiz/models.py:104
+msgid ""
+"If yes, the result of each attempt by a user will be stored. Necessary for "
+"marking."
+msgstr ""
+"Se si, il risultato di ogni tentativo da parte di un utente verrà salvato. "
+"Necessario per segnare."
+
+#: apps/quiz/models.py:107
+msgid "Exam Paper"
+msgstr "Foglio dell'esame"
+
+#: apps/quiz/models.py:111
+msgid ""
+"If yes, only one attempt by a user will be permitted. Non users cannot sit "
+"this exam."
+msgstr ""
+"Se si, per ogni utente sarà permesso un solo tentativo. I non tutenti non "
+"potranno sostenere l'esame."
+
+#: apps/quiz/models.py:114
+msgid "Single Attempt"
+msgstr "Songolo tentativo"
+
+#: apps/quiz/models.py:118
+msgid "Percentage required to pass exam."
+msgstr "Percentuale richiesta per superare l'esame."
+
+#: apps/quiz/models.py:122
+msgid "Displayed if user passes."
+msgstr "Visualizzato se l'utente passa."
+
+#: apps/quiz/models.py:123
+msgid "Success Text"
+msgstr "Testo Risposta Corretta"
+
+#: apps/quiz/models.py:126
+msgid "Fail Text"
+msgstr "Test risposta Sbagliata"
+
+#: apps/quiz/models.py:127
+msgid "Displayed if user fails."
+msgstr "Visualizzato se l'utente fallisce."
+
+#: apps/quiz/models.py:131
+msgid "Draft"
+msgstr "Bozza"
+
+#: apps/quiz/models.py:132
+msgid ""
+"If yes, the quiz is not displayed in the quiz list and can only be taken by "
+"users who can edit quizzes."
+msgstr ""
+"Se sì, il quiz non viene visualizzato nell'elenco quiz e può essere "
+"selezionato solo dagli utenti che possono modificare i quiz."
+
+#: apps/quiz/models.py:152 apps/quiz/models.py:372 apps/quiz/models.py:541
+#: apps/quiz/templates/quiz/sitting_list.html:14
+msgid "Quiz"
+msgstr "Quiz"
+
+#: apps/quiz/models.py:153
+msgid "Quizzes"
+msgstr "Quiz"
+
+#: apps/quiz/models.py:192 apps/quiz/models.py:370
+#: apps/quiz/templates/quiz/sitting_detail.html:13
+#: apps/quiz/templates/quiz/sitting_list.html:13
+msgid "User"
+msgstr "Utente"
+
+#: apps/quiz/models.py:195 apps/quiz/templates/progress.html:60
+#: apps/quiz/templates/quiz/sitting_detail.html:15
+#: apps/quiz/templates/quiz/sitting_list.html:16
+msgid "Score"
+msgstr "Punteggio"
+
+#: apps/quiz/models.py:200
+msgid "User Progress"
+msgstr "Progressi dell'utente"
+
+#: apps/quiz/models.py:201
+msgid "User progress records"
+msgstr "registarzione progressi utente"
+
+#: apps/quiz/models.py:261
+msgid "error"
+msgstr "errore"
+
+#: apps/quiz/models.py:261
+msgid "category does not exist or invalid score"
+msgstr "categoria inesistente  o punteggio non valido"
+
+#: apps/quiz/models.py:375
+msgid "Question Order"
+msgstr "ordine Domande"
+
+#: apps/quiz/models.py:378
+msgid "Question List"
+msgstr "Elenca domande"
+
+#: apps/quiz/models.py:381
+msgid "Incorrect questions"
+msgstr "Domande sbagliate"
+
+#: apps/quiz/models.py:383
+msgid "Current Score"
+msgstr "Punteggio Attuale"
+
+#: apps/quiz/models.py:386
+msgid "Complete"
+msgstr "Completo"
+
+#: apps/quiz/models.py:389
+msgid "User Answers"
+msgstr "Risposte utente"
+
+#: apps/quiz/models.py:392
+msgid "Start"
+msgstr "Inizio"
+
+#: apps/quiz/models.py:394
+msgid "End"
+msgstr "Fine"
+
+#: apps/quiz/models.py:399
+msgid "Can see completed exams."
+msgstr "Puoi vedere gli esami completati."
+
+#: apps/quiz/models.py:557
+msgid "Figure"
+msgstr "Immagine"
+
+#: apps/quiz/models.py:561
+msgid "Enter the question text that you want displayed"
+msgstr "Inserisci il testo della domanda che desideri visualizzare"
+
+#: apps/quiz/models.py:563 apps/quiz/models.py:575
+#: apps/quiz/templates/question.html:47
+#: apps/quiz/templates/quiz/sitting_detail.html:21
+msgid "Question"
+msgstr "Domanda"
+
+#: apps/quiz/models.py:567
+msgid "Explanation to be shown after the question has been answered."
+msgstr ""
+"Spiegazione da visulizzare dopo che è stata data la risposta alla domanda."
+
+#: apps/quiz/models.py:570 apps/quiz/templates/question.html:32
+#: apps/quiz/templates/result.html:21 apps/quiz/templates/result.html.py:87
+msgid "Explanation"
+msgstr "Spiegazione"
+
+#: apps/quiz/models.py:576
+msgid "Questions"
+msgstr "Domande"
+
+#: apps/quiz/templates/base.html:7
+msgid "Example Quiz Website"
+msgstr "Sito Quiz di esempio"
+
+#: apps/quiz/templates/correct_answer.html:6
+msgid "You answered the above question incorrectly"
+msgstr "Hai risposto alla domanda di cui sopra in modo non corretto"
+
+#: apps/quiz/templates/correct_answer.html:16
+msgid "This is the correct answer"
+msgstr "Questa è la risposta corretta"
+
+#: apps/quiz/templates/correct_answer.html:23
+msgid "This was your answer."
+msgstr "Questa è stata la tua risposta "
+
+#: apps/quiz/templates/progress.html:6
+msgid "Progress Page"
+msgstr "Pagina dei progressi"
+
+#: apps/quiz/templates/progress.html:7
+msgid "User Progress Page"
+msgstr "Pagina dei progressi dell'utente"
+
+#: apps/quiz/templates/progress.html:13
+msgid "Question Category Scores"
+msgstr "Punteggi Categoria Domanda "
+
+#: apps/quiz/templates/progress.html:20
+msgid "Correctly answererd"
+msgstr "Risposto correttamente"
+
+#: apps/quiz/templates/progress.html:21
+msgid "Incorrect"
+msgstr "Sbagliato"
+
+#: apps/quiz/templates/progress.html:50
+msgid "Previous exam papers"
+msgstr "Fogli esami precedenti"
+
+#: apps/quiz/templates/progress.html:52
+msgid "Below are the results of exams that you have sat."
+msgstr "Di seguito sono riportati i risultati degli esami sostenuti."
+
+#: apps/quiz/templates/progress.html:59
+msgid "Quiz Title"
+msgstr "Titolo del Quiz"
+
+#: apps/quiz/templates/progress.html:61
+msgid "Possible Score"
+msgstr "Possibile Punteggio"
+
+#: apps/quiz/templates/question.html:13 apps/quiz/templates/result.html:13
+msgid "The previous question"
+msgstr "La domanda precedente"
+
+#: apps/quiz/templates/question.html:22
+msgid "Your answer was"
+msgstr "La tua risposta è stata"
+
+#: apps/quiz/templates/question.html:47
+msgid "of"
+msgstr "di"
+
+#: apps/quiz/templates/question.html:52
+msgid "Question category"
+msgstr "Categoria domanda"
+
+#: apps/quiz/templates/question.html:74
+msgid "Check"
+msgstr "Verifica"
+
+#: apps/quiz/templates/quiz/category_list.html:3
+#: apps/quiz/templates/quiz/quiz_list.html:3
+#: apps/quiz/templates/quiz/sitting_list.html:3
+msgid "All Quizzes"
+msgstr "Tutti i Quiz"
+
+#: apps/quiz/templates/quiz/category_list.html:6
+msgid "Category list"
+msgstr "Lista Categorie"
+
+#: apps/quiz/templates/quiz/quiz_detail.html:11
+msgid "You will only get one attempt at this quiz"
+msgstr "Avrai un solo tentativo a disposizione per questo quiz"
+
+#: apps/quiz/templates/quiz/quiz_detail.html:16
+msgid "Start quiz"
+msgstr "Comincia il Quiz"
+
+#: apps/quiz/templates/quiz/quiz_list.html:6
+msgid "List of quizzes"
+msgstr "Lista dei quiz"
+
+#: apps/quiz/templates/quiz/quiz_list.html:14
+msgid "Exam"
+msgstr "Esame"
+
+#: apps/quiz/templates/quiz/quiz_list.html:15
+msgid "Single attempt"
+msgstr "Singolo tentivo"
+
+#: apps/quiz/templates/quiz/quiz_list.html:31
+#: apps/quiz/templates/quiz/sitting_list.html:42
+msgid "View details"
+msgstr "Vedi i dettagli"
+
+#: apps/quiz/templates/quiz/quiz_list.html:41
+msgid "There are no available quizzes"
+msgstr "Non ci sono quiz disponibili"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:5
+msgid "Result of"
+msgstr "Risultato di"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:5
+msgid "for"
+msgstr "per"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:9
+msgid "Quiz title"
+msgstr "Titolo quiz"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:14
+#: apps/quiz/templates/quiz/sitting_list.html:15
+msgid "Completed"
+msgstr "Completato"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:22
+msgid "User answer"
+msgstr "Risposta utente"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:41
+msgid "incorrect"
+msgstr "errato"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:43
+msgid "Correct"
+msgstr "Corretto"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:49
+msgid "Toggle whether correct"
+msgstr "Seleziona se corretto"
+
+#: apps/quiz/templates/quiz/sitting_list.html:6
+msgid "List of complete exams"
+msgstr "Lista edgli esami completati"
+
+#: apps/quiz/templates/quiz/sitting_list.html:28
+msgid "Filter"
+msgstr "Filtro"
+
+#: apps/quiz/templates/quiz/sitting_list.html:52
+msgid "There are no matching quizzes"
+msgstr "Non ci sono quiz corrispondenti"
+
+#: apps/quiz/templates/result.html:7
+msgid "Exam Results for"
+msgstr "Risultati esame per"
+
+#: apps/quiz/templates/result.html:32
+msgid "Exam results"
+msgstr "Risultati esame"
+
+#: apps/quiz/templates/result.html:34
+msgid "Exam title"
+msgstr "Titolo esame"
+
+#: apps/quiz/templates/result.html:38
+msgid "You answered"
+msgstr "Hai risposto"
+
+#: apps/quiz/templates/result.html:38
+msgid "questions correctly out of"
+msgstr "domande cui hai correttamente risposto su"
+
+#: apps/quiz/templates/result.html:38
+msgid "giving you"
+msgstr "dandoti"
+
+#: apps/quiz/templates/result.html:38
+msgid "percent correct"
+msgstr "percentuale corretta"
+
+#: apps/quiz/templates/result.html:48
+msgid "Review the questions below and try the exam again in the future"
+msgstr "Riesamina le domande qui sotto e riprova l'esame in futuro"
+
+#: apps/quiz/templates/result.html:52
+msgid ""
+"The result of this exam will be stored in your progress section so you can "
+"review and monitor your progression"
+msgstr ""
+" Il risultato di questo esame verrà memorizzato nella sezione di avanzamento "
+"in modo da poter verificare e monitorare i tuoi progressi"
+
+#: apps/quiz/templates/result.html:66
+msgid "Your session score is"
+msgstr "Il punteggio di questa sessione è "
+
+#: apps/quiz/templates/result.html:66
+msgid "out of a possible"
+msgstr "su un massimo di"
+
+#: apps/quiz/templates/result.html:84
+msgid "Your answer"
+msgstr "La tua risposta"
+
+#: apps/quiz/templates/single_complete.html:13
+msgid "You have already sat this exam and only one sitting is permitted"
+msgstr "Hai già sostenuto questo esame ed è consentito farlo solo una volta"
+
+#: apps/quiz/templates/single_complete.html:15
+msgid "This exam is only accessible to signed in users"
+msgstr "Questo esame è disponibile solo per gli utenti collegati"
+
+#: apps/quiz/templates/view_quiz_category.html:3
+msgid "Quizzes related to"
+msgstr "Quiz collegati a"
+
+#: apps/quiz/templates/view_quiz_category.html:6
+msgid "Quizzes in the"
+msgstr "Quiz nella"
+
+#: apps/quiz/templates/view_quiz_category.html:6
+msgid "category"
+msgstr "categoria"
+
+#: apps/quiz/templates/view_quiz_category.html:20
+msgid "There are no quizzes"
+msgstr "Non ci sono quiz"

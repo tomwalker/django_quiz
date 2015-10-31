@@ -1,0 +1,74 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-31 22:44+0000\n"
+"PO-Revision-Date: 2015-10-31 22:19+0000\n"
+"Last-Translator: b'  <>'\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.7.6\n"
+
+#: apps/multichoice/models.py:9 apps/multichoice/models.py:65
+msgid "Content"
+msgstr "Contenuto"
+
+#: apps/multichoice/models.py:10
+msgid "Random"
+msgstr "Casuale"
+
+#: apps/multichoice/models.py:11
+msgid "None"
+msgstr "Nessuno"
+
+#: apps/multichoice/models.py:20
+msgid "The order in which multichoice answer options are displayed to the user"
+msgstr ""
+"Ordine in cui le risposte multiple disponibili vengono visualizzate "
+"all'utente"
+
+#: apps/multichoice/models.py:23
+msgid "Answer Order"
+msgstr "Ordine Risposte"
+
+#: apps/multichoice/models.py:53
+msgid "Multiple Choice Question"
+msgstr "Domanda a risposta multipla"
+
+#: apps/multichoice/models.py:54
+msgid "Multiple Choice Questions"
+msgstr "Domande a risposta multipla"
+
+#: apps/multichoice/models.py:59
+msgid "Question"
+msgstr "Domanda"
+
+#: apps/multichoice/models.py:63
+msgid "Enter the answer text that you want displayed"
+msgstr "Inserisci il testo della risposta che vuoi visualizzare"
+
+#: apps/multichoice/models.py:69
+msgid "Is this a correct answer?"
+msgstr "Questa è la risposta corretta?"
+
+#: apps/multichoice/models.py:70
+msgid "Correct"
+msgstr "Corretto"
+
+#: apps/multichoice/models.py:76
+msgid "Answer"
+msgstr "Risposta"
+
+#: apps/multichoice/models.py:77
+msgid "Answers"
+msgstr "Risposte"
