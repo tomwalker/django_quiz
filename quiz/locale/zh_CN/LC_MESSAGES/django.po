@@ -1,0 +1,474 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-31 22:44+0000\n"
+"PO-Revision-Date: 2015-10-31 22:43+0000\n"
+"Last-Translator: b'  <>'\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.7.6\n"
+
+#: apps/quiz/models.py:30 apps/quiz/models.py:37 apps/quiz/models.py:53
+#: apps/quiz/models.py:83 apps/quiz/models.py:545
+#: apps/quiz/templates/progress.html:19
+#: apps/quiz/templates/quiz/quiz_detail.html:9
+#: apps/quiz/templates/quiz/quiz_list.html:13
+#: apps/quiz/templates/quiz/sitting_detail.html:10
+msgid "Category"
+msgstr "类别"
+
+#: apps/quiz/models.py:38
+msgid "Categories"
+msgstr "类别"
+
+#: apps/quiz/models.py:48 apps/quiz/models.py:58 apps/quiz/models.py:550
+msgid "Sub-Category"
+msgstr "子类"
+
+#: apps/quiz/models.py:59
+msgid "Sub-Categories"
+msgstr "子类"
+
+#: apps/quiz/models.py:69 apps/quiz/templates/quiz/quiz_list.html:12
+msgid "Title"
+msgstr "标题"
+
+#: apps/quiz/models.py:73
+msgid "Description"
+msgstr "描述"
+
+#: apps/quiz/models.py:74
+msgid "a description of the quiz"
+msgstr "测试的描述"
+
+#: apps/quiz/models.py:78
+msgid "a user friendly url"
+msgstr "一个用户友好的URL"
+
+#: apps/quiz/models.py:79
+msgid "user friendly url"
+msgstr "用户友好的URL"
+
+#: apps/quiz/models.py:87
+msgid "Random Order"
+msgstr "随机次序"
+
+#: apps/quiz/models.py:88
+msgid "Display the questions in a random order or as they are set?"
+msgstr "按设定的次序还是随机次序显示问题？"
+
+#: apps/quiz/models.py:93
+msgid "Max Questions"
+msgstr "最大问题数量"
+
+#: apps/quiz/models.py:94
+msgid "Number of questions to be answered on each attempt."
+msgstr "每次尝试可回答的问题数量。"
+
+#: apps/quiz/models.py:98
+msgid ""
+"Correct answer is NOT shown after question. Answers displayed at the end."
+msgstr ""
+"正确答案不会在问题后显示。回答显示在最后。"
+
+#: apps/quiz/models.py:100
+msgid "Answers at end"
+msgstr "最后给出答案"
+
+#: apps/quiz/models.py:104
+msgid ""
+"If yes, the result of each attempt by a user will be stored. Necessary for "
+"marking."
+msgstr ""
+"如果是，用户每次尝试的结果都将记录。如需打分此项必选。"
+
+#: apps/quiz/models.py:107
+msgid "Exam Paper"
+msgstr "试卷"
+
+#: apps/quiz/models.py:111
+msgid ""
+"If yes, only one attempt by a user will be permitted. Non users cannot sit "
+"this exam."
+msgstr ""
+"如果是，一个用户只允许尝试一次。非注册用户不能参加本考试。"
+
+#: apps/quiz/models.py:114
+msgid "Single Attempt"
+msgstr "单次尝试"
+
+#: apps/quiz/models.py:116
+msgid "Pass Mark"
+msgstr "通过分数"
+
+#: apps/quiz/models.py:118
+msgid "Percentage required to pass exam."
+msgstr "通过考试需要的百分数。"
+
+#: apps/quiz/models.py:122
+msgid "Displayed if user passes."
+msgstr "如果用户通过则显示。"
+
+#: apps/quiz/models.py:123
+msgid "Success Text"
+msgstr "成功文本"
+
+#: apps/quiz/models.py:126
+msgid "Fail Text"
+msgstr "失败文本"
+
+#: apps/quiz/models.py:127
+msgid "Displayed if user fails."
+msgstr "如果用户未通过则显示"
+
+#: apps/quiz/models.py:131
+msgid "Draft"
+msgstr "草稿"
+
+#: apps/quiz/models.py:132
+msgid ""
+"If yes, the quiz is not displayed in the quiz list and can only be taken by "
+"users who can edit quizzes."
+msgstr ""
+"如果是，测试不会显示在测试列表里，只能被可以编辑测试的用户操作。"
+
+#: apps/quiz/models.py:152 apps/quiz/models.py:372 apps/quiz/models.py:541
+#: apps/quiz/templates/quiz/sitting_list.html:14
+msgid "Quiz"
+msgstr "测试"
+
+#: apps/quiz/models.py:153
+msgid "Quizzes"
+msgstr "测试"
+
+#: apps/quiz/models.py:192 apps/quiz/models.py:370
+#: apps/quiz/templates/quiz/sitting_detail.html:13
+#: apps/quiz/templates/quiz/sitting_list.html:13
+msgid "User"
+msgstr "用户"
+
+#: apps/quiz/models.py:195 apps/quiz/templates/progress.html:60
+#: apps/quiz/templates/quiz/sitting_detail.html:15
+#: apps/quiz/templates/quiz/sitting_list.html:16
+msgid "Score"
+msgstr "得分"
+
+#: apps/quiz/models.py:200
+msgid "User Progress"
+msgstr "用户进度"
+
+#: apps/quiz/models.py:201
+msgid "User progress records"
+msgstr "用户进度记录"
+
+#: apps/quiz/models.py:261
+msgid "error"
+msgstr "错误"
+
+#: apps/quiz/models.py:261
+msgid "category does not exist or invalid score"
+msgstr "类别不存在或得分无效"
+
+#: apps/quiz/models.py:375
+msgid "Question Order"
+msgstr "问题次序"
+
+#: apps/quiz/models.py:378
+msgid "Question List"
+msgstr "问题列表"
+
+#: apps/quiz/models.py:381
+msgid "Incorrect questions"
+msgstr "不正确的答案"
+
+#: apps/quiz/models.py:383
+msgid "Current Score"
+msgstr "当前得分"
+
+#: apps/quiz/models.py:386
+msgid "Complete"
+msgstr "完成"
+
+#: apps/quiz/models.py:389
+msgid "User Answers"
+msgstr "用户回答"
+
+#: apps/quiz/models.py:392
+msgid "Start"
+msgstr "开始"
+
+#: apps/quiz/models.py:394
+msgid "End"
+msgstr "结束"
+
+#: apps/quiz/models.py:399
+msgid "Can see completed exams."
+msgstr "可以看到已完成的考试"
+
+#: apps/quiz/models.py:557
+msgid "Figure"
+msgstr "图像"
+
+#: apps/quiz/models.py:561
+msgid "Enter the question text that you want displayed"
+msgstr "输入你想显示的问题文本"
+
+#: apps/quiz/models.py:563 apps/quiz/models.py:575
+#: apps/quiz/templates/question.html:47
+#: apps/quiz/templates/quiz/sitting_detail.html:21
+msgid "Question"
+msgstr "问题"
+
+#: apps/quiz/models.py:567
+msgid "Explanation to be shown after the question has been answered."
+msgstr "回答问题后将展示题解。"
+
+#: apps/quiz/models.py:570 apps/quiz/templates/question.html:32
+#: apps/quiz/templates/result.html:21 apps/quiz/templates/result.html.py:87
+msgid "Explanation"
+msgstr "题解"
+
+#: apps/quiz/models.py:576
+msgid "Questions"
+msgstr "问题"
+
+#: apps/quiz/templates/base.html:7
+msgid "Example Quiz Website"
+msgstr "测试样例网站"
+
+#: apps/quiz/templates/correct_answer.html:6
+msgid "You answered the above question incorrectly"
+msgstr "你错误回答了以上问题"
+
+#: apps/quiz/templates/correct_answer.html:16
+msgid "This is the correct answer"
+msgstr "这是正确答案"
+
+#: apps/quiz/templates/correct_answer.html:23
+msgid "This was your answer."
+msgstr "这是你的回答。"
+
+#: apps/quiz/templates/progress.html:6
+msgid "Progress Page"
+msgstr "进度页面"
+
+#: apps/quiz/templates/progress.html:7
+msgid "User Progress Page"
+msgstr "用户进度页面"
+
+#: apps/quiz/templates/progress.html:13
+msgid "Question Category Scores"
+msgstr "问题类别得分"
+
+#: apps/quiz/templates/progress.html:20
+msgid "Correctly answererd"
+msgstr "正确回答了"
+
+#: apps/quiz/templates/progress.html:21
+msgid "Incorrect"
+msgstr "不正确"
+
+#: apps/quiz/templates/progress.html:50
+msgid "Previous exam papers"
+msgstr "前一试卷"
+
+#: apps/quiz/templates/progress.html:52
+msgid "Below are the results of exams that you have sat."
+msgstr "以下是你已经参加的考试的结果。"
+
+#: apps/quiz/templates/progress.html:59
+msgid "Quiz Title"
+msgstr "测试标题"
+
+#: apps/quiz/templates/progress.html:61
+msgid "Possible Score"
+msgstr "可能得分"
+
+#: apps/quiz/templates/question.html:13 apps/quiz/templates/result.html:13
+msgid "The previous question"
+msgstr "前一问题"
+
+#: apps/quiz/templates/question.html:22
+msgid "Your answer was"
+msgstr "你的回答是"
+
+#: apps/quiz/templates/question.html:47
+msgid "of"
+msgstr "属于"
+
+#: apps/quiz/templates/question.html:52
+msgid "Question category"
+msgstr "问题类别"
+
+#: apps/quiz/templates/question.html:74
+msgid "Check"
+msgstr "检查"
+
+#: apps/quiz/templates/quiz/category_list.html:3
+#: apps/quiz/templates/quiz/quiz_list.html:3
+#: apps/quiz/templates/quiz/sitting_list.html:3
+msgid "All Quizzes"
+msgstr "全部测试"
+
+#: apps/quiz/templates/quiz/category_list.html:6
+msgid "Category list"
+msgstr "类别列表"
+
+#: apps/quiz/templates/quiz/quiz_detail.html:11
+msgid "You will only get one attempt at this quiz"
+msgstr "本测试你只有一次尝试的机会"
+
+#: apps/quiz/templates/quiz/quiz_detail.html:16
+msgid "Start quiz"
+msgstr "开始测试"
+
+#: apps/quiz/templates/quiz/quiz_list.html:6
+msgid "List of quizzes"
+msgstr "测试列表"
+
+#: apps/quiz/templates/quiz/quiz_list.html:14
+msgid "Exam"
+msgstr "考试"
+
+#: apps/quiz/templates/quiz/quiz_list.html:15
+msgid "Single attempt"
+msgstr "单一尝试"
+
+#: apps/quiz/templates/quiz/quiz_list.html:31
+#: apps/quiz/templates/quiz/sitting_list.html:42
+msgid "View details"
+msgstr "显示细节"
+
+#: apps/quiz/templates/quiz/quiz_list.html:41
+msgid "There are no available quizzes"
+msgstr "没有可做的测试"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:5
+msgid "Result of"
+msgstr "结果属于"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:5
+msgid "for"
+msgstr "为了"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:9
+msgid "Quiz title"
+msgstr "测试标题"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:14
+#: apps/quiz/templates/quiz/sitting_list.html:15
+msgid "Completed"
+msgstr "已完成"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:22
+msgid "User answer"
+msgstr "用户的回答"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:41
+msgid "incorrect"
+msgstr "不正确"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:43
+msgid "Correct"
+msgstr "正确"
+
+#: apps/quiz/templates/quiz/sitting_detail.html:49
+msgid "Toggle whether correct"
+msgstr "切换是否正确"
+
+#: apps/quiz/templates/quiz/sitting_list.html:6
+msgid "List of complete exams"
+msgstr "已完成考试列表"
+
+#: apps/quiz/templates/quiz/sitting_list.html:28
+msgid "Filter"
+msgstr "过滤"
+
+#: apps/quiz/templates/quiz/sitting_list.html:52
+msgid "There are no matching quizzes"
+msgstr "没有符合条件的测试"
+
+#: apps/quiz/templates/result.html:7
+msgid "Exam Results for"
+msgstr "考试结果"
+
+#: apps/quiz/templates/result.html:32
+msgid "Exam results"
+msgstr "考试结果"
+
+#: apps/quiz/templates/result.html:34
+msgid "Exam title"
+msgstr "考试标题"
+
+#: apps/quiz/templates/result.html:38
+msgid "You answered"
+msgstr "你正确回答了"
+
+#: apps/quiz/templates/result.html:38
+msgid "questions correctly out of"
+msgstr "个问题，总共"
+
+#: apps/quiz/templates/result.html:38
+msgid "giving you"
+msgstr "个问题"
+
+#: apps/quiz/templates/result.html:38
+msgid "percent correct"
+msgstr "%正确率"
+
+#: apps/quiz/templates/result.html:48
+msgid "Review the questions below and try the exam again in the future"
+msgstr "回顾以下问题，将来可以再尝试本考试"
+
+#: apps/quiz/templates/result.html:52
+msgid ""
+"The result of this exam will be stored in your progress section so you can "
+"review and monitor your progression"
+msgstr "本考试的结果将储存于你的进度区域，你可以查看和监控你的进度。"
+
+#: apps/quiz/templates/result.html:66
+msgid "Your session score is"
+msgstr "你目前得分为"
+
+#: apps/quiz/templates/result.html:66
+msgid "out of a possible"
+msgstr "而最多可能得分为"
+
+#: apps/quiz/templates/result.html:84
+msgid "Your answer"
+msgstr "你的答案"
+
+#: apps/quiz/templates/single_complete.html:13
+msgid "You have already sat this exam and only one sitting is permitted"
+msgstr "你已经参加本考试，只能参加一次"
+
+#: apps/quiz/templates/single_complete.html:15
+msgid "This exam is only accessible to signed in users"
+msgstr "用户需登录方可访问本考试"
+
+#: apps/quiz/templates/view_quiz_category.html:3
+msgid "Quizzes related to"
+msgstr "测试有关于"
+
+#: apps/quiz/templates/view_quiz_category.html:6
+msgid "Quizzes in the"
+msgstr "测试属于"
+
+#: apps/quiz/templates/view_quiz_category.html:6
+msgid "category"
+msgstr "类别"
+
+#: apps/quiz/templates/view_quiz_category.html:20
+msgid "There are no quizzes"
+msgstr "没有测试"
