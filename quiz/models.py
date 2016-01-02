@@ -115,6 +115,7 @@ class Quiz(models.Model):
 
     pass_mark = models.SmallIntegerField(
         blank=True, default=0,
+        verbose_name=_("Pass Mark"),
         help_text=_("Percentage required to pass exam."),
         validators=[MaxValueValidator(100)])
 

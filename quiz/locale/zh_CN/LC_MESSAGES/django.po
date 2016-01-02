@@ -84,7 +84,7 @@ msgstr ""
 
 #: apps/quiz/models.py:100
 msgid "Answers at end"
-msgstr "最终回答"
+msgstr "最后给出答案"
 
 #: apps/quiz/models.py:104
 msgid ""
@@ -107,6 +107,10 @@ msgstr ""
 #: apps/quiz/models.py:114
 msgid "Single Attempt"
 msgstr "单次尝试"
+
+#: apps/quiz/models.py:116
+msgid "Pass Mark"
+msgstr "通过分数"
 
 #: apps/quiz/models.py:118
 msgid "Percentage required to pass exam."
