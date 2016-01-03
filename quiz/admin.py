@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Quiz, Category, SubCategory, Progress, Question
 from multichoice.models import MCQuestion, Answer
@@ -27,8 +28,9 @@ class QuizAdminForm(forms.ModelForm):
     questions = forms.ModelMultipleChoiceField(
         queryset=Question.objects.all().select_subclasses(),
         required=False,
+        label=_("Questions"),
         widget=FilteredSelectMultiple(
-            verbose_name='Questions',
+            verbose_name=_("Questions"),
             is_stacked=False))
 
     def __init__(self, *args, **kwargs):
