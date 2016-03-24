@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: django-quiz\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-01 11:37+0400\n"
-"PO-Revision-Date: 2016-03-24 15:56-0500\n"
+"PO-Revision-Date: 2016-03-24 16:26-0500\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -110,6 +110,10 @@ msgstr ""
 #: models.py:114
 msgid "Single Attempt"
 msgstr "Un Intento"
+
+#: apps/quiz/models.py:116
+msgid "Pass Mark"
+msgstr "Mínimo exigido para aprobar"
 
 #: models.py:118
 msgid "Percentage required to pass exam."
