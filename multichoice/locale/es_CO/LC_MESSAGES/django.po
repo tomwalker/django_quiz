@@ -1,0 +1,70 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# , 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: django-quiz-multichoice\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-10-02 16:35+0000\n"
+"PO-Revision-Date: 2016-03-24 16:00-0500\n"
+"Language-Team: American English <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.4\n"
+"Last-Translator: \n"
+"Language: es_CO\n"
+
+#: models.py:7 models.py:61
+msgid "Content"
+msgstr "Contenido"
+
+#: models.py:8
+msgid "Random"
+msgstr "Aleatorio"
+
+#: models.py:9
+msgid "None"
+msgstr "Ninguna"
+
+#: models.py:17
+msgid "The order in which multichoice answer options are displayed to the user"
+msgstr "El orden en que las opciones de respuesta de elección múltiple se muestran al usuario"
+
+#: models.py:20
+msgid "Answer Order"
+msgstr "Orden de las Respuestas"
+
+#: models.py:50
+msgid "Multiple Choice Question"
+msgstr "Pregunta de opción múltiple"
+
+#: models.py:51
+msgid "Multiple Choice Questions"
+msgstr "Preguntas de opción múltiple"
+
+#: models.py:55
+msgid "Question"
+msgstr "Pregunta"
+
+#: models.py:59
+msgid "Enter the answer text that you want displayed"
+msgstr "Ingrese el texto de la respuesta que desea mostrar"
+
+#: models.py:65
+msgid "Is this a correct answer?"
+msgstr "¿Es esta una respuesta correcta?"
+
+#: models.py:66
+msgid "Correct"
+msgstr "Correcto"
+
+#: models.py:72
+msgid "Answer"
+msgstr "Respuesta"
+
+#: models.py:73
+msgid "Answers"
+msgstr "Respuestas"
