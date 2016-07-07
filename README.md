@@ -55,15 +55,16 @@ Installation
 Clone the repo with `git clone https://github.com/tomwalker/django_quiz.git`.
 
 Run `pip install -r requirements.txt`.
+Run `python setup.py install`
 
-Add `'quiz', 'multichoice', 'true_false',` to your `INSTALLED_APPS` setting.
+Add `'quiz', 'multichoice', 'true_false', 'essay'` to your `INSTALLED_APPS` setting.
 
     INSTALLED_APPS = (
         ...
         'quiz',
         'multichoice',
         'true_false',
-		'essay',
+	'essay',
         ...
     )
 
