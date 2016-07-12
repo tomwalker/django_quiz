@@ -312,7 +312,7 @@ class SittingManager(models.Manager):
             question_set = quiz.question_set.all() \
                                             .select_subclasses()
 
-        question_set = question_set.values_list('id', flat=True)
+        question_set = [item.id for item in question_set]
 
         if len(question_set) == 0:
             raise ImproperlyConfigured('Question set of the quiz is empty. '
