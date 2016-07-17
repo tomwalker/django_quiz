@@ -14,7 +14,8 @@ try:
     from django.utils.importlib import import_module
 except ImportError:
     # Django versions >= 1.9
-    from importlib import import_module
+    #from importlib import import_module
+    from django.utils.module_loading import import_module
 from django.utils.six import StringIO
 
 from .models import Category, Quiz, Progress, Sitting, SubCategory
