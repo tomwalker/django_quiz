@@ -1,0 +1,473 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: django-quiz\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-01 11:37+0400\n"
+"PO-Revision-Date: 2016-03-24 16:26-0500\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.4\n"
+"Language-Team: \n"
+"Last-Translator: \n"
+"Language: es_CO\n"
+
+#: admin.py:31 admin.py:33 models.py:576
+msgid "Questions"
+msgstr "Preguntas"
+
+#: models.py:30 models.py:37 models.py:53 models.py:83 models.py:545
+#: templates/progress.html:19 templates/quiz/quiz_detail.html:9
+#: templates/quiz/quiz_list.html:13 templates/quiz/sitting_detail.html:10
+msgid "Category"
+msgstr "Categoría"
+
+#: models.py:38
+msgid "Categories"
+msgstr "Categorías"
+
+#: models.py:48 models.py:58 models.py:550
+msgid "Sub-Category"
+msgstr "Sub-Categoría"
+
+#: models.py:59
+msgid "Sub-Categories"
+msgstr "Sub-Categorías"
+
+#: models.py:69 templates/quiz/quiz_list.html:12
+msgid "Title"
+msgstr "Título"
+
+#: models.py:73
+msgid "Description"
+msgstr "Descripción"
+
+#: models.py:74
+msgid "a description of the quiz"
+msgstr "una descripción del quiz"
+
+#: models.py:78
+msgid "a user friendly url"
+msgstr "una url amigable para el usuario"
+
+#: models.py:79
+msgid "user friendly url"
+msgstr "url amigable para el usuario"
+
+#: models.py:87
+msgid "Random Order"
+msgstr "Orden Aleatorio"
+
+#: models.py:88
+msgid "Display the questions in a random order or as they are set?"
+msgstr "¿Muestra las preguntas en un orden aleatorio o como se crearon?"
+
+#: models.py:93
+msgid "Max Questions"
+msgstr "Número Máximo de Preguntas"
+
+#: models.py:94
+msgid "Number of questions to be answered on each attempt."
+msgstr "Número de preguntas a ser resueltas por cada intento"
+
+#: models.py:98
+msgid ""
+"Correct answer is NOT shown after question. Answers displayed at the end."
+msgstr ""
+"Respuestas correctas NO serán mostradas después de la pregunta. Las "
+"respuestas se mostrarán al final"
+
+#: models.py:100
+msgid "Answers at end"
+msgstr "Respuestas al final"
+
+#: models.py:104
+msgid ""
+"If yes, the result of each attempt by a user will be stored. Necessary for "
+"marking."
+msgstr ""
+"Si escoge si, el resultado de cada intento por usuario será guardado. "
+"Necesario para marcar"
+
+#: models.py:107
+msgid "Exam Paper"
+msgstr "Papel del Exámen"
+
+#: models.py:111
+msgid ""
+"If yes, only one attempt by a user will be permitted. Non users cannot sit "
+"this exam."
+msgstr ""
+"Si escoge si, solo un intento será permitido por usuario. Los que no sean "
+"usuarios no tomarán este exámen"
+
+#: models.py:114
+msgid "Single Attempt"
+msgstr "Un Intento"
+
+#: apps/quiz/models.py:116
+msgid "Pass Mark"
+msgstr "Mínimo exigido para aprobar"
+
+#: models.py:118
+msgid "Percentage required to pass exam."
+msgstr "Porcentaje requerido para aprobar el examen"
+
+#: models.py:122
+msgid "Displayed if user passes."
+msgstr "Mostrar si el usuario pasa"
+
+#: models.py:123
+msgid "Success Text"
+msgstr "Texto de Éxito"
+
+#: models.py:126
+msgid "Fail Text"
+msgstr "Texto de Fracaso"
+
+#: models.py:127
+msgid "Displayed if user fails."
+msgstr "Mostrar si el usuario fracasa"
+
+#: models.py:131
+msgid "Draft"
+msgstr "Borrador"
+
+#: models.py:132
+msgid ""
+"If yes, the quiz is not displayed in the quiz list and can only be taken by "
+"users who can edit quizzes."
+msgstr ""
+"Si escoge si, este quiz no será mostrado en la lista de quizes y solo podrá "
+"ser tomado por usuarios que puedan editar quizes"
+
+#: models.py:152 models.py:372 models.py:541
+#: templates/quiz/sitting_list.html:14
+msgid "Quiz"
+msgstr "Quiz"
+
+#: models.py:153
+msgid "Quizzes"
+msgstr "Quizes"
+
+#: models.py:192 models.py:370 templates/quiz/sitting_detail.html:13
+#: templates/quiz/sitting_list.html:13
+msgid "User"
+msgstr "Usuario"
+
+#: models.py:195 templates/progress.html:60
+#: templates/quiz/sitting_detail.html:15 templates/quiz/sitting_list.html:16
+msgid "Score"
+msgstr "Puntaje"
+
+#: models.py:200
+msgid "User Progress"
+msgstr "Progreso de Usuario"
+
+#: models.py:201
+msgid "User progress records"
+msgstr "Registros de progreso del usuario"
+
+#: models.py:261
+msgid "error"
+msgstr "error"
+
+#: models.py:261
+msgid "category does not exist or invalid score"
+msgstr "categoría no existe o puntaje inválido"
+
+#: models.py:375
+msgid "Question Order"
+msgstr "Orden de las Preguntas"
+
+#: models.py:378
+msgid "Question List"
+msgstr "Lista de Preguntas"
+
+#: models.py:381
+msgid "Incorrect questions"
+msgstr "Preguntas Incorrectas"
+
+#: models.py:383
+msgid "Current Score"
+msgstr "Puntaje Actual"
+
+#: models.py:386
+msgid "Complete"
+msgstr "Completo"
+
+#: models.py:389
+msgid "User Answers"
+msgstr "Respuestas de los Usuarios"
+
+#: models.py:392
+msgid "Start"
+msgstr "Inicio"
+
+#: models.py:394
+msgid "End"
+msgstr "Fin"
+
+#: models.py:399
+msgid "Can see completed exams."
+msgstr "Puede ver exámenes completados"
+
+#: models.py:557
+msgid "Figure"
+msgstr "Figura"
+
+#: models.py:561
+msgid "Enter the question text that you want displayed"
+msgstr "Ingresa el texto de la pregunta que quiere que aparezca"
+
+#: models.py:563 models.py:575 templates/question.html:47
+#: templates/quiz/sitting_detail.html:21
+msgid "Question"
+msgstr "Pregunta"
+
+#: models.py:567
+msgid "Explanation to be shown after the question has been answered."
+msgstr ""
+"Explicación que debe ser mostrada después de que la pregunta fue respondida"
+
+#: models.py:570 templates/question.html:32 templates/result.html:21
+#: templates/result.html.py:87
+msgid "Explanation"
+msgstr "Explicación"
+
+#: templates/base.html:7
+msgid "Example Quiz Website"
+msgstr "Sitio Web Ejemplo Quiz"
+
+#: templates/correct_answer.html:6
+msgid "You answered the above question incorrectly"
+msgstr "Ha respondido a la pregunta anterior de forma incorrecta"
+
+#: templates/correct_answer.html:16
+msgid "This is the correct answer"
+msgstr "Esta es la respuesta correcta"
+
+#: templates/correct_answer.html:23
+msgid "This was your answer."
+msgstr "Esta fue tu respuesta"
+
+#: templates/progress.html:6
+msgid "Progress Page"
+msgstr "Página de Progreso"
+
+#: templates/progress.html:7
+msgid "User Progress Page"
+msgstr "Página Progreso de Usuario"
+
+#: templates/progress.html:13
+msgid "Question Category Scores"
+msgstr "Pregunta Puntajes de las Categorías"
+
+#: templates/progress.html:20
+msgid "Correctly answererd"
+msgstr "Correctamente contestada"
+
+#: templates/progress.html:21
+msgid "Incorrect"
+msgstr "Incorrecta"
+
+#: templates/progress.html:50
+msgid "Previous exam papers"
+msgstr "Exámenes anteriores"
+
+#: templates/progress.html:52
+msgid "Below are the results of exams that you have sat."
+msgstr "Abajo están los resultados de los exámenes que se ha realizado."
+
+#: templates/progress.html:59
+msgid "Quiz Title"
+msgstr "Título del Quiz"
+
+#: templates/progress.html:61
+msgid "Possible Score"
+msgstr "Puntos posibles"
+
+#: templates/question.html:13 templates/result.html:13
+msgid "The previous question"
+msgstr "La pregunta anterior"
+
+#: templates/question.html:22
+msgid "Your answer was"
+msgstr "Tu respuesta fue"
+
+#: templates/question.html:47
+msgid "of"
+msgstr "de"
+
+#: templates/question.html:52
+msgid "Question category"
+msgstr "Categoría de la pregunta"
+
+#: templates/question.html:74
+msgid "Check"
+msgstr "Verificar"
+
+#: templates/quiz/category_list.html:3 templates/quiz/quiz_list.html:3
+#: templates/quiz/sitting_list.html:3
+msgid "All Quizzes"
+msgstr "Todos los Quizes"
+
+#: templates/quiz/category_list.html:6
+msgid "Category list"
+msgstr "Lista de Categorías"
+
+#: templates/quiz/quiz_detail.html:11
+msgid "You will only get one attempt at this quiz"
+msgstr "Solo se tendrá un intento para este quiz"
+
+#: templates/quiz/quiz_detail.html:16
+msgid "Start quiz"
+msgstr "Empezar quiz"
+
+#: templates/quiz/quiz_list.html:6
+msgid "List of quizzes"
+msgstr "Lista de quizes"
+
+#: templates/quiz/quiz_list.html:14
+msgid "Exam"
+msgstr "Examen"
+
+#: templates/quiz/quiz_list.html:15
+msgid "Single attempt"
+msgstr "Un solo intento"
+
+#: templates/quiz/quiz_list.html:31 templates/quiz/sitting_list.html:42
+msgid "View details"
+msgstr "Ver detalles"
+
+#: templates/quiz/quiz_list.html:41
+msgid "There are no available quizzes"
+msgstr "No hay quizes disponibles"
+
+#: templates/quiz/sitting_detail.html:5
+msgid "Result of"
+msgstr "Resultado de"
+
+#: templates/quiz/sitting_detail.html:5
+msgid "for"
+msgstr "para"
+
+#: templates/quiz/sitting_detail.html:9
+msgid "Quiz title"
+msgstr "Título de Quiz"
+
+#: templates/quiz/sitting_detail.html:14 templates/quiz/sitting_list.html:15
+msgid "Completed"
+msgstr "Completado"
+
+#: templates/quiz/sitting_detail.html:22
+msgid "User answer"
+msgstr "Respuesta de usuario"
+
+#: templates/quiz/sitting_detail.html:41
+msgid "incorrect"
+msgstr "Incorrecta"
+
+#: templates/quiz/sitting_detail.html:43
+msgid "Correct"
+msgstr "Correcto"
+
+#: templates/quiz/sitting_detail.html:49
+msgid "Toggle whether correct"
+msgstr "Alternar si es correcta"
+
+#: templates/quiz/sitting_list.html:6
+msgid "List of complete exams"
+msgstr "Lista de examenes completos"
+
+#: templates/quiz/sitting_list.html:28
+msgid "Filter"
+msgstr "Filtro"
+
+#: templates/quiz/sitting_list.html:52
+msgid "There are no matching quizzes"
+msgstr "No hay quizes que coincidan"
+
+#: templates/result.html:7
+msgid "Exam Results for"
+msgstr "Resultados del exámen de"
+
+#: templates/result.html:32
+msgid "Exam results"
+msgstr "Resultados del exámen"
+
+#: templates/result.html:34
+msgid "Exam title"
+msgstr "Título del exámen"
+
+#: templates/result.html:38
+msgid "You answered"
+msgstr "Tu respondiste"
+
+#: templates/result.html:38
+msgid "questions correctly out of"
+msgstr "preguntas correctas de cada"
+
+#: templates/result.html:38
+msgid "giving you"
+msgstr "darle"
+
+#: templates/result.html:38
+msgid "percent correct"
+msgstr "porcentaje de respuestas correctas"
+
+#: templates/result.html:48
+msgid "Review the questions below and try the exam again in the future"
+msgstr ""
+"Revisa las preguntas a continuación e intente el examen de nuevo en el "
+"futuro"
+
+#: templates/result.html:52
+msgid ""
+"The result of this exam will be stored in your progress section so you can "
+"review and monitor your progression"
+msgstr ""
+"El resultado de este examen se almacenará en su sección de progreso para "
+"que pueda revisar y supervisar su progreso"
+
+#: templates/result.html:66
+msgid "Your session score is"
+msgstr "Su puntuación de sesión es"
+
+#: templates/result.html:66
+msgid "out of a possible"
+msgstr "de un total posible"
+
+#: templates/result.html:84
+msgid "Your answer"
+msgstr "Tu respuesta"
+
+#: templates/single_complete.html:13
+msgid "You have already sat this exam and only one sitting is permitted"
+msgstr "Usted ya ha enviado este examen, y sólo se permite una sola sesión"
+
+#: templates/single_complete.html:15
+msgid "This exam is only accessible to signed in users"
+msgstr "Este examen es sólo accesible para los usuarios inscritos"
+
+#: templates/view_quiz_category.html:3
+msgid "Quizzes related to"
+msgstr "Quizes relacionados con"
+
+#: templates/view_quiz_category.html:6
+msgid "Quizzes in the"
+msgstr "Quizes en el"
+
+#: templates/view_quiz_category.html:6
+msgid "category"
+msgstr "categoría"
+
+#: templates/view_quiz_category.html:20
+msgid "There are no quizzes"
+msgstr "No hay quizes"
