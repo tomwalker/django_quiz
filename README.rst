@@ -45,6 +45,7 @@ Add 'quiz', 'multichoice', 'true_false', and 'essay' to your 'INSTALLED_APPS' se
       'quiz',
       'multichoice',
       'true_false',
+      'essay',
       ...
   )
 
