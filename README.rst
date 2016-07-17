@@ -40,23 +40,27 @@ Installation
 
 Add 'quiz', 'multichoice', 'true_false', and 'essay' to your 'INSTALLED_APPS' setting.
 
-  INSTALLED_APPS = (
-      ...
-      'quiz',
-      'multichoice',
-      'true_false',
-      'essay',
-      ...
-  )
+.. code:: python
+
+    INSTALLED_APPS = (
+        ...
+        'quiz',
+        'multichoice',
+        'true_false',
+        'essay',
+        ...
+    )
 
 Add the following to your projects 'urls.py' file, substituting 'q'
 for whatever you want the quiz base url to be.
 
-  urlpatterns = patterns('',
-      ...
-      url(r'^q/', include('quiz.urls')),
-      ...
-  )
+.. code:: python
+
+    urlpatterns = patterns('',
+        ...
+        url(r'^q/', include('quiz.urls')),
+        ...
+    )
 
 MIT License (MIT) Copyright (c) 2012 - 2014 Dr Tom Walker
 
