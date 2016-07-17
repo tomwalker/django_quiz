@@ -26,12 +26,6 @@ matrix:
   - python: "3.4"
     env: TOX_ENV=py34-django18
   - python: "3.5"
-    env: TOX_ENV=py35-django15
-  - python: "3.5"
-    env: TOX_ENV=py35-django16
-  - python: "3.5"
-    env: TOX_ENV=py35-django17
-  - python: "3.5"
     env: TOX_ENV=py35-django18
 
 
