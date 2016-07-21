@@ -1,6 +1,7 @@
 from setuptools import setup
+from io import open
 
-readme = open('README.rst', encoding="utf-8").read()
+readme = open('README.rst', encoding='utf-8').read()
 
 setup(
     name='django-quiz-app',
