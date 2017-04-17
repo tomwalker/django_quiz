@@ -8,7 +8,10 @@ from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.template import Template, Context
 from django.test import TestCase
-from django.utils.importlib import import_module
+try:
+    from importlib import import_module
+except:
+    from django.utils.importlib import import_module
 from django.utils.six import StringIO
 
 from .models import Category, Quiz, Progress, Sitting, SubCategory
