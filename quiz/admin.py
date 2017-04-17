@@ -50,9 +50,15 @@ class QuizAdminForm(forms.ModelForm):
 class QuizAdmin(admin.ModelAdmin):
     form = QuizAdminForm
 
-    list_display = ('title', 'category', )
+    list_display = ('get_title', 'category', )
     list_filter = ('category',)
     search_fields = ('description', 'category', )
+    prepopulated_fields = {'url':('title',)}
+
+    def get_title(self, obj):
+        return obj.title.title()
+    get_title.short_description = 'Quiz Title'
+    get_title.admin_order_field = 'title'
 
 
 class CategoryAdmin(admin.ModelAdmin):
