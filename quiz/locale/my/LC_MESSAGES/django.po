@@ -1,0 +1,467 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-19 06:32+0000\n"
+"PO-Revision-Date: 2017-04-19 15:21+0630\n"
+"Language: my_MM\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.1\n"
+
+#: admin.py:31 admin.py:33 models.py:577
+msgid "Questions"
+msgstr "မေးခွန်းများ"
+
+#: models.py:30 models.py:37 models.py:53 models.py:83 models.py:546
+#: templates/progress.html:19 templates/quiz/quiz_detail.html:9
+#: templates/quiz/quiz_list.html:13 templates/quiz/sitting_detail.html:10
+msgid "Category"
+msgstr "ခေါင်းစဉ်"
+
+#: models.py:38
+msgid "Categories"
+msgstr "ခေါင်းစဉ်များ"
+
+#: models.py:48 models.py:58 models.py:551
+msgid "Sub-Category"
+msgstr "ခေါင်းစဉ်ခွဲ"
+
+#: models.py:59
+msgid "Sub-Categories"
+msgstr "ခေါင်းစဉ်ခွဲများ"
+
+#: models.py:69 templates/quiz/quiz_list.html:12
+msgid "Title"
+msgstr "ခေါင်းစီး"
+
+#: models.py:73
+msgid "Description"
+msgstr "ဖော်ပြချက်"
+
+#: models.py:74
+msgid "a description of the quiz"
+msgstr "မေးခွန်းဖော်ပြချက်"
+
+#: models.py:78
+msgid "a user friendly url"
+msgstr "အသုံးပြုသူအဆင်ပြေသည့်လင့်ခ်"
+
+#: models.py:79
+msgid "user friendly url"
+msgstr "အသုံးပြုသူအဆင်ပြေသည့်လင့်ခ်"
+
+#: models.py:87
+msgid "Random Order"
+msgstr "အစဉ်အစီတကျမဟုတ်သည့်"
+
+#: models.py:88
+msgid "Display the questions in a random order or as they are set?"
+msgstr "မေးခွန်းများကို သတ်မှတ်ထားသည့်အတိုင်း အစဉ်တကျမဟုတ်ဘဲဖော်ပြမလား"
+
+#: models.py:93
+msgid "Max Questions"
+msgstr "မေးခွန်းအများဆုံး"
+
+#: models.py:94
+msgid "Number of questions to be answered on each attempt."
+msgstr "တစ်ကြိမ်ဖြေတိုင်း မေးရမည့်မေးခွန်းအရေအတွက်"
+
+#: models.py:98
+msgid ""
+"Correct answer is NOT shown after question. Answers displayed at the end."
+msgstr ""
+"အဖြေမှန်များကို မေးခွန်းဖြေပြီးချိန်တွင်ဖော်ပြပေးမည်မဟုတ်ဘဲ နောက်ဆုံးအချိန်မှ ဖော်ပြပေးမည်ဖြစ်သည်"
+
+#: models.py:100
+msgid "Answers at end"
+msgstr "နောက်ဆုံးမှအဖြေ"
+
+#: models.py:104
+msgid ""
+"If yes, the result of each attempt by a user will be stored. Necessary for "
+"marking."
+msgstr ""
+"ဟုတ်တယ်လို့မှတ်သားထားပါက အသုံးပြုသူမှ တစ်ကြိမ်ကြိုးစားတိုင်းအဖြေကိုသိမ်းထားမည်ဖြစ်ပြီး "
+"အမှန်ခြစ်သည့်အချိန်တွင်လိုပါလိမ့်မည်"
+
+#: models.py:107
+msgid "Exam Paper"
+msgstr "စာမေးပွဲစာရွက်"
+
+#: models.py:111
+msgid ""
+"If yes, only one attempt by a user will be permitted. Non users cannot sit "
+"this exam."
+msgstr ""
+"ဟုတ်တယ်လို့ဖြေပါက အသုံးပြုသူတစ်ဦးမှ ကြိုစားတိုင်းခွင့်ပြုမည်ဖြစ်သည်။ အသုံးပြုသူမဟုတ်ပါက စာမေးပွဲဖြေနိုင်မည်မဟုတ်ပါ"
+
+#: models.py:114
+msgid "Single Attempt"
+msgstr "တစ်ကြိမ်ကြိုးစားမှု"
+
+#: models.py:118
+msgid "Pass Mark"
+msgstr "အောင်မြင်နိုင်သည့်အမှတ်"
+
+#: models.py:119
+msgid "Percentage required to pass exam."
+msgstr "စာမေးပွဲအောင်မြင်ရန်လိုအပ်သောရာခိုင်နှုန်း"
+
+#: models.py:123
+msgid "Displayed if user passes."
+msgstr "အသုံးပြုသူအောင်မအောင် ကိုဖော်ပြမည်"
+
+#: models.py:124
+msgid "Success Text"
+msgstr "အောင်မြင်ခဲ့ပါကစာ"
+
+#: models.py:127
+msgid "Fail Text"
+msgstr "ကျဆုံးခဲ့ပါကဖော်ပြရန်စာ"
+
+#: models.py:128
+msgid "Displayed if user fails."
+msgstr "အသုံးပြုသူမအောင်မြင်ပါက ဖော်ပြရန်"
+
+#: models.py:132
+msgid "Draft"
+msgstr "အကြမ်း"
+
+#: models.py:133
+msgid ""
+"If yes, the quiz is not displayed in the quiz list and can only be taken by "
+"users who can edit quizzes."
+msgstr ""
+"ဟုတ်တယ်လို့ဖြေပါက မေးခွန်းကို မေးခွန်းစာရင်းထဲတွင်ဖော်ပြထားမည်မဟုတ်ဘဲ မေးခွန်းကို ပြင်ဆင်နိုင်သောအသုံးပြုသူသာ "
+"ပြင်ဆင်ခွင့်ရှိမည်ဖြစ်သည်"
+
+#: models.py:153 models.py:373 models.py:542
+#: templates/quiz/sitting_list.html:14
+msgid "Quiz"
+msgstr "မေးခွန်း"
+
+#: models.py:154
+msgid "Quizzes"
+msgstr "မေးခွန်းများ"
+
+#: models.py:193 models.py:371 templates/quiz/sitting_detail.html:13
+#: templates/quiz/sitting_list.html:13
+msgid "User"
+msgstr "အသုံးပြုသူ"
+
+#: models.py:196 templates/progress.html:60
+#: templates/quiz/sitting_detail.html:15 templates/quiz/sitting_list.html:16
+msgid "Score"
+msgstr "ရမှတ်"
+
+#: models.py:201
+msgid "User Progress"
+msgstr "အသုံးပြုသူအခြေအနေ"
+
+#: models.py:202
+msgid "User progress records"
+msgstr "အသုံးပြုသူအခြေအနေမှတ်တမ်း"
+
+#: models.py:262
+msgid "error"
+msgstr "ချို့ယွင်းချက်"
+
+#: models.py:262
+msgid "category does not exist or invalid score"
+msgstr "ခေါင်းစဉ်သည်မရှိပါ သို့မဟုတ် မမှန်ကန်သောအမှတ်"
+
+#: models.py:376
+msgid "Question Order"
+msgstr "မေးခွန်းအစီအစဉ်ချမှု"
+
+#: models.py:379
+msgid "Question List"
+msgstr "မေးခွန်းစာရင်း"
+
+#: models.py:382
+msgid "Incorrect questions"
+msgstr "မမှန်ကန်သောမေးခွန်းများ"
+
+#: models.py:384
+msgid "Current Score"
+msgstr "ယခုရမှတ်"
+
+#: models.py:387
+msgid "Complete"
+msgstr "ပြီးဆုံးခဲ့ပြီ"
+
+#: models.py:390
+msgid "User Answers"
+msgstr "အသုံးပြုသူအဖြေများ"
+
+#: models.py:393
+msgid "Start"
+msgstr "စတင်မည်"
+
+#: models.py:395
+msgid "End"
+msgstr "ပြီးပြီ"
+
+#: models.py:400
+msgid "Can see completed exams."
+msgstr "ပြီးဆုံးခဲ့သောစာမေးပွဲများမြင်နိုင်သည်"
+
+#: models.py:558
+msgid "Figure"
+msgstr "ကိန်းဂဏန်း"
+
+#: models.py:562
+msgid "Enter the question text that you want displayed"
+msgstr "သင်ဖော်ပြလိုသောမေးခွန်းစာကိုရိုက်ထည့်ပါ"
+
+#: models.py:564 models.py:576 templates/question.html:47
+#: templates/quiz/sitting_detail.html:21
+msgid "Question"
+msgstr "မေးခွန်း"
+
+#: models.py:568
+msgid "Explanation to be shown after the question has been answered."
+msgstr "မေးခွန်းမေး၊ဖြေပြီးပါက ဖော်ပြရန် ရှင်းလင်းချက်"
+
+#: models.py:571 templates/question.html:32 templates/result.html:21
+#: templates/result.html.py:87
+msgid "Explanation"
+msgstr "ရှင်းလင်းချက်"
+
+#: templates/base.html:7
+msgid "Example Quiz Website"
+msgstr "ဥပမာ မေးခွန်း ဝက်ဘ်ဆိုဒ်"
+
+#: templates/correct_answer.html:6
+msgid "You answered the above question incorrectly"
+msgstr "အထက်ဖော်ပြပါ မေးခွန်းကို သင်မှန်ကန်စွာ မဖြေခဲ့ပါ"
+
+#: templates/correct_answer.html:16
+msgid "This is the correct answer"
+msgstr "ဒီဟာသည်မှန်ကန်သောအဖြေဖြစ်သည်"
+
+#: templates/correct_answer.html:23
+msgid "This was your answer."
+msgstr "ဒီဟာသည် သင်၏အဖြေ"
+
+#: templates/progress.html:6
+msgid "Progress Page"
+msgstr "အခြေအနေ စာမျက်နှာ"
+
+#: templates/progress.html:7
+msgid "User Progress Page"
+msgstr "အသုံးပြုသူအခြေအနေစာမျက်နှာ"
+
+#: templates/progress.html:13
+msgid "Question Category Scores"
+msgstr "မေးခွန်း ခေါင်းစဉ် အမှတ်များ"
+
+#: templates/progress.html:20
+msgid "Correctly answererd"
+msgstr "မှန်ကန်စွာဖြေခဲ့သော"
+
+#: templates/progress.html:21
+msgid "Incorrect"
+msgstr "မမှန်ကန်သော"
+
+#: templates/progress.html:50
+msgid "Previous exam papers"
+msgstr "ယခင်စာမေးပွဲ မေးခွန်းများ"
+
+#: templates/progress.html:52
+msgid "Below are the results of exams that you have sat."
+msgstr "သင်ဖြေကြားဖူးခဲ့သော စာမေးပွဲရလဒ်များမှာ အောက်ပါအတိုင်းဖြစ်သည်"
+
+#: templates/progress.html:59
+msgid "Quiz Title"
+msgstr "မေးခွန်းခေါင်းစဉ်"
+
+#: templates/progress.html:61
+msgid "Possible Score"
+msgstr "ဖြစ်နိုင်ခြေရှိသော ရမှတ်"
+
+#: templates/question.html:13 templates/result.html:13
+msgid "The previous question"
+msgstr "ယခင်မေးခွန်း"
+
+#: templates/question.html:22
+msgid "Your answer was"
+msgstr "သင့်အဖြေမှာ "
+
+#: templates/question.html:47
+msgid "of"
+msgstr "၏"
+
+#: templates/question.html:52
+msgid "Question category"
+msgstr "မေးခွန်းခေါင်းစဉ်အမျိုးအစား"
+
+#: templates/question.html:74
+msgid "Check"
+msgstr "စစ်ဆေးမည်"
+
+#: templates/result.html:7
+msgid "Exam Results for"
+msgstr "စာမေးပွဲရလဒ်အတွက်မှာ "
+
+#: templates/result.html:32
+msgid "Exam results"
+msgstr "စာမေးပွဲရလဒ်"
+
+#: templates/result.html:34
+msgid "Exam title"
+msgstr "စာမေးပွဲခေါင်းစဉ်"
+
+#: templates/result.html:38
+msgid "You answered"
+msgstr "သင်ဖြေကြားခဲ့သောအဖြေမှာ "
+
+#: templates/result.html:38
+msgid "questions correctly out of"
+msgstr "မေးခွန်းများမှ မှန်ကန်ခဲ့သည်မှာ "
+
+#: templates/result.html:38
+msgid "giving you"
+msgstr "သင့်ကိုပေးမည်မှာ"
+
+#: templates/result.html:38
+msgid "percent correct"
+msgstr "ရာခိုင်နှုန်း မှန်ကန်သည်"
+
+#: templates/result.html:48
+msgid "Review the questions below and try the exam again in the future"
+msgstr "အောက်ပါမေးခွန်းများကို ကြည့်ရှုပါ ပြီးတော့ နောက်စာမေးပွဲအတွက် ပြန်လည်ကြိုးစားပါ"
+
+#: templates/result.html:52
+msgid ""
+"The result of this exam will be stored in your progress section so you can "
+"review and monitor your progression"
+msgstr ""
+"ဒီစာမေးပွဲရလဒ်ကို သင်၏ အခြေအနေပြ အပိုင်းတွင် သိမ်းထားမည်ဖြစ်ပြီး သင်သည် သင်၏ရလဒ်အခြေအနေကို "
+"နောက်ပိုင်းတွင် ပြန်လည်ကြည့်နိုင်မည်ဖြစ်သည်"
+
+#: templates/result.html:66
+msgid "Your session score is"
+msgstr "သင်၏စာမေးပွဲရမှတ်မှာ "
+
+#: templates/result.html:66
+msgid "out of a possible"
+msgstr "ဖြစ်နိုင်သော "
+
+#: templates/result.html:84
+msgid "Your answer"
+msgstr "သင့်အဖြေ"
+
+#: templates/single_complete.html:13
+msgid "You have already sat this exam and only one sitting is permitted"
+msgstr "သင်သည်ဒီစာမေးပွဲကို ဖြေပြီးပြီဖြစ်သည်။ တစ်ဦးလျှင် တစ်ကြိမ်သာဖြေခွင့်ရှိသည်"
+
+#: templates/single_complete.html:15
+msgid "This exam is only accessible to signed in users"
+msgstr "ဒီစာမေးပွဲသည် ဝင်ရောက်နိုင်သောအသုံးပြုသူများအတွက်သာဖြစ်သည်"
+
+#: templates/view_quiz_category.html:3
+msgid "Quizzes related to"
+msgstr "မေးခွန်းသက်ဆိုင်သည်မှာ "
+
+#: templates/view_quiz_category.html:6
+msgid "Quizzes in the"
+msgstr "ထိုထဲတွင်ပါသောမေးခွန်းများ"
+
+#: templates/view_quiz_category.html:6
+msgid "category"
+msgstr "ခေါင်းစဉ်အမျိုးအစား"
+
+#: templates/view_quiz_category.html:20
+msgid "There are no quizzes"
+msgstr "မေးခွန်းများမရှိပါ"
+
+#: templates/quiz/category_list.html:3 templates/quiz/quiz_list.html:3
+#: templates/quiz/sitting_list.html:3
+msgid "All Quizzes"
+msgstr "မေးခွန်းအားလုံး"
+
+#: templates/quiz/category_list.html:6
+msgid "Category list"
+msgstr "ခေါင်းစဉ်အမျိုးအစားစာရင်း"
+
+#: templates/quiz/quiz_detail.html:11
+msgid "You will only get one attempt at this quiz"
+msgstr "ဒီမေးခွန်းကို သင်တစ်ကြိမ်သာဖြေခွင့်ရှိမည်ဖြစ်သည်"
+
+#: templates/quiz/quiz_detail.html:16
+msgid "Start quiz"
+msgstr "စဖြေမည်"
+
+#: templates/quiz/quiz_list.html:6
+msgid "List of quizzes"
+msgstr "မေးခွန်းစာရင်းများ"
+
+#: templates/quiz/quiz_list.html:14
+msgid "Exam"
+msgstr "စာမေးပွဲ"
+
+#: templates/quiz/quiz_list.html:15
+msgid "Single attempt"
+msgstr "တစ်ကြိမ်ကြိုးစားမှု"
+
+#: templates/quiz/quiz_list.html:31 templates/quiz/sitting_list.html:42
+msgid "View details"
+msgstr "အသေးစိတ်အချက်အလက်များကိုကြည့်မည်"
+
+#: templates/quiz/quiz_list.html:41
+msgid "There are no available quizzes"
+msgstr "ရရှိနိုင်သောမေးခွန်းများမရှိပါ"
+
+#: templates/quiz/sitting_detail.html:5
+msgid "Result of"
+msgstr "ရလဒ်၏"
+
+#: templates/quiz/sitting_detail.html:5
+msgid "for"
+msgstr "အတွက်"
+
+#: templates/quiz/sitting_detail.html:9
+msgid "Quiz title"
+msgstr "မေးခွန်းခေါင်းစဉ်"
+
+#: templates/quiz/sitting_detail.html:14 templates/quiz/sitting_list.html:15
+msgid "Completed"
+msgstr "ပြီးပြည့်စုံခဲ့သော"
+
+#: templates/quiz/sitting_detail.html:22
+msgid "User answer"
+msgstr "အသုံးပြုသူအဖြေ"
+
+#: templates/quiz/sitting_detail.html:41
+msgid "incorrect"
+msgstr "မမှန်ကန်သော"
+
+#: templates/quiz/sitting_detail.html:43
+msgid "Correct"
+msgstr "မှန်ကန်သော"
+
+#: templates/quiz/sitting_detail.html:49
+msgid "Toggle whether correct"
+msgstr "အဖြေမှန်ကန်ုဖော်ပြမည်၊ မဖော်ပြမည်"
+
+#: templates/quiz/sitting_list.html:6
+msgid "List of complete exams"
+msgstr "ဖြေပြီးခဲ့သော စာမေးပွဲစာရင်း"
+
+#: templates/quiz/sitting_list.html:28
+msgid "Filter"
+msgstr "စစ်ထုတ်ရန်"
+
+#: templates/quiz/sitting_list.html:52
+msgid "There are no matching quizzes"
+msgstr "ကိုက်ညီသောမေးခွန်းများမရှိပါ"
