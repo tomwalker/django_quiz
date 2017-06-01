@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-19 06:32+0000\n"
-"PO-Revision-Date: 2017-04-19 15:21+0630\n"
-"Language: my_MM\n"
+"POT-Creation-Date: 2017-06-01 02:59+0000\n"
+"PO-Revision-Date: 2017-06-01 03:22+0000\n"
+"Last-Translator:   <kostik@kostik.net>\n"
+"Language-Team: \n"
+"Language: my\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "X-Generator: Poedit 2.0.1\n"
+"X-Translated-Using: django-rosetta 0.7.13\n"
 
 #: admin.py:31 admin.py:33 models.py:577
 msgid "Questions"
@@ -79,7 +80,8 @@ msgstr "တစ်ကြိမ်ဖြေတိုင်း မေးရမည�
 msgid ""
 "Correct answer is NOT shown after question. Answers displayed at the end."
 msgstr ""
-"အဖြေမှန်များကို မေးခွန်းဖြေပြီးချိန်တွင်ဖော်ပြပေးမည်မဟုတ်ဘဲ နောက်ဆုံးအချိန်မှ ဖော်ပြပေးမည်ဖြစ်သည်"
+"အဖြေမှန်များကို မေးခွန်းဖြေပြီးချိန်တွင်ဖော်ပြပေးမည်မဟုတ်ဘဲ "
+"နောက်ဆုံးအချိန်မှ ဖော်ပြပေးမည်ဖြစ်သည်"
 
 #: models.py:100
 msgid "Answers at end"
@@ -90,7 +92,8 @@ msgid ""
 "If yes, the result of each attempt by a user will be stored. Necessary for "
 "marking."
 msgstr ""
-"ဟုတ်တယ်လို့မှတ်သားထားပါက အသုံးပြုသူမှ တစ်ကြိမ်ကြိုးစားတိုင်းအဖြေကိုသိမ်းထားမည်ဖြစ်ပြီး "
+"ဟုတ်တယ်လို့မှတ်သားထားပါက အသုံးပြုသူမှ "
+"တစ်ကြိမ်ကြိုးစားတိုင်းအဖြေကိုသိမ်းထားမည်ဖြစ်ပြီး "
 "အမှန်ခြစ်သည့်အချိန်တွင်လိုပါလိမ့်မည်"
 
 #: models.py:107
@@ -102,7 +105,8 @@ msgid ""
 "If yes, only one attempt by a user will be permitted. Non users cannot sit "
 "this exam."
 msgstr ""
-"ဟုတ်တယ်လို့ဖြေပါက အသုံးပြုသူတစ်ဦးမှ ကြိုစားတိုင်းခွင့်ပြုမည်ဖြစ်သည်။ အသုံးပြုသူမဟုတ်ပါက စာမေးပွဲဖြေနိုင်မည်မဟုတ်ပါ"
+"ဟုတ်တယ်လို့ဖြေပါက အသုံးပြုသူတစ်ဦးမှ ကြိုစားတိုင်းခွင့်ပြုမည်ဖြစ်သည်။ "
+"အသုံးပြုသူမဟုတ်ပါက စာမေးပွဲဖြေနိုင်မည်မဟုတ်ပါ"
 
 #: models.py:114
 msgid "Single Attempt"
@@ -141,8 +145,8 @@ msgid ""
 "If yes, the quiz is not displayed in the quiz list and can only be taken by "
 "users who can edit quizzes."
 msgstr ""
-"ဟုတ်တယ်လို့ဖြေပါက မေးခွန်းကို မေးခွန်းစာရင်းထဲတွင်ဖော်ပြထားမည်မဟုတ်ဘဲ မေးခွန်းကို ပြင်ဆင်နိုင်သောအသုံးပြုသူသာ "
-"ပြင်ဆင်ခွင့်ရှိမည်ဖြစ်သည်"
+"ဟုတ်တယ်လို့ဖြေပါက မေးခွန်းကို မေးခွန်းစာရင်းထဲတွင်ဖော်ပြထားမည်မဟုတ်ဘဲ "
+"မေးခွန်းကို ပြင်ဆင်နိုင်သောအသုံးပြုသူသာ ပြင်ဆင်ခွင့်ရှိမည်ဖြစ်သည်"
 
 #: models.py:153 models.py:373 models.py:542
 #: templates/quiz/sitting_list.html:14
@@ -309,82 +313,6 @@ msgstr "မေးခွန်းခေါင်းစဉ်အမျိုးအ
 msgid "Check"
 msgstr "စစ်ဆေးမည်"
 
-#: templates/result.html:7
-msgid "Exam Results for"
-msgstr "စာမေးပွဲရလဒ်အတွက်မှာ "
-
-#: templates/result.html:32
-msgid "Exam results"
-msgstr "စာမေးပွဲရလဒ်"
-
-#: templates/result.html:34
-msgid "Exam title"
-msgstr "စာမေးပွဲခေါင်းစဉ်"
-
-#: templates/result.html:38
-msgid "You answered"
-msgstr "သင်ဖြေကြားခဲ့သောအဖြေမှာ "
-
-#: templates/result.html:38
-msgid "questions correctly out of"
-msgstr "မေးခွန်းများမှ မှန်ကန်ခဲ့သည်မှာ "
-
-#: templates/result.html:38
-msgid "giving you"
-msgstr "သင့်ကိုပေးမည်မှာ"
-
-#: templates/result.html:38
-msgid "percent correct"
-msgstr "ရာခိုင်နှုန်း မှန်ကန်သည်"
-
-#: templates/result.html:48
-msgid "Review the questions below and try the exam again in the future"
-msgstr "အောက်ပါမေးခွန်းများကို ကြည့်ရှုပါ ပြီးတော့ နောက်စာမေးပွဲအတွက် ပြန်လည်ကြိုးစားပါ"
-
-#: templates/result.html:52
-msgid ""
-"The result of this exam will be stored in your progress section so you can "
-"review and monitor your progression"
-msgstr ""
-"ဒီစာမေးပွဲရလဒ်ကို သင်၏ အခြေအနေပြ အပိုင်းတွင် သိမ်းထားမည်ဖြစ်ပြီး သင်သည် သင်၏ရလဒ်အခြေအနေကို "
-"နောက်ပိုင်းတွင် ပြန်လည်ကြည့်နိုင်မည်ဖြစ်သည်"
-
-#: templates/result.html:66
-msgid "Your session score is"
-msgstr "သင်၏စာမေးပွဲရမှတ်မှာ "
-
-#: templates/result.html:66
-msgid "out of a possible"
-msgstr "ဖြစ်နိုင်သော "
-
-#: templates/result.html:84
-msgid "Your answer"
-msgstr "သင့်အဖြေ"
-
-#: templates/single_complete.html:13
-msgid "You have already sat this exam and only one sitting is permitted"
-msgstr "သင်သည်ဒီစာမေးပွဲကို ဖြေပြီးပြီဖြစ်သည်။ တစ်ဦးလျှင် တစ်ကြိမ်သာဖြေခွင့်ရှိသည်"
-
-#: templates/single_complete.html:15
-msgid "This exam is only accessible to signed in users"
-msgstr "ဒီစာမေးပွဲသည် ဝင်ရောက်နိုင်သောအသုံးပြုသူများအတွက်သာဖြစ်သည်"
-
-#: templates/view_quiz_category.html:3
-msgid "Quizzes related to"
-msgstr "မေးခွန်းသက်ဆိုင်သည်မှာ "
-
-#: templates/view_quiz_category.html:6
-msgid "Quizzes in the"
-msgstr "ထိုထဲတွင်ပါသောမေးခွန်းများ"
-
-#: templates/view_quiz_category.html:6
-msgid "category"
-msgstr "ခေါင်းစဉ်အမျိုးအစား"
-
-#: templates/view_quiz_category.html:20
-msgid "There are no quizzes"
-msgstr "မေးခွန်းများမရှိပါ"
-
 #: templates/quiz/category_list.html:3 templates/quiz/quiz_list.html:3
 #: templates/quiz/sitting_list.html:3
 msgid "All Quizzes"
@@ -465,3 +393,82 @@ msgstr "စစ်ထုတ်ရန်"
 #: templates/quiz/sitting_list.html:52
 msgid "There are no matching quizzes"
 msgstr "ကိုက်ညီသောမေးခွန်းများမရှိပါ"
+
+#: templates/result.html:7
+msgid "Exam Results for"
+msgstr "စာမေးပွဲရလဒ်အတွက်မှာ "
+
+#: templates/result.html:32
+msgid "Exam results"
+msgstr "စာမေးပွဲရလဒ်"
+
+#: templates/result.html:34
+msgid "Exam title"
+msgstr "စာမေးပွဲခေါင်းစဉ်"
+
+#: templates/result.html:38
+msgid "You answered"
+msgstr "သင်ဖြေကြားခဲ့သောအဖြေမှာ "
+
+#: templates/result.html:38
+msgid "questions correctly out of"
+msgstr "မေးခွန်းများမှ မှန်ကန်ခဲ့သည်မှာ "
+
+#: templates/result.html:38
+msgid "giving you"
+msgstr "သင့်ကိုပေးမည်မှာ"
+
+#: templates/result.html:38
+msgid "percent correct"
+msgstr "ရာခိုင်နှုန်း မှန်ကန်သည်"
+
+#: templates/result.html:48
+msgid "Review the questions below and try the exam again in the future"
+msgstr ""
+"အောက်ပါမေးခွန်းများကို ကြည့်ရှုပါ ပြီးတော့ နောက်စာမေးပွဲအတွက် "
+"ပြန်လည်ကြိုးစားပါ"
+
+#: templates/result.html:52
+msgid ""
+"The result of this exam will be stored in your progress section so you can "
+"review and monitor your progression"
+msgstr ""
+"ဒီစာမေးပွဲရလဒ်ကို သင်၏ အခြေအနေပြ အပိုင်းတွင် သိမ်းထားမည်ဖြစ်ပြီး သင်သည် "
+"သင်၏ရလဒ်အခြေအနေကို နောက်ပိုင်းတွင် ပြန်လည်ကြည့်နိုင်မည်ဖြစ်သည်"
+
+#: templates/result.html:66
+msgid "Your session score is"
+msgstr "သင်၏စာမေးပွဲရမှတ်မှာ "
+
+#: templates/result.html:66
+msgid "out of a possible"
+msgstr "ဖြစ်နိုင်သော "
+
+#: templates/result.html:84
+msgid "Your answer"
+msgstr "သင့်အဖြေ"
+
+#: templates/single_complete.html:13
+msgid "You have already sat this exam and only one sitting is permitted"
+msgstr ""
+"သင်သည်ဒီစာမေးပွဲကို ဖြေပြီးပြီဖြစ်သည်။ တစ်ဦးလျှင် တစ်ကြိမ်သာဖြေခွင့်ရှိသည်"
+
+#: templates/single_complete.html:15
+msgid "This exam is only accessible to signed in users"
+msgstr "ဒီစာမေးပွဲသည် ဝင်ရောက်နိုင်သောအသုံးပြုသူများအတွက်သာဖြစ်သည်"
+
+#: templates/view_quiz_category.html:3
+msgid "Quizzes related to"
+msgstr "မေးခွန်းသက်ဆိုင်သည်မှာ "
+
+#: templates/view_quiz_category.html:6
+msgid "Quizzes in the"
+msgstr "ထိုထဲတွင်ပါသောမေးခွန်းများ"
+
+#: templates/view_quiz_category.html:6
+msgid "category"
+msgstr "ခေါင်းစဉ်အမျိုးအစား"
+
+#: templates/view_quiz_category.html:20
+msgid "There are no quizzes"
+msgstr "မေးခွန်းများမရှိပါ"
