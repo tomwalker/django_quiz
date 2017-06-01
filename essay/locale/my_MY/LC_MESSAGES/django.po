@@ -3,24 +3,24 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-19 06:30+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2017-04-19 13:55+0630\n"
+"Language: my_MM\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.1\n"
 
 #: models.py:26
 msgid "Essay style question"
-msgstr ""
+msgstr "အက်ဆေးစတိုင်မေးခွန်း"
 
 #: models.py:27
 msgid "Essay style questions"
-msgstr ""
+msgstr "အက်ဆေးစတိုင်မေးခွန်းများ"
