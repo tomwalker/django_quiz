@@ -1,6 +1,7 @@
-django-model-utils==2.0.3
-Django==1.6.5
-Pillow==2.5.0
+django-model-utils==3.0.0
+# Use latest code in Django 1.11 branch until 1.11.3 is released
+https://github.com/django/django/archive/stable/1.11.x.zip
+Pillow==4.1.1
 
 # Only needed for running tests.
 tox
