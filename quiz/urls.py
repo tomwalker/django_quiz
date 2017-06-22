@@ -1,11 +1,11 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from .views import QuizListView, CategoriesListView,\
     ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList,\
     QuizMarkingDetail, QuizDetailView, QuizTake
 
 
-urlpatterns = patterns('',
+urlpatterns = [
 
                        url(regex=r'^$',
                            view=QuizListView.as_view(),
@@ -39,4 +39,4 @@ urlpatterns = patterns('',
                        url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
                            view=QuizTake.as_view(),
                            name='quiz_question'),
-)
+]
