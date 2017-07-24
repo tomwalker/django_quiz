@@ -28,9 +28,9 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     install_requires=[
-        'django-model-utils == 3.0.0',
-        'Django >= 1.11',
-        'Pillow==4.1.1'
+        'django-model-utils>=3.0.0',
+        'Django>=1.11',
+        'Pillow>=4.0.0'
     ],
     test_suite='runtests.runtests'
 )
