@@ -478,14 +478,14 @@ class TestQuestionMarking(TestCase):
 
     def test_paper_marking_list_view(self):
         response = self.client.get('/marking/')
-        self.assertRedirects(response, 'accounts/login/?next=/marking/',
+        self.assertRedirects(response, '/accounts/login/?next=/marking/',
                              status_code=302, target_status_code=404 or 200)
 
         self.assertFalse(self.teacher.has_perm('view_sittings', self.student))
 
         self.client.login(username='luke', password='top_secret')
         response = self.client.get('/marking/')
-        self.assertRedirects(response, 'accounts/login/?next=/marking/',
+        self.assertRedirects(response, '/accounts/login/?next=/marking/',
                              status_code=302, target_status_code=404 or 200)
 
         self.client.login(username='yoda', password='use_d@_force')
