@@ -4,7 +4,9 @@ import json
 
 from django.db import models
 from django.core.exceptions import ValidationError, ImproperlyConfigured
-from django.core.validators import MaxValueValidator
+from django.core.validators import (
+    MaxValueValidator, validate_comma_separated_integer_list,
+)
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from django.utils.encoding import python_2_unicode_compatible
@@ -192,8 +194,9 @@ class Progress(models.Model):
     """
     user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_("User"))
 
-    score = models.CommaSeparatedIntegerField(max_length=1024,
-                                              verbose_name=_("Score"))
+    score = models.CharField(max_length=1024,
+                             verbose_name=_("Score"),
+                             validators=[validate_comma_separated_integer_list])
 
     objects = ProgressManager()
 
@@ -372,14 +375,21 @@ class Sitting(models.Model):
 
     quiz = models.ForeignKey(Quiz, verbose_name=_("Quiz"))
 
-    question_order = models.CommaSeparatedIntegerField(
-        max_length=1024, verbose_name=_("Question Order"))
+    question_order = models.CharField(
+        max_length=1024,
+        verbose_name=_("Question Order"),
+        validators=[validate_comma_separated_integer_list])
 
-    question_list = models.CommaSeparatedIntegerField(
-        max_length=1024, verbose_name=_("Question List"))
+    question_list = models.CharField(
+        max_length=1024,
+        verbose_name=_("Question List"),
+        validators=[validate_comma_separated_integer_list])
 
-    incorrect_questions = models.CommaSeparatedIntegerField(
-        max_length=1024, blank=True, verbose_name=_("Incorrect questions"))
+    incorrect_questions = models.CharField(
+        max_length=1024,
+        blank=True,
+        verbose_name=_("Incorrect questions"),
+        validators=[validate_comma_separated_integer_list])
 
     current_score = models.IntegerField(verbose_name=_("Current Score"))
 

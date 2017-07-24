@@ -6,6 +6,7 @@ from django.conf import settings
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
+import re
 
 
 class Migration(migrations.Migration):
@@ -32,7 +33,7 @@ class Migration(migrations.Migration):
             name='Progress',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('score', models.CommaSeparatedIntegerField(max_length=1024, verbose_name='Score')),
+                ('score', models.CharField(max_length=1024, validators=[django.core.validators.RegexValidator(re.compile('^\\d+(?:\\,\\d+)*\\Z', 32), code='invalid', message='Enter only digits separated by commas.')], verbose_name='Score')),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User')),
             ],
             options={
@@ -82,9 +83,9 @@ class Migration(migrations.Migration):
             name='Sitting',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('question_order', models.CommaSeparatedIntegerField(max_length=1024, verbose_name='Question Order')),
-                ('question_list', models.CommaSeparatedIntegerField(max_length=1024, verbose_name='Question List')),
-                ('incorrect_questions', models.CommaSeparatedIntegerField(blank=True, max_length=1024, verbose_name='Incorrect questions')),
+                ('question_order', models.CharField(max_length=1024, validators=[django.core.validators.RegexValidator(re.compile('^\\d+(?:\\,\\d+)*\\Z', 32), code='invalid', message='Enter only digits separated by commas.')], verbose_name='Question Order')),
+                ('question_list', models.CharField(max_length=1024, validators=[django.core.validators.RegexValidator(re.compile('^\\d+(?:\\,\\d+)*\\Z', 32), code='invalid', message='Enter only digits separated by commas.')], verbose_name='Question List')),
+                ('incorrect_questions', models.CharField(blank=True, max_length=1024, validators=[django.core.validators.RegexValidator(re.compile('^\\d+(?:\\,\\d+)*\\Z', 32), code='invalid', message='Enter only digits separated by commas.')], verbose_name='Incorrect questions')),
                 ('current_score', models.IntegerField(verbose_name='Current Score')),
                 ('complete', models.BooleanField(default=False, verbose_name='Complete')),
                 ('user_answers', models.TextField(blank=True, default='{}', verbose_name='User Answers')),
