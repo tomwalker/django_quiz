@@ -3,6 +3,7 @@
 *.pyc
 #*#
 /db.sqlite3
+sqlite.db
 /manage.py
 /mysite*
 /plan.txt
