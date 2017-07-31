@@ -135,6 +135,7 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 class QuizTake(FormView):
     form_class = QuestionForm
     template_name = 'question.html'
+    result_template_name = 'result.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
@@ -242,7 +243,7 @@ class QuizTake(FormView):
         if self.quiz.exam_paper is False:
             self.sitting.delete()
 
-        return render(self.request, 'result.html', results)
+        return render(self.request, self.result_template_name, results)
 
     def anon_load_sitting(self):
         if self.quiz.single_attempt is True:
