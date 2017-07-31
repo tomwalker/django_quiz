@@ -136,6 +136,7 @@ class QuizTake(FormView):
     form_class = QuestionForm
     template_name = 'question.html'
     result_template_name = 'result.html'
+    single_complete_template_name = 'single_complete.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
@@ -151,7 +152,7 @@ class QuizTake(FormView):
             self.sitting = self.anon_load_sitting()
 
         if self.sitting is False:
-            return render(request, 'single_complete.html')
+            return render(request, self.single_complete_template_name)
 
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
 
