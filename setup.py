@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 from io import open
 
 readme = open('README.rst', encoding='utf-8').read()
@@ -6,7 +6,7 @@ readme = open('README.rst', encoding='utf-8').read()
 setup(
     name='django-quiz-app',
     version='0.5.1',
-    packages=['quiz', 'multichoice', 'true_false', 'essay', 'quiz.templatetags'],
+    packages=find_packages(),
     include_package_data=True,
     license='MIT License',
     description='A configurable quiz app for Django.',
@@ -28,9 +28,9 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     install_requires=[
-        'django-model-utils == 2.0.3',
-        'Django >= 1.5.1',
-        'Pillow == 2.5.0'
+        'django-model-utils>=3.0.0',
+        'Django>=1.11',
+        'Pillow>=4.0.0'
     ],
     test_suite='runtests.runtests'
 )
