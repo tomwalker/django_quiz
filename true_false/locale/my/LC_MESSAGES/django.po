@@ -8,18 +8,19 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-19 06:32+0000\n"
-"PO-Revision-Date: 2017-04-19 14:08+0630\n"
+"PO-Revision-Date: 2017-11-02 10:00+0000\n"
+"Last-Translator: Pyae Sone <gipsyhnh@gmail.com>\n"
+"Language-Team: \n"
 "Language: my_MM\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "X-Generator: Poedit 2.0.1\n"
+"X-Translated-Using: django-rosetta 0.7.13\n"
 
 #: models.py:11
 msgid "Tick this if the question is true. Leave it blank for false."
-msgstr ""
+msgstr "မေးခွန်းသည် မှန်ပါက အမှန်ခြစ်ပါ။ အမှားဆိုပါကဒီအထိုင်းထားပေးပါ"
 
 #: models.py:14
 msgid "Correct"
