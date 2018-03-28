@@ -56,7 +56,7 @@ class CategoriesListView(ListView):
 
 class ViewQuizListByCategory(ListView):
     model = Quiz
-    template_name = 'view_quiz_category.html'
+    template_name = 'quiz/view_quiz_category.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.category = get_object_or_404(
@@ -80,7 +80,7 @@ class ViewQuizListByCategory(ListView):
 
 
 class QuizUserProgressView(TemplateView):
-    template_name = 'progress.html'
+    template_name = 'quiz/progress.html'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -134,7 +134,7 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
 class QuizTake(FormView):
     form_class = QuestionForm
-    template_name = 'question.html'
+    template_name = 'quiz/question.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
@@ -150,7 +150,7 @@ class QuizTake(FormView):
             self.sitting = self.anon_load_sitting()
 
         if self.sitting is False:
-            return render(request, 'single_complete.html')
+            return render(request, 'quiz/single_complete.html')
 
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
 
@@ -242,7 +242,7 @@ class QuizTake(FormView):
         if self.quiz.exam_paper is False:
             self.sitting.delete()
 
-        return render(self.request, 'result.html', results)
+        return render(self.request, 'quiz/result.html', results)
 
     def anon_load_sitting(self):
         if self.quiz.single_attempt is True:
@@ -351,7 +351,7 @@ class QuizTake(FormView):
 
         del self.request.session[self.quiz.anon_q_data()]
 
-        return render(self.request, 'result.html', results)
+        return render(self.request, 'quiz/result.html', results)
 
 
 def anon_session_score(session, to_add=0, possible=0):
