@@ -7,6 +7,10 @@
 {% block description %} {% trans "Exam Results for" %} {{ quiz.title }} {% endblock %}
 
 {% block content %}
+ 
+  {% if quiz.time_limit > 0 and elapsed > quiz.time_limit %}
+      <p>Exceeded maximum allowed {{ quiz.time_limit }} minutes.</p>
+  {% endif %}
 
   {% if previous.answers %}
 
@@ -18,10 +22,12 @@
 	</strong>
   </p>
   {% include 'correct_answer.html' %}
+  {% if previous.previous_question.explanation %}
   <p><strong>{% trans "Explanation" %}:</strong></p>
   <div class="well " style="background-color: #fcf8e3;">
     <p>{{ previous.previous_question.explanation }}</p>
   </div>
+  {% endif %}
   <hr>
 
   {% endif %}
@@ -84,10 +90,12 @@
       <p>{% trans "Your answer" %}: {{ question|answer_choice_to_string:question.user_answer }}</p>
       {% endif %}
 
+      {% if question.explanation %}
 	  <p><strong>{% trans "Explanation" %}:</strong></p>
 	  <div class="well " style="background-color: #fcf8e3;">
 		<p>{{ question.explanation|safe }}</p>
 	  </div>
+      {% endif %}
 
 	  <hr>
 

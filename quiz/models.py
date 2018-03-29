@@ -135,6 +135,12 @@ class Quiz(models.Model):
                     " taken by users who can edit"
                     " quizzes."))
 
+    time_limit = models.SmallIntegerField(
+        blank=True, default=0,
+        verbose_name=_("Time Limit"),
+        help_text=_("In minutes."),
+        validators=[MaxValueValidator(600)])
+
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         self.url = re.sub('\s+', '-', self.url).lower()
 
