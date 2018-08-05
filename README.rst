@@ -27,9 +27,8 @@ Current features
 Requirements
 ------------
 
-django-model-utils 2.0.3
+django-model-utils
 
-It was developed using Django 1.6.5
 
 Installation
 ------------

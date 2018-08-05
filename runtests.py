@@ -12,8 +12,7 @@ from django.conf import settings
 
 
 def runtests():
-    if django.VERSION >= (1, 7):
-        django.setup()
+    django.setup()
     TestRunner = get_runner(settings)
     test_runner = TestRunner(verbosity=1, interactive=True)
     failures = test_runner.run_tests(

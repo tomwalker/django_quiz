@@ -5,7 +5,10 @@ from django.conf import settings
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from django.core.urlresolvers import resolve
+try:
+    from django.core.urlresolvers import resolve
+except ImportError:
+    from django.urls import resolve
 from django.http import HttpRequest
 from django.template import Template, Context
 from django.test import TestCase
