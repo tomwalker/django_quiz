@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import (
     MaxValueValidator, validate_comma_separated_integer_list,
 )
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 from django.utils.encoding import python_2_unicode_compatible
 from django.conf import settings

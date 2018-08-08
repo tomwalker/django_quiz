@@ -13,6 +13,7 @@ from django.http import HttpRequest
 from django.template import Template, Context
 from django.test import TestCase
 from django.utils.six import StringIO
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Category, Quiz, Progress, Sitting, SubCategory
 from .views import (anon_session_score, QuizListView, CategoriesListView,
@@ -166,7 +167,7 @@ class TestProgress(TestCase):
             self.p1.update_score('hamster', 3, 4)
 
         non_int = self.p1.update_score(question2, '1', 2)
-        self.assertIn('error', str(non_int))
+        self.assertIn(_('error'), non_int)
 
         # negative possible score
         self.p1.update_score(question2, 0, -1)
