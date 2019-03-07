@@ -42,7 +42,7 @@ class QuizAdminForm(forms.ModelForm):
     def save(self, commit=True):
         quiz = super(QuizAdminForm, self).save(commit=False)
         quiz.save()
-        quiz.question_set = self.cleaned_data['questions']
+        quiz.question_set.set(self.cleaned_data['questions'])
         self.save_m2m()
         return quiz
 

@@ -1,15 +1,19 @@
 # -*- coding: iso-8859-15 -*-
+from importlib import import_module
 
 from django.conf import settings
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from django.core.urlresolvers import resolve
+try:
+    from django.core.urlresolvers import resolve
+except ImportError:
+    from django.urls import resolve
 from django.http import HttpRequest
 from django.template import Template, Context
 from django.test import TestCase
-from django.utils.importlib import import_module
 from django.utils.six import StringIO
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Category, Quiz, Progress, Sitting, SubCategory
 from .views import (anon_session_score, QuizListView, CategoriesListView,
@@ -163,7 +167,7 @@ class TestProgress(TestCase):
             self.p1.update_score('hamster', 3, 4)
 
         non_int = self.p1.update_score(question2, '1', 2)
-        self.assertIn('error', str(non_int))
+        self.assertIn(_('error'), non_int)
 
         # negative possible score
         self.p1.update_score(question2, 0, -1)
@@ -478,14 +482,14 @@ class TestQuestionMarking(TestCase):
 
     def test_paper_marking_list_view(self):
         response = self.client.get('/marking/')
-        self.assertRedirects(response, 'accounts/login/?next=/marking/',
+        self.assertRedirects(response, '/accounts/login/?next=/marking/',
                              status_code=302, target_status_code=404 or 200)
 
         self.assertFalse(self.teacher.has_perm('view_sittings', self.student))
 
         self.client.login(username='luke', password='top_secret')
         response = self.client.get('/marking/')
-        self.assertRedirects(response, 'accounts/login/?next=/marking/',
+        self.assertRedirects(response, '/accounts/login/?next=/marking/',
                              status_code=302, target_status_code=404 or 200)
 
         self.client.login(username='yoda', password='use_d@_force')

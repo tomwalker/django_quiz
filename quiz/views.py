@@ -135,13 +135,18 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 class QuizTake(FormView):
     form_class = QuestionForm
     template_name = 'question.html'
+    result_template_name = 'result.html'
+    single_complete_template_name = 'single_complete.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
         if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
             raise PermissionDenied
 
-        self.logged_in_user = self.request.user.is_authenticated()
+        try:
+            self.logged_in_user = self.request.user.is_authenticated()
+        except TypeError:
+            self.logged_in_user = self.request.user.is_authenticated
 
         if self.logged_in_user:
             self.sitting = Sitting.objects.user_sitting(request.user,
@@ -150,11 +155,11 @@ class QuizTake(FormView):
             self.sitting = self.anon_load_sitting()
 
         if self.sitting is False:
-            return render(request, 'single_complete.html')
+            return render(request, self.single_complete_template_name)
 
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
 
-    def get_form(self, form_class):
+    def get_form(self, *args, **kwargs):
         if self.logged_in_user:
             self.question = self.sitting.get_first_question()
             self.progress = self.sitting.progress()
@@ -164,6 +169,8 @@ class QuizTake(FormView):
 
         if self.question.__class__ is Essay_Question:
             form_class = EssayForm
+        else:
+            form_class = self.form_class
 
         return form_class(**self.get_form_kwargs())
 
@@ -242,7 +249,7 @@ class QuizTake(FormView):
         if self.quiz.exam_paper is False:
             self.sitting.delete()
 
-        return render(self.request, 'result.html', results)
+        return render(self.request, self.result_template_name, results)
 
     def anon_load_sitting(self):
         if self.quiz.single_attempt is True:
