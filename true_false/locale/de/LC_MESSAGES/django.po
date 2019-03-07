@@ -1,0 +1,36 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-31 22:44+0000\n"
+"PO-Revision-Date: 2019-03-07 21:12+0100\n"
+"Last-Translator: Reiner Mayers\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.7.6\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: apps/true_false/models.py:11
+msgid "Tick this if the question is true. Leave it blank for false."
+msgstr "Markieren Sie, wenn die Frage stimmt. Freilassen wenn falsch."
+
+#: apps/true_false/models.py:14
+msgid "Correct"
+msgstr "Korrekt"
+
+#: apps/true_false/models.py:42
+msgid "True/False Question"
+msgstr "Wahr/Falsch Frage"
+
+#: apps/true_false/models.py:43
+msgid "True/False Questions"
+msgstr "Wahr/Falsch Fragen"
