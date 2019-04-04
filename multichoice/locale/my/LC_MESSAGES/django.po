@@ -1,0 +1,71 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-19 06:30+0000\n"
+"PO-Revision-Date: 2017-04-19 14:02+0630\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: my_MM\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.1\n"
+
+#: models.py:9 models.py:65
+msgid "Content"
+msgstr "မာတိကာ"
+
+#: models.py:10
+msgid "Random"
+msgstr "အစီအစဉ်တကျမဟုတ်ဘဲ"
+
+#: models.py:11
+msgid "None"
+msgstr "ဘာမှမဟုတ်"
+
+#: models.py:20
+msgid ""
+"The order in which multichoice answer options are displayed to the user"
+msgstr "အသုံးပြုသူထံသို့ အဖြေများစွာရှိသည့်မေးခွန်းများအတွက် စီရန်"
+
+#: models.py:23
+msgid "Answer Order"
+msgstr "အဖြေစီပုံ"
+
+#: models.py:53
+msgid "Multiple Choice Question"
+msgstr "အဖြေအများ ရွေးနိုင်သောမေးခွန်းပုံစံ"
+
+#: models.py:54
+msgid "Multiple Choice Questions"
+msgstr "အဖြေအများ ရွေးနိုင်သောမေးခွန်းပုံစံများ"
+
+#: models.py:59
+msgid "Question"
+msgstr "မေးခွန်း"
+
+#: models.py:63
+msgid "Enter the answer text that you want displayed"
+msgstr "သင်ဖော်ပြလိုသောအဖြေကိုရိုက်ထည့်ပါ"
+
+#: models.py:69
+msgid "Is this a correct answer?"
+msgstr "ဒီဟာသည် အဖြေမှန်လား"
+
+#: models.py:70
+msgid "Correct"
+msgstr "အဖြေမှန်"
+
+#: models.py:76
+msgid "Answer"
+msgstr "အဖြေ"
+
+#: models.py:77
+msgid "Answers"
+msgstr "အဖြေများ"

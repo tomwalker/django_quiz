@@ -17,7 +17,7 @@ class Essay_Question(Question):
         return False
 
     def answer_choice_to_string(self, guess):
-        return str(guess)
+        return unicode(guess)
 
     def __str__(self):
         return self.content
