@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
+
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+
 from quiz.models import Question
 
 
@@ -13,14 +15,18 @@ ANSWER_ORDER_OPTIONS = (
 
 
 class MCQuestion(Question):
+    """Stores multiple-choice questions."""
 
     answer_order = models.CharField(
-        max_length=30, null=True, blank=True,
+        max_length=30,
+        null=True,
+        blank=True,
         choices=ANSWER_ORDER_OPTIONS,
         help_text=_("The order in which multichoice "
                     "answer options are displayed "
                     "to the user"),
-        verbose_name=_("Answer Order"))
+        verbose_name=_("Answer Order")
+    )
 
     def check_if_correct(self, guess):
         answer = Answer.objects.get(id=guess)
@@ -56,18 +62,31 @@ class MCQuestion(Question):
 
 @python_2_unicode_compatible
 class Answer(models.Model):
-    question = models.ForeignKey(MCQuestion, verbose_name=_("Question"), on_delete=models.CASCADE)
+    """
+    Stores question answers, related to:
 
-    content = models.CharField(max_length=1000,
-                               blank=False,
-                               help_text=_("Enter the answer text that "
-                                           "you want displayed"),
-                               verbose_name=_("Content"))
+    :model: 'multichoice.MCQuestion'
+    """
+    question = models.ForeignKey(
+        MCQuestion,
+        verbose_name=_("Question"),
+        on_delete=models.CASCADE
+    )
 
-    correct = models.BooleanField(blank=False,
-                                  default=False,
-                                  help_text=_("Is this a correct answer?"),
-                                  verbose_name=_("Correct"))
+    content = models.CharField(
+        max_length=1000,
+        blank=False,
+        help_text=_("Enter the answer text that "
+                    "you want displayed"),
+        verbose_name=_("Content")
+    )
+
+    correct = models.BooleanField(
+        blank=False,
+        default=False,
+        help_text=_("Is this a correct answer?"),
+        verbose_name=_("Correct")
+    )
 
     def __str__(self):
         return self.content

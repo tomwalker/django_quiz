@@ -6,8 +6,8 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
 
-from .forms import QuestionForm, EssayForm
-from .models import Quiz, Category, Progress, Sitting, Question
+from quiz.forms import QuestionForm, EssayForm
+from quiz.models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
 
 
@@ -29,6 +29,19 @@ class SittingFilterTitleMixin(object):
 
 
 class QuizListView(ListView):
+    """
+    Display an list of quizzes :model:`quiz.Quiz`.
+
+    **Context**
+
+    ``Quiz``
+        An instance of :model:`quiz.Quiz`.
+
+    **Template:**
+
+    :template:`quiz/quiz_list.html`
+    """
+
     model = Quiz
 
     def get_queryset(self):
@@ -37,6 +50,19 @@ class QuizListView(ListView):
 
 
 class QuizDetailView(DetailView):
+    """
+    Display an individual quiz :model:`quiz.Quiz`.
+
+    **Context**
+
+    ``Quiz``
+        An instance of :model:`quiz.Quiz`.
+
+    **Template:**
+
+    :template:`quiz/quiz_detail.html`
+    """
+
     model = Quiz
     slug_field = 'url'
 
@@ -51,10 +77,36 @@ class QuizDetailView(DetailView):
 
 
 class CategoriesListView(ListView):
+    """
+    Display an list of categories :model:`quiz.Category`.
+
+    **Context**
+
+    ``Category``
+        An instance of :model:`quiz.Category`.
+
+    **Template:**
+
+    :template:`quiz/category_list.html`
+    """
+
     model = Category
 
 
 class ViewQuizListByCategory(ListView):
+    """
+    Display an list of quizzes :model:`quiz.Quiz`.
+
+    **Context**
+
+    ``Quiz``
+        An instance of :model:`quiz.Quiz`.
+
+    **Template:**
+
+    :template:`view_quiz_category.html`
+    """
+
     model = Quiz
     template_name = 'view_quiz_category.html'
 
@@ -63,14 +115,12 @@ class ViewQuizListByCategory(ListView):
             Category,
             category=self.kwargs['category_name']
         )
-
-        return super(ViewQuizListByCategory, self).\
-            dispatch(request, *args, **kwargs)
+        return super(
+            ViewQuizListByCategory, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(ViewQuizListByCategory, self)\
-            .get_context_data(**kwargs)
-
+        context = super(
+            ViewQuizListByCategory, self).get_context_data(**kwargs)
         context['category'] = self.category
         return context
 
@@ -80,12 +130,20 @@ class ViewQuizListByCategory(ListView):
 
 
 class QuizUserProgressView(TemplateView):
+    """
+    Display quiz user progress.
+
+    **Template:**
+
+    :template:`progress.html`
+    """
+
     template_name = 'progress.html'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(QuizUserProgressView, self)\
-            .dispatch(request, *args, **kwargs)
+        return super(
+            QuizUserProgressView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(QuizUserProgressView, self).get_context_data(**kwargs)
@@ -96,11 +154,24 @@ class QuizUserProgressView(TemplateView):
 
 
 class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
+    """
+    Display an list of user quiz results :model:`quiz.Sitting`.
+
+    **Context**
+
+    ``Sitting``
+        An instance of :model:`quiz.Sitting`.
+
+    **Template:**
+
+    :template:`sitting_list.html`
+    """
+
     model = Sitting
 
     def get_queryset(self):
-        queryset = super(QuizMarkingList, self).get_queryset()\
-                                               .filter(complete=True)
+        queryset = super(QuizMarkingList, self).get_queryset()
+        queryset = queryset.filter(complete=True)
 
         user_filter = self.request.GET.get('user_filter')
         if user_filter:
@@ -110,6 +181,19 @@ class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
 
 
 class QuizMarkingDetail(QuizMarkerMixin, DetailView):
+    """
+    Display a user quiz :model:`quiz.Sitting`.
+
+    **Context**
+
+    ``Sitting``
+        An instance of :model:`quiz.Sitting`.
+
+    **Template:**
+
+    :template:`sitting_detail.html`
+    """
+
     model = Sitting
 
     def post(self, request, *args, **kwargs):
@@ -127,12 +211,20 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(QuizMarkingDetail, self).get_context_data(**kwargs)
-        context['questions'] =\
-            context['sitting'].get_questions(with_answers=True)
+        context['questions'] = context[
+            'sitting'].get_questions(with_answers=True)
         return context
 
 
 class QuizTake(FormView):
+    """
+    Display a quiz.
+
+    **Template:**
+
+    :template:`question.html`
+    """
+
     form_class = QuestionForm
     template_name = 'question.html'
     result_template_name = 'result.html'
@@ -149,8 +241,10 @@ class QuizTake(FormView):
             self.logged_in_user = self.request.user.is_authenticated
 
         if self.logged_in_user:
-            self.sitting = Sitting.objects.user_sitting(request.user,
-                                                        self.quiz)
+            self.sitting = Sitting.objects.user_sitting(
+                request.user,
+                self.quiz
+            )
         else:
             self.sitting = self.anon_load_sitting()
 
@@ -216,12 +310,15 @@ class QuizTake(FormView):
             progress.update_score(self.question, 0, 1)
 
         if self.quiz.answers_at_end is not True:
-            self.previous = {'previous_answer': guess,
-                             'previous_outcome': is_correct,
-                             'previous_question': self.question,
-                             'answers': self.question.get_answers(),
-                             'question_type': {self.question
-                                               .__class__.__name__: True}}
+            self.previous = {
+                'previous_answer': guess,
+                'previous_outcome': is_correct,
+                'previous_question': self.question,
+                'answers': self.question.get_answers(),
+                'question_type': {
+                    self.question.__class__.__name__: True
+                }
+            }
         else:
             self.previous = {}
 
@@ -314,12 +411,15 @@ class QuizTake(FormView):
 
         self.previous = {}
         if self.quiz.answers_at_end is not True:
-            self.previous = {'previous_answer': guess,
-                             'previous_outcome': is_correct,
-                             'previous_question': self.question,
-                             'answers': self.question.get_answers(),
-                             'question_type': {self.question
-                                               .__class__.__name__: True}}
+            self.previous = {
+                'previous_answer': guess,
+                'previous_outcome': is_correct,
+                'previous_question': self.question,
+                'answers': self.question.get_answers(),
+                'question_type': {
+                    self.question.__class__.__name__: True
+                }
+            }
 
         self.request.session[self.quiz.anon_q_list()] =\
             self.request.session[self.quiz.anon_q_list()][1:]
@@ -345,13 +445,13 @@ class QuizTake(FormView):
 
         if self.quiz.answers_at_end:
             results['questions'] = sorted(
-                self.quiz.question_set.filter(id__in=q_order)
-                                      .select_subclasses(),
+                self.quiz.question_set.filter(
+                    id__in=q_order).select_subclasses(),
                 key=lambda q: q_order.index(q.id))
 
             results['incorrect_questions'] = (
-                self.request
-                    .session[self.quiz.anon_q_data()]['incorrect_questions'])
+                self.request.session[
+                    self.quiz.anon_q_data()]['incorrect_questions'])
 
         else:
             results['previous'] = self.previous
