@@ -9,7 +9,8 @@ from django.core.validators import (
 )
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
-from django.utils.encoding import python_2_unicode_compatible
+#from django.utils.encoding import python_2_unicode_compatible
+from six import python_2_unicode_compatible
 from django.conf import settings
 
 from model_utils.managers import InheritanceManager

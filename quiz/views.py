@@ -8,7 +8,7 @@ from django.views.generic import DetailView, ListView, TemplateView, FormView
 
 from .forms import QuestionForm, EssayForm
 from .models import Quiz, Category, Progress, Sitting, Question
-from essay.models import Essay_Question
+from ..essay.models import Essay_Question
 
 
 class QuizMarkerMixin(object):
