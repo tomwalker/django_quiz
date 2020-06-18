@@ -1,7 +1,4 @@
-try:
-    from django.conf.urls import url
-except ImportError:
-    from django.urls import re_path as url
+from django.urls import path
 
 from .views import QuizListView, CategoriesListView, \
     ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList, \
@@ -9,36 +6,36 @@ from .views import QuizListView, CategoriesListView, \
 
 urlpatterns = [
 
-    url(r'^$',
+    path('',
         view=QuizListView.as_view(),
         name='quiz_index'),
 
-    url(r'^category/$',
+    path('category/',
         view=CategoriesListView.as_view(),
         name='quiz_category_list_all'),
 
-    url(r'^category/(?P<category_name>[\w|\W-]+)/$',
+    path('category/<str:category_name>',
         view=ViewQuizListByCategory.as_view(),
         name='quiz_category_list_matching'),
 
-    url(r'^progress/$',
+    path('progress/',
         view=QuizUserProgressView.as_view(),
         name='quiz_progress'),
 
-    url(r'^marking/$',
+    path('marking/',
         view=QuizMarkingList.as_view(),
         name='quiz_marking'),
 
-    url(r'^marking/(?P<pk>[\d.]+)/$',
+    path('marking/<int:pk>/',
         view=QuizMarkingDetail.as_view(),
         name='quiz_marking_detail'),
 
     #  passes variable 'quiz_name' to quiz_take view
-    url(r'^(?P<slug>[\w-]+)/$',
+    path('<slug:slug>/',
         view=QuizDetailView.as_view(),
         name='quiz_start_page'),
 
-    url(r'^(?P<quiz_name>[\w-]+)/take/$',
+    path('<str:quiz_name>/take/',
         view=QuizTake.as_view(),
         name='quiz_question'),
 ]
