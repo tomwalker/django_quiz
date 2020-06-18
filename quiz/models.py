@@ -7,9 +7,8 @@ from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import (
     MaxValueValidator, validate_comma_separated_integer_list,
 )
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
-from django.utils.encoding import python_2_unicode_compatible
 from django.conf import settings
 
 from model_utils.managers import InheritanceManager
@@ -25,7 +24,6 @@ class CategoryManager(models.Manager):
         return new_category
 
 
-@python_2_unicode_compatible
 class Category(models.Model):
 
     category = models.CharField(
@@ -43,7 +41,6 @@ class Category(models.Model):
         return self.category
 
 
-@python_2_unicode_compatible
 class SubCategory(models.Model):
 
     sub_category = models.CharField(
@@ -64,7 +61,6 @@ class SubCategory(models.Model):
         return self.sub_category + " (" + self.category.category + ")"
 
 
-@python_2_unicode_compatible
 class Quiz(models.Model):
 
     title = models.CharField(
@@ -541,7 +537,6 @@ class Sitting(models.Model):
         return answered, total
 
 
-@python_2_unicode_compatible
 class Question(models.Model):
     """
     Base class for all question types.

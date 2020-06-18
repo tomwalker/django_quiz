@@ -1,7 +1,7 @@
 from django.core.files.base import ContentFile
 from django.db.models.fields.files import ImageFieldFile
 from django.test import TestCase
-from django.utils.six import StringIO
+from six import StringIO
 
 from .models import MCQuestion, Answer
 
