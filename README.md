@@ -46,9 +46,11 @@ Requirements
 ------------
 django-model-utils
 
+six
+
 Pillow
 
-Tests are included and pass for Django versions 1.5, 1.6, 1.7 and 1.8, running with Python 2.7, 3.3 and 3.4
+Tests are included and pass for Django versions 1.5, 1.6, 1.7 and 1.8, 3.0 running with Python 2.7, 3.3, 3.4, 3.6 , 3.9 
 
 Installation
 ------------
@@ -64,7 +66,7 @@ Add `'quiz', 'multichoice', 'true_false', 'essay'` to your `INSTALLED_APPS` sett
         'quiz',
         'multichoice',
         'true_false',
-	'essay',
+	    'essay',
         ...
     )
 
