@@ -3,6 +3,9 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from quiz.models import Question
 
+from parler.models import TranslatableModel, TranslatedFields
+from parler.managers import TranslatableManager
+
 
 ANSWER_ORDER_OPTIONS = (
     ("content", _("Content")),
@@ -12,6 +15,8 @@ ANSWER_ORDER_OPTIONS = (
 
 
 class MCQuestion(Question):
+
+    # default_manager = TranslatableManager()
 
     answer_order = models.CharField(
         max_length=30,
@@ -58,16 +63,18 @@ class MCQuestion(Question):
         verbose_name_plural = _("Multiple Choice Questions")
 
 
-class Answer(models.Model):
+class Answer(TranslatableModel):
     question = models.ForeignKey(
         MCQuestion, verbose_name=_("Question"), on_delete=models.CASCADE
     )
 
-    content = models.CharField(
-        max_length=1000,
-        blank=False,
-        help_text=_("Enter the answer text that you want displayed"),
-        verbose_name=_("Content"),
+    translations = TranslatedFields(
+        content=models.CharField(
+            max_length=1000,
+            blank=True,
+            help_text=_("Enter the answer text that you want displayed"),
+            verbose_name=_("Content"),
+        )
     )
 
     correct = models.BooleanField(

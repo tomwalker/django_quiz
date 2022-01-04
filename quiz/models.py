@@ -12,10 +12,17 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 from django.conf import settings
 
-from model_utils.managers import InheritanceManager
+from parler.models import TranslatableModel, TranslatedFields
+from parler.managers import TranslatableQuerySet, TranslatableManager
+
+# from model_utils.managers import InheritanceManager, InheritanceManagerMixin
+from polymorphic.models import PolymorphicModel
+from polymorphic.managers import PolymorphicManager
+from polymorphic.query import PolymorphicQuerySet
 
 
-class CategoryManager(models.Manager):
+
+class CategoryManager(TranslatableManager):
     def new_category(self, category):
         new_category = self.create(category=re.sub("\s+", "-", category).lower())
 
@@ -23,10 +30,16 @@ class CategoryManager(models.Manager):
         return new_category
 
 
-class Category(models.Model):
+class Category(TranslatableModel):
 
-    category = models.CharField(
-        verbose_name=_("Category"), max_length=250, blank=True, unique=True, null=True
+    translations = TranslatedFields(
+        category=models.CharField(
+            verbose_name=_("Category"),
+            max_length=250,
+            blank=True,
+            unique=True,
+            null=True,
+        )
     )
 
     objects = CategoryManager()
@@ -39,10 +52,12 @@ class Category(models.Model):
         return self.category
 
 
-class SubCategory(models.Model):
+class SubCategory(TranslatableModel):
 
-    sub_category = models.CharField(
-        verbose_name=_("Sub-Category"), max_length=250, blank=True, null=True
+    translations = TranslatedFields(
+        sub_category=models.CharField(
+            verbose_name=_("Sub-Category"), max_length=250, blank=True, null=True
+        )
     )
 
     category = models.ForeignKey(
@@ -63,21 +78,31 @@ class SubCategory(models.Model):
         return self.sub_category + " (" + self.category.category + ")"
 
 
-class Quiz(models.Model):
+class Quiz(TranslatableModel):
 
-    title = models.CharField(verbose_name=_("Title"), max_length=60, blank=False)
-
-    description = models.TextField(
-        verbose_name=_("Description"),
-        blank=True,
-        help_text=_("a description of the quiz"),
-    )
-
-    url = models.SlugField(
-        max_length=60,
-        blank=False,
-        help_text=_("a user friendly url"),
-        verbose_name=_("user friendly url"),
+    translations = TranslatedFields(
+        title=models.CharField(verbose_name=_("Title"), max_length=60, blank=False),
+        description=models.TextField(
+            verbose_name=_("Description"),
+            blank=True,
+            help_text=_("a description of the quiz"),
+        ),
+        success_text=models.TextField(
+            blank=True,
+            help_text=_("Displayed if user passes."),
+            verbose_name=_("Success Text"),
+        ),
+        fail_text=models.TextField(
+            verbose_name=_("Fail Text"),
+            blank=True,
+            help_text=_("Displayed if user fails."),
+        ),
+        url=models.SlugField(
+            max_length=60,
+            blank=False,
+            help_text=_("a user friendly url"),
+            verbose_name=_("user friendly url"),
+        ),
     )
 
     category = models.ForeignKey(
@@ -92,9 +117,7 @@ class Quiz(models.Model):
         blank=False,
         default=False,
         verbose_name=_("Random Order"),
-        help_text=_(
-            "Display the questions in a random order or as they are set?"
-        ),
+        help_text=_("Display the questions in a random order or as they are set?"),
     )
 
     max_questions = models.PositiveIntegerField(
@@ -139,35 +162,16 @@ class Quiz(models.Model):
         validators=[MaxValueValidator(100)],
     )
 
-    success_text = models.TextField(
-        blank=True,
-        help_text=_("Displayed if user passes."),
-        verbose_name=_("Success Text"),
-    )
-
-    fail_text = models.TextField(
-        verbose_name=_("Fail Text"), blank=True, help_text=_("Displayed if user fails.")
-    )
-
     draft = models.BooleanField(
         blank=True,
         default=False,
         verbose_name=_("Draft"),
         help_text=_(
-            "If yes, the quiz is not displayed"
-            " in the quiz list and can only be"
-            " taken by users who can edit"
-            " quizzes."
+            "If yes, the quiz is not displayed in the quiz list and can only be taken by users who can edit quizzes."
         ),
     )
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
-        self.url = re.sub("\s+", "-", self.url).lower()
-
-        self.url = "".join(
-            letter for letter in self.url if letter.isalnum() or letter == "-"
-        )
-
         if self.single_attempt is True:
             self.exam_paper = True
 
@@ -184,7 +188,7 @@ class Quiz(models.Model):
         return self.title
 
     def get_questions(self):
-        return self.question_set.all().select_subclasses()
+        return self.question_set.all()
 
     @property
     def get_max_score(self):
@@ -200,7 +204,7 @@ class Quiz(models.Model):
         return str(self.id) + "_data"
 
 
-class ProgressManager(models.Manager):
+class ProgressManager(TranslatableManager):
     def new_progress(self, user):
         new_progress = self.create(user=user, score="")
         new_progress.save()
@@ -281,7 +285,7 @@ class Progress(models.Model):
 
         Does not return anything.
         """
-        category_test = Category.objects.filter(category=question.category).exists()
+        category_test = Category.objects.active_translations(category=question.category).exists()
 
         if any(
             [
@@ -333,9 +337,9 @@ class Progress(models.Model):
 class SittingManager(models.Manager):
     def new_sitting(self, user, quiz):
         if quiz.random_order is True:
-            question_set = quiz.question_set.all().select_subclasses().order_by("?")
+            question_set = quiz.question_set.all().order_by("?")
         else:
-            question_set = quiz.question_set.all().select_subclasses()
+            question_set = quiz.question_set.all()
 
         question_set = [item.id for item in question_set]
 
@@ -452,7 +456,7 @@ class Sitting(models.Model):
 
         first, _ = self.question_list.split(",", 1)
         question_id = int(first)
-        return Question.objects.get_subclass(id=question_id)
+        return Question.objects.get(id=question_id)
 
     def remove_first_question(self):
         if not self.question_list:
@@ -542,7 +546,7 @@ class Sitting(models.Model):
     def get_questions(self, with_answers=False):
         question_ids = self._question_ids()
         questions = sorted(
-            self.quiz.question_set.filter(id__in=question_ids).select_subclasses(),
+            self.quiz.question_set.filter(id__in=question_ids),
             key=lambda q: question_ids.index(q.id),
         )
 
@@ -571,7 +575,15 @@ class Sitting(models.Model):
         return answered, total
 
 
-class Question(models.Model):
+
+class QuestionQuerySet(TranslatableQuerySet, PolymorphicQuerySet):
+    pass
+
+class QuestionManager(PolymorphicManager, TranslatableManager):
+    queryset_class = QuestionQuerySet
+
+
+class Question(PolymorphicModel, TranslatableModel):
     """
     Base class for all question types.
     Shared properties placed here.
@@ -599,23 +611,25 @@ class Question(models.Model):
         upload_to="uploads/%Y/%m/%d", blank=True, null=True, verbose_name=_("Figure")
     )
 
-    content = models.CharField(
-        max_length=1000,
-        blank=False,
-        help_text=_("Enter the question text that you want displayed"),
-        verbose_name=_("Question"),
-    )
-
-    explanation = models.TextField(
-        max_length=2000,
-        blank=True,
-        help_text=_(
-            "Explanation to be shown after the question has been answered."
+    base_translations = TranslatedFields(
+        content=models.CharField(
+            max_length=1000,
+            blank=False,
+            help_text=_("Enter the question text that you want displayed"),
+            verbose_name=_("Question"),
         ),
-        verbose_name=_("Explanation"),
+        explanation=models.TextField(
+            max_length=2000,
+            blank=True,
+            help_text=_(
+                "Explanation to be shown after the question has been answered."
+            ),
+            verbose_name=_("Explanation"),
+        ),
     )
 
-    objects = InheritanceManager()
+    # default_manager = TranslatableManager()
+    objects = QuestionManager()
 
     class Meta:
         verbose_name = _("Question")
