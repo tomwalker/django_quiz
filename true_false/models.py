@@ -1,16 +1,17 @@
 from __future__ import unicode_literals
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+from parler.managers import TranslatableManager
+
 from quiz.models import Question
 
 
 class TF_Question(Question):
+    # default_manager = TranslatableManager()
     correct = models.BooleanField(
         blank=False,
         default=False,
-        help_text=_(
-            "Tick this if the question is true. Leave it blank for false."
-        ),
+        help_text=_("Tick this if the question is true. Leave it blank for false."),
         verbose_name=_("Correct"),
     )
 
