@@ -12,6 +12,8 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 from django.conf import settings
 
+from django_jsonfield_backport.models import JSONField
+
 from parler.models import TranslatableModel, TranslatedFields
 from parler.managers import TranslatableQuerySet, TranslatableManager
 
@@ -206,7 +208,7 @@ class Quiz(TranslatableModel):
 
 class ProgressManager(TranslatableManager):
     def new_progress(self, user):
-        new_progress = self.create(user=user, score="")
+        new_progress = self.create(user=user, score={})
         new_progress.save()
         return new_progress
 
@@ -218,17 +220,30 @@ class Progress(models.Model):
 
     Data stored in csv using the format:
         category, score, possible, category, score, possible, ...
+
+    Data stored in JSON using the format:
+        
+        {
+            category_id: {
+                "score": score,
+                "possible": possible
+            },
+            category_id: {
+                "score": score,
+                "possible": possible
+            },
+            ...
+        }
     """
 
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE
     )
 
-    score = models.CharField(
-        max_length=1024,
-        verbose_name=_("Score"),
-        validators=[validate_comma_separated_integer_list],
-    )
+    score = JSONField(
+            verbose_name=_("Score"),
+            default=dict
+            )
 
     objects = ProgressManager()
 
@@ -240,41 +255,24 @@ class Progress(models.Model):
     def list_all_cat_scores(self):
         """
         Returns a dict in which the key is the category name and the item is
-        a list of three integers.
+        a dict of three integers.
 
-        The first is the number of questions correct,
-        the second is the possible best score,
-        the third is the percentage correct.
+        The "score" is the number of questions correct,
+        the "possible" is the possible best score,
+        the "percent" is the percentage correct.
 
         The dict will have one key for every category that you have defined
         """
-        score_before = self.score
         output = {}
+        category_passed = list(int(x) for x in self.score.keys())
 
-        for cat in Category.objects.all():
-            to_find = re.escape(cat.category) + r",(\d+),(\d+),"
-            #  group 1 is score, group 2 is highest possible
+        for category in Category.objects.filter(pk__in=category_passed):
+            values = self.score[str(category.id)]
+            values["percent"] = int(values['score']/values['possible'] * 100)
+            output[category] = values
 
-            match = re.search(to_find, self.score, re.IGNORECASE)
-
-            if match:
-                score = int(match.group(1))
-                possible = int(match.group(2))
-
-                try:
-                    percent = int(round((float(score) / float(possible)) * 100))
-                except:
-                    percent = 0
-
-                output[cat.category] = [score, possible, percent]
-
-            else:  # if category has not been added yet, add it.
-                self.score += cat.category + ",0,0,"
-                output[cat.category] = [0, 0]
-
-        if len(self.score) > len(score_before):
-            # If a new category has been added, save changes.
-            self.save()
+        for category in Category.objects.exclude(pk__in=category_passed):
+            output[category] = {"score": 0, "possible": 0, "percent": 0}
 
         return output
 
@@ -301,30 +299,16 @@ class Progress(models.Model):
         ):
             return _("error"), _("category does not exist or invalid score")
 
-        to_find = (
-            re.escape(str(question.category)) + r",(?P<score>\d+),(?P<possible>\d+),"
-        )
+        if str(question.category.id) not in self.score.keys():
+            self.score[str(question.category.id)] = {"score": 0, "possible": 0}
 
-        match = re.search(to_find, self.score, re.IGNORECASE)
+        current_score = self.score[str(question.category.id)]
+        self.score[str(question.category.id)] = {
+            "score": current_score["score"] + abs(score_to_add),
+            "possible": current_score["possible"] + abs(possible_to_add)
+        }
 
-        if match:
-            updated_score = int(match.group("score")) + abs(score_to_add)
-            updated_possible = int(match.group("possible")) + abs(possible_to_add)
-
-            new_score = ",".join(
-                [str(question.category), str(updated_score), str(updated_possible), ""]
-            )
-
-            # swap old score for the new one
-            self.score = self.score.replace(match.group(), new_score)
-            self.save()
-
-        else:
-            #  if not present but existing, add with the points passed in
-            self.score += ",".join(
-                [str(question.category), str(score_to_add), str(possible_to_add), ""]
-            )
-            self.save()
+        self.save()
 
     def show_exams(self):
         """

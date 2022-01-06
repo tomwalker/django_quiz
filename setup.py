@@ -28,9 +28,10 @@ setup(
     ],
     install_requires=[
         "django-model-utils>=3.1.1",
-        "Django>=1.8.19",
+        "Django>=2.2",
         "Pillow>=4.0.0",
         "django-parler>=2.2,<2.3",
+        "django-jsonfield-backport"
     ],
     test_suite="runtests.runtests",
 )
