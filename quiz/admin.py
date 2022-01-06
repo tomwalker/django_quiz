@@ -60,7 +60,7 @@ class QuizAdmin(TranslatableAdmin):
                     "url",
                     "category",
                     "description",
-                    ["success_text", "fail_text"],
+                    ("success_text", "fail_text"),
                     "random_order",
                     "max_questions",
                     "answers_at_end",

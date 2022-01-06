@@ -42,7 +42,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'User Progress',
                 'verbose_name_plural': 'User progress records',
             },
-            bases=(parler.models.TranslatableModelMixin, models.Model),
         ),
         migrations.CreateModel(
             name='Question',
@@ -102,7 +101,6 @@ class Migration(migrations.Migration):
             options={
                 'permissions': (('view_sittings', 'Can see completed exams.'),),
             },
-            bases=(parler.models.TranslatableModelMixin, models.Model),
         ),
         migrations.CreateModel(
             name='SubCategory',
