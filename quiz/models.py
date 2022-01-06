@@ -17,11 +17,9 @@ from django_jsonfield_backport.models import JSONField
 from parler.models import TranslatableModel, TranslatedFields
 from parler.managers import TranslatableQuerySet, TranslatableManager
 
-# from model_utils.managers import InheritanceManager, InheritanceManagerMixin
 from polymorphic.models import PolymorphicModel
 from polymorphic.managers import PolymorphicManager
 from polymorphic.query import PolymorphicQuerySet
-
 
 
 class CategoryManager(TranslatableManager):
