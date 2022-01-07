@@ -23,7 +23,7 @@ class SittingFilterTitleMixin(object):
         queryset = super(SittingFilterTitleMixin, self).get_queryset()
         quiz_filter = self.request.GET.get("quiz_filter")
         if quiz_filter:
-            queryset = queryset.filter(quiz__title__icontains=quiz_filter)
+            queryset = queryset.filter(quiz__translations__title__icontains=quiz_filter)
 
         return queryset
 

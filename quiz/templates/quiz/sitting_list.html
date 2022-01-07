@@ -4,29 +4,28 @@
 
 {% block content %}
     <h2>{% trans "List of complete exams" %}</h2>
-    {% if sitting_list %}
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{% trans "User" %}</th>
+                <th>{% trans "Quiz" %}</th>
+                <th>{% trans "Completed" %}</th>
+                <th>{% trans "Score" %}(%)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <form action="" method="GET">
+                    <td><input type="text" name="user_filter" value="{{ request.GET.user_filter }}" /></td>
+                    <td><input type="text" name="quiz_filter" value="{{ request.GET.quiz_filter }}" /></td>
+                    <td></td>
+                    <td></td>
+                    <td><button type="submit" class="btn btn-default">{% trans "Filter"%}</button></td>
+                </form>
+            </tr>
 
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>{% trans "User" %}</th>
-                    <th>{% trans "Quiz" %}</th>
-                    <th>{% trans "Completed" %}</th>
-                    <th>{% trans "Score" %}(%)</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <form action="" method="GET">
-                        <td><input type="text" name="user_filter" /></td>
-                        <td><input type="text" name="quiz_filter" /></td>
-                        <td></td>
-                        <td></td>
-                        <td><button type="submit" class="btn btn-default">{% trans "Filter"%}</button></td>
-                    </form>
-                </tr>
-
+            {% if sitting_list %}
                 {% for sitting in sitting_list %}
                     <tr>
                         <td>{{ sitting.user }}</td>
@@ -40,9 +39,9 @@
                         </td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>{% trans "There are no matching quizzes." %}</p>
-    {% endif %}
+            {% else %}
+            <tr> <td colspan=5>{% trans "There are no matching quizzes." %}</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
 {% endblock %}
