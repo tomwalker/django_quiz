@@ -38,7 +38,7 @@ class QuizListView(ListView):
 
 class QuizDetailView(DetailView):
     model = Quiz
-    slug_field = "url"
+    slug_field = "translations__url"
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -133,7 +133,7 @@ class QuizTake(FormView):
     single_complete_template_name = "single_complete.html"
 
     def dispatch(self, request, *args, **kwargs):
-        self.quiz = get_object_or_404(Quiz, url=self.kwargs["quiz_name"])
+        self.quiz = get_object_or_404(Quiz, translations__url=self.kwargs["quiz_name"])
         if self.quiz.draft and not request.user.has_perm("quiz.change_quiz"):
             raise PermissionDenied
 
