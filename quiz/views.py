@@ -56,11 +56,11 @@ class CategoriesListView(ListView):
 
 class ViewQuizListByCategory(ListView):
     model = Quiz
-    template_name = "view_quiz_category.html"
+    template_name = "quiz/view_quiz_category.html"
 
     def dispatch(self, request, *args, **kwargs):
         self.category = get_object_or_404(
-            Category, category=self.kwargs["category_name"]
+            Category, translations__category=self.kwargs["category_name"]
         )
 
         return super(ViewQuizListByCategory, self).dispatch(request, *args, **kwargs)
@@ -77,7 +77,7 @@ class ViewQuizListByCategory(ListView):
 
 
 class QuizUserProgressView(TemplateView):
-    template_name = "progress.html"
+    template_name = "quiz/progress.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -128,9 +128,9 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
 class QuizTake(FormView):
     form_class = QuestionForm
-    template_name = "question.html"
-    result_template_name = "result.html"
-    single_complete_template_name = "single_complete.html"
+    template_name = "quiz/question.html"
+    result_template_name = "quiz/result.html"
+    single_complete_template_name = "quiz/single_complete.html"
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, translations__url=self.kwargs["quiz_name"])
@@ -350,7 +350,7 @@ class QuizTake(FormView):
 
         del self.request.session[self.quiz.anon_q_data()]
 
-        return render(self.request, "result.html", results)
+        return render(self.request, result_template_name, results)
 
 
 def anon_session_score(session, to_add=0, possible=0):
