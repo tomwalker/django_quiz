@@ -238,10 +238,7 @@ class Progress(models.Model):
         settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE
     )
 
-    score = JSONField(
-            verbose_name=_("Score"),
-            default=dict
-            )
+    score = JSONField(verbose_name=_("Score"), default=dict)
 
     objects = ProgressManager()
 
@@ -266,7 +263,7 @@ class Progress(models.Model):
 
         for category in Category.objects.filter(pk__in=category_passed):
             values = self.score[str(category.id)]
-            values["percent"] = int(values['score']/values['possible'] * 100)
+            values["percent"] = int(values["score"] / values["possible"] * 100)
             output[category] = values
 
         for category in Category.objects.exclude(pk__in=category_passed):
@@ -281,7 +278,9 @@ class Progress(models.Model):
 
         Does not return anything.
         """
-        category_test = Category.objects.active_translations(category=question.category).exists()
+        category_test = Category.objects.active_translations(
+            category=question.category
+        ).exists()
 
         if any(
             [
@@ -303,7 +302,7 @@ class Progress(models.Model):
         current_score = self.score[str(question.category.id)]
         self.score[str(question.category.id)] = {
             "score": current_score["score"] + abs(score_to_add),
-            "possible": current_score["possible"] + abs(possible_to_add)
+            "possible": current_score["possible"] + abs(possible_to_add),
         }
 
         self.save()
@@ -557,9 +556,9 @@ class Sitting(models.Model):
         return answered, total
 
 
-
 class QuestionQuerySet(TranslatableQuerySet, PolymorphicQuerySet):
     pass
+
 
 class QuestionManager(PolymorphicManager, TranslatableManager):
     queryset_class = QuestionQuerySet
@@ -610,7 +609,6 @@ class Question(PolymorphicModel, TranslatableModel):
         ),
     )
 
-    # default_manager = TranslatableManager()
     objects = QuestionManager()
 
     class Meta:

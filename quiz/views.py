@@ -112,7 +112,7 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
         q_to_toggle = request.POST.get("qid", None)
         if q_to_toggle:
-            q = Question.objects.get_subclass(id=int(q_to_toggle))
+            q = Question.objects.get(pk=int(q_to_toggle))
             if int(q_to_toggle) in sitting.get_incorrect_questions:
                 sitting.remove_incorrect_question(q)
             else:
@@ -282,7 +282,7 @@ class QuizTake(FormView):
 
     def anon_next_question(self):
         next_question_id = self.request.session[self.quiz.anon_q_list()][0]
-        return Question.objects.get_subclass(id=next_question_id)
+        return Question.objects.get(pk=next_question_id)
 
     def anon_sitting_progress(self):
         total = len(self.request.session[self.quiz.anon_q_data()]["order"])
@@ -337,8 +337,8 @@ class QuizTake(FormView):
 
         if self.quiz.answers_at_end:
             results["questions"] = sorted(
-                self.quiz.question_set.filter(id__in=q_order).select_subclasses(),
-                key=lambda q: q_order.index(q.id),
+                self.quiz.question_set.filter(pk__in=q_order),
+                key=lambda q: q_order.index(q.pk),
             )
 
             results["incorrect_questions"] = self.request.session[
