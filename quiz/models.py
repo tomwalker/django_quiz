@@ -11,6 +11,7 @@ from django.core.validators import (
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 from django.conf import settings
+from django.urls import reverse
 
 from django_jsonfield_backport.models import JSONField
 
@@ -202,6 +203,9 @@ class Quiz(TranslatableModel):
 
     def anon_q_data(self):
         return str(self.id) + "_data"
+
+    def get_absolute_url(self):
+        return reverse("quiz_start_page", kwargs={"slug": self.url})
 
 
 class ProgressManager(TranslatableManager):
