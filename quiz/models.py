@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import re
 import json
+from datetime import datetime
 
 from django.db import models
 from django.core.exceptions import ValidationError, ImproperlyConfigured
@@ -224,7 +225,7 @@ class Progress(models.Model):
         category, score, possible, category, score, possible, ...
 
     Data stored in JSON using the format:
-        
+
         {
             category_id: {
                 "score": score,
@@ -568,6 +569,20 @@ class QuestionManager(PolymorphicManager, TranslatableManager):
     queryset_class = QuestionQuerySet
 
 
+def figure_upload(instance, filename):
+    """Path for figures upload
+
+    Try to use settings.QUIZ_FIGURES_DIR, and fallback to `upload/%Y/%d/%d`.
+    """
+    basepath = getattr(
+        settings,
+        "QUIZ_FIGURES_DIR",
+        datetime.strftime(datetime.now(), "upload/%Y/%m/%d/"),
+    )
+    path = f"{basepath}/{filename}"
+    return path
+
+
 class Question(PolymorphicModel, TranslatableModel):
     """
     Base class for all question types.
@@ -593,7 +608,7 @@ class Question(PolymorphicModel, TranslatableModel):
     )
 
     figure = models.ImageField(
-        upload_to="uploads/%Y/%m/%d", blank=True, null=True, verbose_name=_("Figure")
+        upload_to=figure_upload, blank=True, null=True, verbose_name=_("Figure")
     )
 
     base_translations = TranslatedFields(
