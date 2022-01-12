@@ -39,6 +39,10 @@ class Migration(migrations.Migration):
             name='_title',
         ),
         migrations.RemoveField(
+            model_name='quiz',
+            name='_url',
+        ),
+        migrations.RemoveField(
             model_name='subcategory',
             name='_sub_category',
         ),

@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import re
 import json
+from datetime import datetime
 
 from django.db import models
 from django.core.exceptions import ValidationError, ImproperlyConfigured
@@ -11,6 +12,7 @@ from django.core.validators import (
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 from django.conf import settings
+from django.urls import reverse
 
 from django_jsonfield_backport.models import JSONField
 
@@ -97,13 +99,12 @@ class Quiz(TranslatableModel):
             blank=True,
             help_text=_("Displayed if user fails."),
         ),
-    )
-
-    url = models.SlugField(
-        max_length=60,
-        blank=False,
-        help_text=_("a user friendly url"),
-        verbose_name=_("user friendly url"),
+        url=models.SlugField(
+            max_length=60,
+            blank=False,
+            help_text=_("a user friendly url"),
+            verbose_name=_("user friendly url"),
+        ),
     )
 
     category = models.ForeignKey(
@@ -168,20 +169,11 @@ class Quiz(TranslatableModel):
         default=False,
         verbose_name=_("Draft"),
         help_text=_(
-            "If yes, the quiz is not displayed"
-            " in the quiz list and can only be"
-            " taken by users who can edit"
-            " quizzes."
+            "If yes, the quiz is not displayed in the quiz list and can only be taken by users who can edit quizzes."
         ),
     )
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
-        self.url = re.sub("\s+", "-", self.url).lower()
-
-        self.url = "".join(
-            letter for letter in self.url if letter.isalnum() or letter == "-"
-        )
-
         if self.single_attempt is True:
             self.exam_paper = True
 
@@ -213,6 +205,9 @@ class Quiz(TranslatableModel):
     def anon_q_data(self):
         return str(self.id) + "_data"
 
+    def get_absolute_url(self):
+        return reverse("quiz_start_page", kwargs={"slug": self.url})
+
 
 class ProgressManager(TranslatableManager):
     def new_progress(self, user):
@@ -230,7 +225,7 @@ class Progress(models.Model):
         category, score, possible, category, score, possible, ...
 
     Data stored in JSON using the format:
-        
+
         {
             category_id: {
                 "score": score,
@@ -248,10 +243,7 @@ class Progress(models.Model):
         settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE
     )
 
-    score = JSONField(
-            verbose_name=_("Score"),
-            default=dict
-            )
+    score = JSONField(verbose_name=_("Score"), default=dict)
 
     objects = ProgressManager()
 
@@ -276,7 +268,7 @@ class Progress(models.Model):
 
         for category in Category.objects.filter(pk__in=category_passed):
             values = self.score[str(category.id)]
-            values["percent"] = int(values['score']/values['possible'] * 100)
+            values["percent"] = int(values["score"] / values["possible"] * 100)
             output[category] = values
 
         for category in Category.objects.exclude(pk__in=category_passed):
@@ -291,7 +283,9 @@ class Progress(models.Model):
 
         Does not return anything.
         """
-        category_test = Category.objects.active_translations(category=question.category).exists()
+        category_test = Category.objects.active_translations(
+            category=question.category
+        ).exists()
 
         if any(
             [
@@ -313,7 +307,7 @@ class Progress(models.Model):
         current_score = self.score[str(question.category.id)]
         self.score[str(question.category.id)] = {
             "score": current_score["score"] + abs(score_to_add),
-            "possible": current_score["possible"] + abs(possible_to_add)
+            "possible": current_score["possible"] + abs(possible_to_add),
         }
 
         self.save()
@@ -567,12 +561,26 @@ class Sitting(models.Model):
         return answered, total
 
 
-
 class QuestionQuerySet(TranslatableQuerySet, PolymorphicQuerySet):
     pass
 
+
 class QuestionManager(PolymorphicManager, TranslatableManager):
     queryset_class = QuestionQuerySet
+
+
+def figure_upload(instance, filename):
+    """Path for figures upload
+
+    Try to use settings.QUIZ_FIGURES_DIR, and fallback to `upload/%Y/%d/%d`.
+    """
+    basepath = getattr(
+        settings,
+        "QUIZ_FIGURES_DIR",
+        datetime.strftime(datetime.now(), "upload/%Y/%m/%d/"),
+    )
+    path = f"{basepath}/{filename}"
+    return path
 
 
 class Question(PolymorphicModel, TranslatableModel):
@@ -600,7 +608,7 @@ class Question(PolymorphicModel, TranslatableModel):
     )
 
     figure = models.ImageField(
-        upload_to="uploads/%Y/%m/%d", blank=True, null=True, verbose_name=_("Figure")
+        upload_to=figure_upload, blank=True, null=True, verbose_name=_("Figure")
     )
 
     base_translations = TranslatedFields(
@@ -620,7 +628,6 @@ class Question(PolymorphicModel, TranslatableModel):
         ),
     )
 
-    # default_manager = TranslatableManager()
     objects = QuestionManager()
 
     class Meta:

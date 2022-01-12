@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.inclusion_tag("correct_answer.html", takes_context=True)
+@register.inclusion_tag("quiz/correct_answer.html", takes_context=True)
 def correct_answer_for_all(context, question):
     """
     processes the correct answer based on a given question object

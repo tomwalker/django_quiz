@@ -23,7 +23,7 @@ class SittingFilterTitleMixin(object):
         queryset = super(SittingFilterTitleMixin, self).get_queryset()
         quiz_filter = self.request.GET.get("quiz_filter")
         if quiz_filter:
-            queryset = queryset.filter(quiz__title__icontains=quiz_filter)
+            queryset = queryset.filter(quiz__translations__title__icontains=quiz_filter)
 
         return queryset
 
@@ -38,7 +38,7 @@ class QuizListView(ListView):
 
 class QuizDetailView(DetailView):
     model = Quiz
-    slug_field = "url"
+    slug_field = "translations__url"
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -56,11 +56,11 @@ class CategoriesListView(ListView):
 
 class ViewQuizListByCategory(ListView):
     model = Quiz
-    template_name = "view_quiz_category.html"
+    template_name = "quiz/view_quiz_category.html"
 
     def dispatch(self, request, *args, **kwargs):
         self.category = get_object_or_404(
-            Category, category=self.kwargs["category_name"]
+            Category, translations__category=self.kwargs["category_name"]
         )
 
         return super(ViewQuizListByCategory, self).dispatch(request, *args, **kwargs)
@@ -77,7 +77,7 @@ class ViewQuizListByCategory(ListView):
 
 
 class QuizUserProgressView(TemplateView):
-    template_name = "progress.html"
+    template_name = "quiz/progress.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -112,7 +112,7 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
         q_to_toggle = request.POST.get("qid", None)
         if q_to_toggle:
-            q = Question.objects.get_subclass(id=int(q_to_toggle))
+            q = Question.objects.get(pk=int(q_to_toggle))
             if int(q_to_toggle) in sitting.get_incorrect_questions:
                 sitting.remove_incorrect_question(q)
             else:
@@ -128,12 +128,12 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
 
 class QuizTake(FormView):
     form_class = QuestionForm
-    template_name = "question.html"
-    result_template_name = "result.html"
-    single_complete_template_name = "single_complete.html"
+    template_name = "quiz/question.html"
+    result_template_name = "quiz/result.html"
+    single_complete_template_name = "quiz/single_complete.html"
 
     def dispatch(self, request, *args, **kwargs):
-        self.quiz = get_object_or_404(Quiz, url=self.kwargs["quiz_name"])
+        self.quiz = get_object_or_404(Quiz, translations__url=self.kwargs["quiz_name"])
         if self.quiz.draft and not request.user.has_perm("quiz.change_quiz"):
             raise PermissionDenied
 
@@ -282,7 +282,7 @@ class QuizTake(FormView):
 
     def anon_next_question(self):
         next_question_id = self.request.session[self.quiz.anon_q_list()][0]
-        return Question.objects.get_subclass(id=next_question_id)
+        return Question.objects.get(pk=next_question_id)
 
     def anon_sitting_progress(self):
         total = len(self.request.session[self.quiz.anon_q_data()]["order"])
@@ -337,8 +337,8 @@ class QuizTake(FormView):
 
         if self.quiz.answers_at_end:
             results["questions"] = sorted(
-                self.quiz.question_set.filter(id__in=q_order).select_subclasses(),
-                key=lambda q: q_order.index(q.id),
+                self.quiz.question_set.filter(pk__in=q_order),
+                key=lambda q: q_order.index(q.pk),
             )
 
             results["incorrect_questions"] = self.request.session[
@@ -350,7 +350,7 @@ class QuizTake(FormView):
 
         del self.request.session[self.quiz.anon_q_data()]
 
-        return render(self.request, "result.html", results)
+        return render(self.request, result_template_name, results)
 
 
 def anon_session_score(session, to_add=0, possible=0):

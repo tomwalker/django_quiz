@@ -30,6 +30,7 @@ def forwards_func(apps, schema_editor):
             master_id=object.pk,
             language_code=settings.LANGUAGE_CODE,
             title=object._title,
+            url=object._url,
             description=object._description,
             success_text=object._success_text,
             fail_text=object._fail_text,
@@ -65,6 +66,7 @@ def backwards_func(apps, schema_editor):
     for object in Quiz.objects.all():
         translation = _get_translation(object, QuizTranslation)
         object._title = translation.title
+        object._url = translation.url
         object._description = translation.description
         object._success_text = translation.success_text
         object._fail_text = translation.fail_text

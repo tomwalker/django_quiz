@@ -52,6 +52,11 @@ class Migration(migrations.Migration):
             new_name='_title',
         ),
         migrations.RenameField(
+            model_name='quiz',
+            old_name='url',
+            new_name='_url',
+        ),
+        migrations.RenameField(
             model_name='subcategory',
             old_name='sub_category',
             new_name='_sub_category',
@@ -110,6 +115,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('language_code', models.CharField(db_index=True, max_length=15, verbose_name='Language')),
                 ('title', models.CharField(max_length=60, verbose_name='Title')),
+                ('url', models.SlugField(help_text='a user friendly url', max_length=60, verbose_name='user friendly url')),
                 ('description', models.TextField(blank=True, help_text='a description of the quiz', verbose_name='Description')),
                 ('success_text', models.TextField(blank=True, help_text='Displayed if user passes.', verbose_name='Success Text')),
                 ('fail_text', models.TextField(blank=True, help_text='Displayed if user fails.', verbose_name='Fail Text')),
