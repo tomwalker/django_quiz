@@ -5,13 +5,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('quiz', '0006_remove_csv_score'),
-    ]
+    dependencies = [("quiz", "0006_remove_csv_score")]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='progress',
-            name='score',
-        ),
-    ]
+    operations = [migrations.RemoveField(model_name="progress", name="score")]

@@ -69,7 +69,7 @@ class QuizAdmin(TranslatableAdmin):
                     "pass_mark",
                     "draft",
                     "questions",
-                ),
+                )
             },
         ),
     )
@@ -77,9 +77,8 @@ class QuizAdmin(TranslatableAdmin):
     def get_prepopulated_fields(self, request, obj=None):
         # can't use `prepopulated_fields = ..` because it breaks the admin validation
         # for translated fields. This is the official django-parler workaround.
-        return {
-            'url': ('title',)
-        }
+        return {"url": ("title",)}
+
 
 class CategoryAdmin(TranslatableAdmin):
     search_fields = ("translations__category",)
@@ -119,9 +118,7 @@ class MCQuestionAdmin(TranslatableAdmin, PolymorphicChildModelAdmin):
 
     filter_horizontal = ("quiz",)
 
-    inlines = [
-        AnswerInline,
-    ]
+    inlines = [AnswerInline]
 
 
 class TFQuestionAdmin(TranslatableAdmin, PolymorphicChildModelAdmin):

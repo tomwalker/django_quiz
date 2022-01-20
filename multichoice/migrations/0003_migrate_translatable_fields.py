@@ -4,25 +4,28 @@ from django.db import migrations
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
+
 def forwards_func(apps, schema_editor):
-    Answer = apps.get_model('multichoice', 'Answer')
-    AnswerTranslation = apps.get_model('multichoice', 'AnswerTranslation')
+    Answer = apps.get_model("multichoice", "Answer")
+    AnswerTranslation = apps.get_model("multichoice", "AnswerTranslation")
 
     for object in Answer.objects.all():
         AnswerTranslation.objects.create(
             master_id=object.pk,
             language_code=settings.LANGUAGE_CODE,
-            content=object._content
+            content=object._content,
         )
 
+
 def backwards_func(apps, schema_editor):
-    Answer = apps.get_model('multichoice', 'Answer')
-    AnswerTranslation = apps.get_model('multichoice', 'AnswerTranslation')
+    Answer = apps.get_model("multichoice", "Answer")
+    AnswerTranslation = apps.get_model("multichoice", "AnswerTranslation")
 
     for object in Answer.objects.all():
         translation = _get_translation(object, AnswerTranslation)
         object._content = translation.content
-        object.save()   # Note this only calls Model.save()
+        object.save()  # Note this only calls Model.save()
+
 
 def _get_translation(object, MyModelTranslation):
     translations = MyModelTranslation.objects.filter(master_id=object.pk)
@@ -39,13 +42,8 @@ def _get_translation(object, MyModelTranslation):
             return translations.get()
 
 
-
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('multichoice', '0002_add_translation_model'),
-    ]
+    dependencies = [("multichoice", "0002_add_translation_model")]
 
-    operations = [
-            migrations.RunPython(forwards_func, backwards_func),
-    ]
+    operations = [migrations.RunPython(forwards_func, backwards_func)]

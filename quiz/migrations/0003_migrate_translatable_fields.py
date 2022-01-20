@@ -4,27 +4,28 @@ from django.db import migrations
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
+
 def forwards_func(apps, schema_editor):
-    Category = apps.get_model('quiz', "Category")
-    CategoryTranslation = apps.get_model('quiz', 'CategoryTranslation')
+    Category = apps.get_model("quiz", "Category")
+    CategoryTranslation = apps.get_model("quiz", "CategoryTranslation")
     for object in Category.objects.all():
         CategoryTranslation.objects.create(
             master_id=object.pk,
             language_code=settings.LANGUAGE_CODE,
-            category=object._category
+            category=object._category,
         )
 
-    SubCategory = apps.get_model('quiz', "SubCategory")
-    SubCategoryTranslation = apps.get_model('quiz', 'SubCategoryTranslation')
+    SubCategory = apps.get_model("quiz", "SubCategory")
+    SubCategoryTranslation = apps.get_model("quiz", "SubCategoryTranslation")
     for object in SubCategory.objects.all():
         SubCategoryTranslation.objects.create(
             master_id=object.pk,
             language_code=settings.LANGUAGE_CODE,
-            sub_category=object._sub_category
+            sub_category=object._sub_category,
         )
 
-    Quiz = apps.get_model('quiz', "Quiz")
-    QuizTranslation = apps.get_model('quiz', 'QuizTranslation')
+    Quiz = apps.get_model("quiz", "Quiz")
+    QuizTranslation = apps.get_model("quiz", "QuizTranslation")
     for object in Quiz.objects.all():
         QuizTranslation.objects.create(
             master_id=object.pk,
@@ -36,8 +37,8 @@ def forwards_func(apps, schema_editor):
             fail_text=object._fail_text,
         )
 
-    Question = apps.get_model('quiz', "Question")
-    QuestionTranslation = apps.get_model('quiz', 'QuestionTranslation')
+    Question = apps.get_model("quiz", "Question")
+    QuestionTranslation = apps.get_model("quiz", "QuestionTranslation")
     for object in Question.objects.all():
         QuestionTranslation.objects.create(
             master_id=object.pk,
@@ -46,23 +47,24 @@ def forwards_func(apps, schema_editor):
             explanation=object._explanation,
         )
 
+
 def backwards_func(apps, schema_editor):
-    Category = apps.get_model('quiz', 'Category')
-    CategoryTranslation = apps.get_model('quiz', 'CategoryTranslation')
+    Category = apps.get_model("quiz", "Category")
+    CategoryTranslation = apps.get_model("quiz", "CategoryTranslation")
     for object in Category.objects.all():
         translation = _get_translation(object, CategoryTranslation)
         object._category = translation.category
         object.save()
 
-    SubCategory = apps.get_model('quiz', 'SubCategory')
-    SubCategoryTranslation = apps.get_model('quiz', 'SubCategoryTranslation')
+    SubCategory = apps.get_model("quiz", "SubCategory")
+    SubCategoryTranslation = apps.get_model("quiz", "SubCategoryTranslation")
     for object in SubCategory.objects.all():
         translation = _get_translation(object, SubCategoryTranslation)
         object._sub_category = translation.sub_category
         object.save()
 
-    Quiz = apps.get_model('quiz', 'Quiz')
-    QuizTranslation = apps.get_model('quiz', 'QuizTranslation')
+    Quiz = apps.get_model("quiz", "Quiz")
+    QuizTranslation = apps.get_model("quiz", "QuizTranslation")
     for object in Quiz.objects.all():
         translation = _get_translation(object, QuizTranslation)
         object._title = translation.title
@@ -72,13 +74,14 @@ def backwards_func(apps, schema_editor):
         object._fail_text = translation.fail_text
         object.save()
 
-    Question = apps.get_model('quiz', 'Question')
-    QuestionTranslation = apps.get_model('quiz', 'QuestionTranslation')
+    Question = apps.get_model("quiz", "Question")
+    QuestionTranslation = apps.get_model("quiz", "QuestionTranslation")
     for object in Question.objects.all():
         translation = _get_translation(object, QuestionTranslation)
         object._content = translation.content
         object._explanation = translation.explanation
         object.save()
+
 
 def _get_translation(object, MyModelTranslation):
     translations = MyModelTranslation.objects.filter(master_id=object.pk)
@@ -95,13 +98,8 @@ def _get_translation(object, MyModelTranslation):
             return translations.get()
 
 
-
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('quiz', '0002_add_translation_model'),
-    ]
+    dependencies = [("quiz", "0002_add_translation_model")]
 
-    operations = [
-            migrations.RunPython(forwards_func, backwards_func),
-    ]
+    operations = [migrations.RunPython(forwards_func, backwards_func)]

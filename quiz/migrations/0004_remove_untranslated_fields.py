@@ -5,45 +5,16 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('quiz', '0003_migrate_translatable_fields'),
-    ]
+    dependencies = [("quiz", "0003_migrate_translatable_fields")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='category',
-            name='_category',
-        ),
-        migrations.RemoveField(
-            model_name='question',
-            name='_content',
-        ),
-        migrations.RemoveField(
-            model_name='question',
-            name='_explanation',
-        ),
-        migrations.RemoveField(
-            model_name='quiz',
-            name='_description',
-        ),
-        migrations.RemoveField(
-            model_name='quiz',
-            name='_fail_text',
-        ),
-        migrations.RemoveField(
-            model_name='quiz',
-            name='_success_text',
-        ),
-        migrations.RemoveField(
-            model_name='quiz',
-            name='_title',
-        ),
-        migrations.RemoveField(
-            model_name='quiz',
-            name='_url',
-        ),
-        migrations.RemoveField(
-            model_name='subcategory',
-            name='_sub_category',
-        ),
+        migrations.RemoveField(model_name="category", name="_category"),
+        migrations.RemoveField(model_name="question", name="_content"),
+        migrations.RemoveField(model_name="question", name="_explanation"),
+        migrations.RemoveField(model_name="quiz", name="_description"),
+        migrations.RemoveField(model_name="quiz", name="_fail_text"),
+        migrations.RemoveField(model_name="quiz", name="_success_text"),
+        migrations.RemoveField(model_name="quiz", name="_title"),
+        migrations.RemoveField(model_name="quiz", name="_url"),
+        migrations.RemoveField(model_name="subcategory", name="_sub_category"),
     ]

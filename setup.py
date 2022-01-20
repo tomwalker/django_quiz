@@ -5,7 +5,7 @@ readme = open("README.rst", encoding="utf-8").read()
 
 setup(
     name="django-quiz-app",
-    version="0.5.1",
+    version="0.6.0-rc0",
     packages=find_packages(),
     include_package_data=True,
     license="MIT License",
@@ -30,7 +30,7 @@ setup(
         "Django>=2.2",
         "Pillow>=4.0.0",
         "django-parler>=2.2,<2.3",
-        "django-jsonfield-backport"
+        "django-jsonfield-backport",
     ],
     test_suite="runtests.runtests",
 )

@@ -5,13 +5,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('multichoice', '0003_migrate_translatable_fields'),
-    ]
+    dependencies = [("multichoice", "0003_migrate_translatable_fields")]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='answer',
-            name='_content',
-        ),
-    ]
+    operations = [migrations.RemoveField(model_name="answer", name="_content")]

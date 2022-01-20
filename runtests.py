@@ -2,7 +2,8 @@
 
 import os
 import sys
-os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings'
+
+os.environ["DJANGO_SETTINGS_MODULE"] = "test_settings"
 test_dir = os.path.dirname(__file__)
 sys.path.insert(0, test_dir)
 
@@ -15,10 +16,9 @@ def runtests():
     django.setup()
     TestRunner = get_runner(settings)
     test_runner = TestRunner(verbosity=1, interactive=True)
-    failures = test_runner.run_tests(
-        ['quiz', 'essay', 'multichoice', 'true_false']
-    )
+    failures = test_runner.run_tests(["quiz", "essay", "multichoice", "true_false"])
     sys.exit(bool(failures))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     runtests()

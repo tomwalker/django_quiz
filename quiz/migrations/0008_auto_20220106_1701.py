@@ -5,14 +5,10 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('quiz', '0007_remove_progress_score'),
-    ]
+    dependencies = [("quiz", "0007_remove_progress_score")]
 
     operations = [
         migrations.RenameField(
-            model_name='progress',
-            old_name='score_json',
-            new_name='score',
-        ),
+            model_name="progress", old_name="score_json", new_name="score"
+        )
     ]

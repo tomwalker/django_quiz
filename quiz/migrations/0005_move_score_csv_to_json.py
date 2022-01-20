@@ -6,14 +6,14 @@ import django_jsonfield_backport.models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('quiz', '0004_remove_untranslated_fields'),
-    ]
+    dependencies = [("quiz", "0004_remove_untranslated_fields")]
 
     operations = [
         migrations.AddField(
-            model_name='progress',
-            name='score_json',
-            field=django_jsonfield_backport.models.JSONField(default=dict, verbose_name='Score'),
-        ),
+            model_name="progress",
+            name="score_json",
+            field=django_jsonfield_backport.models.JSONField(
+                default=dict, verbose_name="Score"
+            ),
+        )
     ]

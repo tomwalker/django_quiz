@@ -1,0 +1,49 @@
+[version]
+current = "0.6.0-rc.0"
+
+# valid versions:
+# we use semver
+# valid syntax are :
+# x.y.z-wip for WIP stage (beg dev cycle without releases and not really working)
+# x.y.z-[alpha|beta|rc].i for alpha, beta, RC versionning
+# x.y.z for stable releases
+
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  (
+    -
+    (
+      (?P<channel>alpha|beta|rc)
+      \.
+      (?P<release>\d+)
+    )
+  )?
+'''
+
+[git]
+message_template = """Release {new_version}"""
+tag_template = "{new_version}"
+
+# For each file to patch, add a [[file]] config
+# section containing the path of the file, relative to the
+# tbump.toml location.
+[[file]]
+src = "quiz/__init__.py"
+
+# You can specify a list of commands to
+# run after the files have been patched
+# and before the git commit is made
+
+ [[before_commit]]
+ name = "check black"
+ cmd = "black ./"
+
+# Or run some commands after the git tag and the branch
+# have been pushed:
+#  [[after_push]]
+#  name = "publish"
+#  cmd = "./publish.sh"

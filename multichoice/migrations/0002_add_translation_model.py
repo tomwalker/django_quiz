@@ -8,31 +8,57 @@ import parler.models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('multichoice', '0001_initial'),
-    ]
+    dependencies = [("multichoice", "0001_initial")]
 
     operations = [
         migrations.RenameField(
-            model_name='answer',
-            old_name='content',
-            new_name='_content',
+            model_name="answer", old_name="content", new_name="_content"
         ),
         migrations.CreateModel(
-            name='AnswerTranslation',
+            name="AnswerTranslation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('language_code', models.CharField(db_index=True, max_length=15, verbose_name='Language')),
-                ('content', models.CharField(blank=True, help_text='Enter the answer text that you want displayed', max_length=1000, verbose_name='Content')),
-                ('master', parler.fields.TranslationsForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='multichoice.Answer')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "language_code",
+                    models.CharField(
+                        db_index=True, max_length=15, verbose_name="Language"
+                    ),
+                ),
+                (
+                    "content",
+                    models.CharField(
+                        blank=True,
+                        help_text="Enter the answer text that you want displayed",
+                        max_length=1000,
+                        verbose_name="Content",
+                    ),
+                ),
+                (
+                    "master",
+                    parler.fields.TranslationsForeignKey(
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="translations",
+                        to="multichoice.Answer",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Answer Translation',
-                'db_table': 'multichoice_answer_translation',
-                'db_tablespace': '',
-                'managed': True,
-                'default_permissions': (),
-                'unique_together': {('language_code', 'master')},
+                "verbose_name": "Answer Translation",
+                "db_table": "multichoice_answer_translation",
+                "db_tablespace": "",
+                "managed": True,
+                "default_permissions": (),
+                "unique_together": {("language_code", "master")},
             },
             bases=(parler.models.TranslatedFieldsModelMixin, models.Model),
         ),
