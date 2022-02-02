@@ -6,17 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('quiz', '0009_auto_20220111_0958'),
+        ("quiz", "0009_auto_20220111_0958"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='categorytranslation',
-            name='category',
-            field=models.CharField(blank=True, max_length=250, null=True, verbose_name='Category'),
+            model_name="categorytranslation",
+            name="category",
+            field=models.CharField(
+                blank=True, max_length=250, null=True, verbose_name="Category"
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='categorytranslation',
-            unique_together={('language_code', 'master'), ('category', 'language_code')},
+            name="categorytranslation",
+            unique_together={
+                ("language_code", "master"),
+                ("category", "language_code"),
+            },
         ),
     ]

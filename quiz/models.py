@@ -41,7 +41,7 @@ class Category(TranslatableModel):
             blank=True,
             null=True,
         ),
-        meta={'unique_together': [('category', 'language_code')]}
+        meta={"unique_together": [("category", "language_code")]},
     )
 
     objects = CategoryManager()

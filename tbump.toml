@@ -1,5 +1,5 @@
 [version]
-current = "0.6.0-rc.0"
+current = "0.6.0-rc.1"
 
 # valid versions:
 # we use semver
