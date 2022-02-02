@@ -39,9 +39,9 @@ class Category(TranslatableModel):
             verbose_name=_("Category"),
             max_length=250,
             blank=True,
-            unique=True,
             null=True,
-        )
+        ),
+        meta={'unique_together': [('category', 'language_code')]}
     )
 
     objects = CategoryManager()
