@@ -101,7 +101,7 @@ class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
         if user_filter:
             queryset = queryset.filter(user__username__icontains=user_filter)
 
-        return queryset
+        return queryset.distinct()
 
 
 class QuizMarkingDetail(QuizMarkerMixin, DetailView):
