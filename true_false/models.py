@@ -1,13 +1,12 @@
 from __future__ import unicode_literals
-from django.utils.translation import gettext_lazy as _
-from django.db import models
-from parler.managers import TranslatableManager
 
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from parler.managers import TranslatableManager
 from quiz.models import Question
 
 
 class TF_Question(Question):
-    # default_manager = TranslatableManager()
     correct = models.BooleanField(
         blank=False,
         default=False,
@@ -30,12 +29,12 @@ class TF_Question(Question):
 
     def get_answers(self):
         return [
-            {"correct": self.check_if_correct("True"), "content": "True"},
-            {"correct": self.check_if_correct("False"), "content": "False"},
+            {"correct": self.check_if_correct("True"), "content": _("True")},
+            {"correct": self.check_if_correct("False"), "content": _("False")},
         ]
 
     def get_answers_list(self):
-        return [(True, True), (False, False)]
+        return [(True, _("True")), (False, _("False"))]
 
     def answer_choice_to_string(self, guess):
         return str(guess)
