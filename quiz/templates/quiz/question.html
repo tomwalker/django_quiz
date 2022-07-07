@@ -15,7 +15,13 @@
         <div class="alert {% if previous.previous_outcome %}alert-success{% else %}alert-warning{% endif %}">
             <p>
                 <small>{% trans "Your answer was" %}</small>
-                <strong> {{ previous.previous_outcome|yesno:"correct,incorrect" }} </strong>
+                <strong>
+                  {% if previous.previous_outcome %}
+                    {% trans "correct" %}
+                  {% else %}
+                    {% trans "incorrect" %}
+                  {% endif %}
+                </strong>
             </p>
         </div>
 
@@ -23,7 +29,7 @@
 
         <p><strong>{% trans "Explanation" %}:</strong></p>
         <div class="well " style="background-color: #fcf8e3;">
-            <p>{{ previous.previous_question.explanation }}</p>
+            <p>{{ previous.previous_question.explanation|linebreaksbr }}</p>
         </div>
 
         <hr>
