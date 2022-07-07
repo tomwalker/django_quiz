@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-quiz\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-01 11:37+0400\n"
+"POT-Creation-Date: 2022-07-07 16:34+0200\n"
 "PO-Revision-Date: 2015-08-21 19:40+0500\n"
 "Last-Translator: Eugena Mihailikova <eugena.mihailikova@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,291 +19,273 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: admin.py:31 admin.py:33 models.py:576
+#: admin.py:30 admin.py:31 models.py:635
 msgid "Questions"
 msgstr "Вопросы"
 
-#: models.py:30 models.py:37 models.py:53 models.py:83 models.py:545
-#: templates/progress.html:19 templates/quiz/quiz_detail.html:9
-#: templates/quiz/quiz_list.html:13 templates/quiz/sitting_detail.html:10
+#: admin.py:57
+msgid "Reset ongoing sittings"
+msgstr ""
+
+#: admin.py:63
+msgid "Delete all sittings"
+msgstr ""
+
+#: models.py:39 models.py:50 models.py:69 models.py:114 models.py:596
+#: templates/progress.html:19 templates/quiz/progress.html:17
+#: templates/quiz/quiz_detail.html:7 templates/quiz/quiz_list.html:13
+#: templates/quiz/sitting_detail.html:10
 msgid "Category"
 msgstr "Категория"
 
-#: models.py:38
+#: models.py:51
 msgid "Categories"
 msgstr "Категории"
 
-#: models.py:48 models.py:58 models.py:550
+#: models.py:61 models.py:76 models.py:604
 msgid "Sub-Category"
 msgstr "Подкатегория"
 
-#: models.py:59
+#: models.py:77
 msgid "Sub-Categories"
 msgstr "Подкатегории"
 
-#: models.py:69 templates/quiz/quiz_list.html:12
+#: models.py:86 templates/quiz/quiz_list.html:12
 msgid "Title"
 msgstr "Название"
 
-#: models.py:73
+#: models.py:88
 msgid "Description"
 msgstr "Описание"
 
-#: models.py:74
+#: models.py:90
 msgid "a description of the quiz"
 msgstr "описание теста"
 
-#: models.py:78
+#: models.py:94
+msgid "Displayed if user passes."
+msgstr "Отображается, если пользователь успешно прошел тест"
+
+#: models.py:95
+msgid "Success Text"
+msgstr "Текст в случае успеха"
+
+#: models.py:98
+msgid "Fail Text"
+msgstr "Текст в случае неудачи"
+
+#: models.py:100
+msgid "Displayed if user fails."
+msgstr "Отображается, если пользователь провалил тест"
+
+#: models.py:105
 msgid "a user friendly url"
 msgstr "url теста"
 
-#: models.py:79
+#: models.py:106
 msgid "user friendly url"
 msgstr "url теста"
 
-#: models.py:87
+#: models.py:121
 msgid "Random Order"
 msgstr "Случайный порядок"
 
-#: models.py:88
+#: models.py:122
 msgid "Display the questions in a random order or as they are set?"
 msgstr "Отображать вопросы в случайном порядке или в порядке добавления?"
 
-#: models.py:93
+#: models.py:128
 msgid "Max Questions"
 msgstr "Максимальное количество вопросов"
 
-#: models.py:94
+#: models.py:129
 msgid "Number of questions to be answered on each attempt."
 msgstr ""
 "Количество вопросов, на которые должны быть даны ответы при каждой попытке"
 
-#: models.py:98
+#: models.py:136
 msgid ""
 "Correct answer is NOT shown after question. Answers displayed at the end."
 msgstr ""
 "Правильный ответ НЕ показан после вопроса. Ответы отображаются после "
 "прохождения теста"
 
-#: models.py:100
+#: models.py:138
 msgid "Answers at end"
 msgstr "Ответы в конце"
 
-#: models.py:104
+#: models.py:145
 msgid ""
 "If yes, the result of each attempt by a user will be stored. Necessary for "
 "marking."
 msgstr "Если отмечено, результаты каждой попытки пользователя будет сохранен"
 
-#: models.py:107
+#: models.py:147
 msgid "Exam Paper"
 msgstr "Экзаменационный лист"
 
-#: models.py:111
+#: models.py:154
 msgid ""
 "If yes, only one attempt by a user will be permitted. Non users cannot sit "
 "this exam."
 msgstr "Если отмечено, пользователю будет разрешена только одна попытка"
 
-#: models.py:114
+#: models.py:156
 msgid "Single Attempt"
 msgstr "Единственная попытка"
 
-#: models.py:118
+#: models.py:162
+msgid "Pass Mark"
+msgstr ""
+
+#: models.py:163
 msgid "Percentage required to pass exam."
 msgstr "Процент правильных ответов для прохождения теста"
 
-#: models.py:122
-msgid "Displayed if user passes."
-msgstr "Отображается, если пользователь успешно прошел тест"
-
-#: models.py:123
-msgid "Success Text"
-msgstr "Текст в случае успеха"
-
-#: models.py:126
-msgid "Fail Text"
-msgstr "Текст в случае неудачи"
-
-#: models.py:127
-msgid "Displayed if user fails."
-msgstr "Отображается, если пользователь провалил тест"
-
-#: models.py:131
+#: models.py:170
 msgid "Draft"
 msgstr "Черновик"
 
-#: models.py:132
+#: models.py:172
 msgid ""
 "If yes, the quiz is not displayed in the quiz list and can only be taken by "
 "users who can edit quizzes."
-msgstr "Если отмечено, то не отображается в публичном списке и может быть "
-"взято только пользователями с соответствующим правом"
+msgstr ""
+"Если отмечено, то не отображается в публичном списке и может быть взято "
+"только пользователями с соответствующим правом"
 
-#: models.py:152 models.py:372 models.py:541
-#: templates/quiz/sitting_list.html:14
+#: models.py:186 models.py:394 models.py:592
+#: templates/quiz/sitting_list.html:11
 msgid "Quiz"
 msgstr "Тест"
 
-#: models.py:153
+#: models.py:187
 msgid "Quizzes"
 msgstr "Тесты"
 
-#: models.py:192 models.py:370 templates/quiz/sitting_detail.html:13
-#: templates/quiz/sitting_list.html:13
+#: models.py:243 models.py:391 templates/quiz/sitting_detail.html:13
+#: templates/quiz/sitting_list.html:10
 msgid "User"
 msgstr "Пользователь"
 
-#: models.py:195 templates/progress.html:60
-#: templates/quiz/sitting_detail.html:15 templates/quiz/sitting_list.html:16
+#: models.py:246 templates/progress.html:60 templates/quiz/progress.html:48
+#: templates/quiz/sitting_detail.html:15 templates/quiz/sitting_list.html:13
 msgid "Score"
 msgstr "Баллы"
 
-#: models.py:200
+#: models.py:251
 msgid "User Progress"
 msgstr "Прогресс пользователя"
 
-#: models.py:201
+#: models.py:252
 msgid "User progress records"
 msgstr "Прогресс пользователя"
 
-#: models.py:261
+#: models.py:302 tests.py:162
 msgid "error"
 msgstr "ошибка"
 
-#: models.py:261
+#: models.py:302
 msgid "category does not exist or invalid score"
 msgstr "категории не существует или недопустимый балл"
 
-#: models.py:375
+#: models.py:398
 msgid "Question Order"
 msgstr "Порядок вопросов"
 
-#: models.py:378
+#: models.py:404
 msgid "Question List"
 msgstr "Список вопросов"
 
-#: models.py:381
+#: models.py:411
 msgid "Incorrect questions"
 msgstr "Вопросы, на которые дан неверный ответ"
 
-#: models.py:383
+#: models.py:415
 msgid "Current Score"
 msgstr "Текущий балл"
 
-#: models.py:386
+#: models.py:418
 msgid "Complete"
 msgstr "Завершен"
 
-#: models.py:389
+#: models.py:422
 msgid "User Answers"
 msgstr "Ответы пользователя"
 
-#: models.py:392
+#: models.py:425
 msgid "Start"
 msgstr "Начало"
 
-#: models.py:394
+#: models.py:427
 msgid "End"
 msgstr "Окончание"
 
-#: models.py:399
+#: models.py:432
 msgid "Can see completed exams."
 msgstr "Может просматривать оконченные тесты"
 
-#: models.py:557
+#: models.py:611
 msgid "Figure"
 msgstr "Рисунок"
 
-#: models.py:561
+#: models.py:618
 msgid "Enter the question text that you want displayed"
 msgstr "Введите текст вопроса, который должен отобразиться"
 
-#: models.py:563 models.py:575 templates/question.html:47
-#: templates/quiz/sitting_detail.html:21
+#: models.py:619 models.py:634 templates/quiz/sitting_detail.html:20
 msgid "Question"
 msgstr "Вопрос"
 
-#: models.py:567
+#: models.py:625
 msgid "Explanation to be shown after the question has been answered."
 msgstr "Объяснение показывается после того, как дан ответ на вопрос"
 
-#: models.py:570 templates/question.html:32 templates/result.html:21
-#: templates/result.html.py:87
+#: models.py:627 templates/quiz/question.html:30 templates/quiz/result.html:23
+#: templates/quiz/result.html:80
 msgid "Explanation"
 msgstr "Объяснение"
 
-#: templates/base.html:7
-msgid "Example Quiz Website"
-msgstr "Тесты"
-
-#: templates/correct_answer.html:6
-msgid "You answered the above question incorrectly"
-msgstr "Вы дали неверный ответ"
-
-#: templates/correct_answer.html:16
-msgid "This is the correct answer"
-msgstr "Это правильный ответ"
-
-#: templates/correct_answer.html:23
-msgid "This was your answer."
-msgstr "Это был ваш ответ"
-
-#: templates/progress.html:6
+#: templates/progress.html:6 templates/quiz/progress.html:6
 msgid "Progress Page"
 msgstr "Страница прогесса"
 
-#: templates/progress.html:7
+#: templates/progress.html:7 templates/quiz/progress.html:7
 msgid "User Progress Page"
 msgstr "Страница прогресса пользователя"
 
-#: templates/progress.html:13
+#: templates/progress.html:13 templates/quiz/progress.html:12
 msgid "Question Category Scores"
 msgstr "Баллы по категориям вопросов"
 
-#: templates/progress.html:20
+#: templates/progress.html:20 templates/quiz/progress.html:18
 msgid "Correctly answererd"
 msgstr "Верных ответов"
 
-#: templates/progress.html:21
+#: templates/progress.html:21 templates/quiz/progress.html:19
+#: templates/quiz/sitting_detail.html:38
 msgid "Incorrect"
 msgstr "Неверных ответов"
 
-#: templates/progress.html:50
+#: templates/progress.html:50 templates/quiz/progress.html:39
 msgid "Previous exam papers"
 msgstr "Список предыдущих экзаменов"
 
-#: templates/progress.html:52
+#: templates/progress.html:52 templates/quiz/progress.html:41
 msgid "Below are the results of exams that you have sat."
 msgstr "Ниже представлены результаты пройденных Вами тестов"
 
-#: templates/progress.html:59
+#: templates/progress.html:59 templates/quiz/progress.html:47
 msgid "Quiz Title"
 msgstr "Название теста"
 
-#: templates/progress.html:61
+#: templates/progress.html:61 templates/quiz/progress.html:49
 msgid "Possible Score"
 msgstr "Возможный балл"
 
-#: templates/question.html:13 templates/result.html:13
-msgid "The previous question"
-msgstr "Предыдущий вопрос"
-
-#: templates/question.html:22
-msgid "Your answer was"
-msgstr "Ваш ответ был"
-
-#: templates/question.html:47
-msgid "of"
-msgstr "из"
-
-#: templates/question.html:52
-msgid "Question category"
-msgstr "Категория вопроса"
-
-#: templates/question.html:74
-msgid "Check"
-msgstr "Ответить"
+#: templates/quiz/base.html:7
+msgid "Example Quiz Website"
+msgstr "Тесты"
 
 #: templates/quiz/category_list.html:3 templates/quiz/quiz_list.html:3
 #: templates/quiz/sitting_list.html:3
@@ -314,11 +296,59 @@ msgstr "Все тесты"
 msgid "Category list"
 msgstr "Список категорий"
 
-#: templates/quiz/quiz_detail.html:11
+#: templates/quiz/correct_answer.html:6
+msgid "You answered the above question incorrectly"
+msgstr "Вы дали неверный ответ"
+
+#: templates/quiz/correct_answer.html:16
+#, fuzzy
+#| msgid "This is the correct answer"
+msgid "This is the correct answer."
+msgstr "Это правильный ответ"
+
+#: templates/quiz/correct_answer.html:21
+msgid "This was your answer."
+msgstr "Это был ваш ответ"
+
+#: templates/quiz/question.html:12 templates/quiz/result.html:13
+msgid "The previous question"
+msgstr "Предыдущий вопрос"
+
+#: templates/quiz/question.html:17 templates/quiz/result.html:15
+msgid "Your answer was"
+msgstr "Ваш ответ был"
+
+#: templates/quiz/question.html:20
+#, fuzzy
+#| msgid "Incorrect"
+msgid "correct"
+msgstr "Неверных ответов"
+
+#: templates/quiz/question.html:22
+msgid "incorrect"
+msgstr "Неверно"
+
+#: templates/quiz/question.html:45
+#, python-format
+msgid ""
+"\n"
+"                    Question %(current)s of %(total)s\n"
+"                "
+msgstr ""
+
+#: templates/quiz/question.html:52
+msgid "Question category"
+msgstr "Категория вопроса"
+
+#: templates/quiz/question.html:74
+msgid "Check"
+msgstr "Ответить"
+
+#: templates/quiz/quiz_detail.html:9
 msgid "You will only get one attempt at this quiz"
 msgstr "У вас есть одна попытка для прохождения данного теста"
 
-#: templates/quiz/quiz_detail.html:16
+#: templates/quiz/quiz_detail.html:14 templates/quiz/quiz_list.html:29
 msgid "Start quiz"
 msgstr "Начать тест"
 
@@ -334,13 +364,76 @@ msgstr "Тестирование"
 msgid "Single attempt"
 msgstr "Единственная попытка"
 
-#: templates/quiz/quiz_list.html:31 templates/quiz/sitting_list.html:42
-msgid "View details"
-msgstr "Подробнее"
-
-#: templates/quiz/quiz_list.html:41
-msgid "There are no available quizzes"
+#: templates/quiz/quiz_list.html:39
+#, fuzzy
+#| msgid "There are no available quizzes"
+msgid "There are no available quizzes."
 msgstr "Доступных тестов нет"
+
+#: templates/quiz/result.html:7
+msgid "Exam Results for"
+msgstr "Результат теста для"
+
+#: templates/quiz/result.html:34
+msgid "Exam results"
+msgstr "Результаты тестирования"
+
+#: templates/quiz/result.html:36
+msgid "Exam title"
+msgstr "Название теста"
+
+#: templates/quiz/result.html:41
+#, python-format
+msgid ""
+"\n"
+"                You answered %(score)s questions correctly out of "
+"%(max_score)s, giving you %(percent)s percent correct.\n"
+"                "
+msgstr ""
+
+#: templates/quiz/result.html:51
+#, fuzzy
+#| msgid "Review the questions below and try the exam again in the future"
+msgid "Review the questions below and try the exam again in the future."
+msgstr ""
+"Просмотрите вопросы, представленные ниже и попробуйте пройти тест еще раз"
+
+#: templates/quiz/result.html:55
+#, fuzzy
+#| msgid ""
+#| "The result of this exam will be stored in your progress section so you "
+#| "can review and monitor your progression"
+msgid ""
+"The result of this exam will be stored in your progress section so you can "
+"review and monitor your progression."
+msgstr ""
+"Результаты данного экзамена будут сохранены. Вы сможете просматривать ваш "
+"прогресс"
+
+#: templates/quiz/result.html:65
+#, python-format
+msgid ""
+"\n"
+"            Your session score is %(session)s out of a possible "
+"%(possible)s.\n"
+"            "
+msgstr ""
+
+#: templates/quiz/result.html:77
+msgid "Your answer"
+msgstr "Ваш ответ"
+
+#: templates/quiz/single_complete.html:9
+#, fuzzy
+#| msgid "You have already sat this exam and only one sitting is permitted"
+msgid "You have already sat this exam and only one sitting is permitted."
+msgstr "Вы уже прошли данный тест. Разрешена только одна попытка"
+
+#: templates/quiz/single_complete.html:11
+#, fuzzy
+#| msgid "This exam is only accessible to signed in users"
+msgid "This exam is only accessible to signed in users."
+msgstr "Этот тест доступен только зарегистрированным пользователям"
 
 #: templates/quiz/sitting_detail.html:5
 msgid "Result of"
@@ -354,23 +447,19 @@ msgstr "для"
 msgid "Quiz title"
 msgstr "Назвние теста"
 
-#: templates/quiz/sitting_detail.html:14 templates/quiz/sitting_list.html:15
+#: templates/quiz/sitting_detail.html:14 templates/quiz/sitting_list.html:12
 msgid "Completed"
 msgstr "Завершено"
 
-#: templates/quiz/sitting_detail.html:22
+#: templates/quiz/sitting_detail.html:21
 msgid "User answer"
 msgstr "Ответ пользователя"
 
-#: templates/quiz/sitting_detail.html:41
-msgid "incorrect"
-msgstr "Неверно"
-
-#: templates/quiz/sitting_detail.html:43
+#: templates/quiz/sitting_detail.html:40
 msgid "Correct"
 msgstr "Верно"
 
-#: templates/quiz/sitting_detail.html:49
+#: templates/quiz/sitting_detail.html:46
 msgid "Toggle whether correct"
 msgstr "Изменить результат"
 
@@ -378,87 +467,61 @@ msgstr "Изменить результат"
 msgid "List of complete exams"
 msgstr "Список завершенных тестов"
 
-#: templates/quiz/sitting_list.html:28
+#: templates/quiz/sitting_list.html:24
 msgid "Filter"
 msgstr "Фильтр"
 
-#: templates/quiz/sitting_list.html:52
-msgid "There are no matching quizzes"
+#: templates/quiz/sitting_list.html:37
+msgid "View details"
+msgstr "Подробнее"
+
+#: templates/quiz/sitting_list.html:43
+#, fuzzy
+#| msgid "There are no matching quizzes"
+msgid "There are no matching quizzes."
 msgstr "Подходящих тестов нет"
 
-#: templates/result.html:7
-msgid "Exam Results for"
-msgstr "Результат теста для"
-
-#: templates/result.html:32
-msgid "Exam results"
-msgstr "Результаты тестирования"
-
-#: templates/result.html:34
-msgid "Exam title"
-msgstr "Название теста"
-
-#: templates/result.html:38
-msgid "You answered"
-msgstr "Ваш результат"
-
-#: templates/result.html:38
-msgid "questions correctly out of"
-msgstr "правильных ответов из"
-
-#: templates/result.html:38
-msgid "giving you"
-msgstr "вы дали"
-
-#: templates/result.html:38
-msgid "percent correct"
-msgstr "процент правильных ответов"
-
-#: templates/result.html:48
-msgid "Review the questions below and try the exam again in the future"
-msgstr ""
-"Просмотрите вопросы, представленные ниже и попробуйте пройти тест еще раз"
-
-#: templates/result.html:52
-msgid ""
-"The result of this exam will be stored in your progress section so you can "
-"review and monitor your progression"
-msgstr ""
-"Результаты данного экзамена будут сохранены. Вы сможете просматривать ваш "
-"прогресс"
-
-#: templates/result.html:66
-msgid "Your session score is"
-msgstr "Балл вашей сессии"
-
-#: templates/result.html:66
-msgid "out of a possible"
-msgstr "из возможных"
-
-#: templates/result.html:84
-msgid "Your answer"
-msgstr "Ваш ответ"
-
-#: templates/single_complete.html:13
-msgid "You have already sat this exam and only one sitting is permitted"
-msgstr "Вы уже прошли данный тест. Разрешена только одна попытка"
-
-#: templates/single_complete.html:15
-msgid "This exam is only accessible to signed in users"
-msgstr "Этот тест доступен только зарегистрированным пользователям"
-
-#: templates/view_quiz_category.html:3
+#: templates/quiz/view_quiz_category.html:3
 msgid "Quizzes related to"
 msgstr "Тесты относятся к"
 
-#: templates/view_quiz_category.html:6
-msgid "Quizzes in the"
-msgstr "Тесты в"
+#: templates/quiz/view_quiz_category.html:7
+#, python-format
+msgid ""
+"\n"
+"            Quizzes in the %(category)s category\n"
+"        "
+msgstr ""
 
-#: templates/view_quiz_category.html:6
-msgid "category"
-msgstr "категория"
-
-#: templates/view_quiz_category.html:20
-msgid "There are no quizzes"
+#: templates/quiz/view_quiz_category.html:24
+#, fuzzy
+#| msgid "There are no quizzes"
+msgid "There is no quiz"
 msgstr "Тестов нет"
+
+#~ msgid "of"
+#~ msgstr "из"
+
+#~ msgid "You answered"
+#~ msgstr "Ваш результат"
+
+#~ msgid "questions correctly out of"
+#~ msgstr "правильных ответов из"
+
+#~ msgid "giving you"
+#~ msgstr "вы дали"
+
+#~ msgid "percent correct"
+#~ msgstr "процент правильных ответов"
+
+#~ msgid "Your session score is"
+#~ msgstr "Балл вашей сессии"
+
+#~ msgid "out of a possible"
+#~ msgstr "из возможных"
+
+#~ msgid "Quizzes in the"
+#~ msgstr "Тесты в"
+
+#~ msgid "category"
+#~ msgstr "категория"

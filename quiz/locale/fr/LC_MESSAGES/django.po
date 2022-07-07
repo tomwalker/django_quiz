@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-12 16:50+0100\n"
+"POT-Creation-Date: 2022-07-07 16:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: admin.py:31 admin.py:32 models.py:635
+#: admin.py:30 admin.py:31 models.py:635
 msgid "Questions"
 msgstr "Questions"
 
+#: admin.py:57
+msgid "Reset ongoing sittings"
+msgstr "Réinitialiser les examens en cours"
+
+#: admin.py:63
+msgid "Delete all sittings"
+msgstr "Supprimer tous les examens"
+
 #: models.py:39 models.py:50 models.py:69 models.py:114 models.py:596
-#: templates/quiz/progress.html:17 templates/quiz/quiz_detail.html:7
-#: templates/quiz/quiz_list.html:13 templates/quiz/sitting_detail.html:10
+#: templates/progress.html:19 templates/quiz/progress.html:17
+#: templates/quiz/quiz_detail.html:7 templates/quiz/quiz_list.html:13
+#: templates/quiz/sitting_detail.html:10
 msgid "Category"
 msgstr "Catégorie"
 
@@ -42,7 +51,7 @@ msgstr "Sous-catégories"
 
 #: models.py:86 templates/quiz/quiz_list.html:12
 msgid "Title"
-msgstr "Title"
+msgstr "Titre"
 
 #: models.py:88
 msgid "Description"
@@ -93,24 +102,35 @@ msgid "Number of questions to be answered on each attempt."
 msgstr "Nombre de questions à répondre à chaque essai."
 
 #: models.py:136
-msgid "Correct answer is NOT shown after question. Answers displayed at the end."
-msgstr "Les réponses correctes ne sont PAS affichés après les questions, mais uniquement à la fin."
+msgid ""
+"Correct answer is NOT shown after question. Answers displayed at the end."
+msgstr ""
+"Les réponses correctes ne sont PAS affichés après les questions, mais "
+"uniquement à la fin."
 
 #: models.py:138
 msgid "Answers at end"
 msgstr "Réponses à la fin"
 
 #: models.py:145
-msgid "If yes, the result of each attempt by a user will be stored. Necessary for marking."
-msgstr "Si oui, le résultat de chaque essai sera enregistré. Nécessaire pour les examens"
+msgid ""
+"If yes, the result of each attempt by a user will be stored. Necessary for "
+"marking."
+msgstr ""
+"Si oui, le résultat de chaque essai sera enregistré. Nécessaire pour les "
+"examens"
 
 #: models.py:147
 msgid "Exam Paper"
 msgstr "Examen"
 
 #: models.py:154
-msgid "If yes, only one attempt by a user will be permitted. Non users cannot sit this exam."
-msgstr "Si oui, un seul essai par utilisateur est autorisé. Les personnes non connectés ne peuvent pas passer ce quiz."
+msgid ""
+"If yes, only one attempt by a user will be permitted. Non users cannot sit "
+"this exam."
+msgstr ""
+"Si oui, un seul essai par utilisateur est autorisé. Les personnes non "
+"connectés ne peuvent pas passer ce quiz."
 
 #: models.py:156
 msgid "Single Attempt"
@@ -129,8 +149,12 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #: models.py:172
-msgid "If yes, the quiz is not displayed in the quiz list and can only be taken by users who can edit quizzes."
-msgstr "Si ui, le quiz n'est pas affiché dans la liste des quiz et ne peut être passé que par les utilisateurs qui peuvent éditer les quiz."
+msgid ""
+"If yes, the quiz is not displayed in the quiz list and can only be taken by "
+"users who can edit quizzes."
+msgstr ""
+"Si ui, le quiz n'est pas affiché dans la liste des quiz et ne peut être "
+"passé que par les utilisateurs qui peuvent éditer les quiz."
 
 #: models.py:186 models.py:394 models.py:592
 #: templates/quiz/sitting_list.html:11
@@ -146,7 +170,7 @@ msgstr "Quiz"
 msgid "User"
 msgstr "Utilisateur"
 
-#: models.py:246 templates/quiz/progress.html:48
+#: models.py:246 templates/progress.html:60 templates/quiz/progress.html:48
 #: templates/quiz/sitting_detail.html:15 templates/quiz/sitting_list.html:13
 msgid "Score"
 msgstr "Score"
@@ -219,10 +243,47 @@ msgstr "Question"
 msgid "Explanation to be shown after the question has been answered."
 msgstr "Explication à afficher une fois la réponse donnée."
 
-#: models.py:627 templates/quiz/question.html:24 templates/quiz/result.html:23
+#: models.py:627 templates/quiz/question.html:30 templates/quiz/result.html:23
 #: templates/quiz/result.html:80
 msgid "Explanation"
 msgstr "Explication"
+
+#: templates/progress.html:6 templates/quiz/progress.html:6
+msgid "Progress Page"
+msgstr "Page des progrès"
+
+#: templates/progress.html:7 templates/quiz/progress.html:7
+msgid "User Progress Page"
+msgstr "Page des progrès de l'utilisateur"
+
+#: templates/progress.html:13 templates/quiz/progress.html:12
+msgid "Question Category Scores"
+msgstr "Score par catégorie"
+
+#: templates/progress.html:20 templates/quiz/progress.html:18
+msgid "Correctly answererd"
+msgstr "Réponses correctes"
+
+#: templates/progress.html:21 templates/quiz/progress.html:19
+#: templates/quiz/sitting_detail.html:38
+msgid "Incorrect"
+msgstr "Incorrecte"
+
+#: templates/progress.html:50 templates/quiz/progress.html:39
+msgid "Previous exam papers"
+msgstr "Examen précédent"
+
+#: templates/progress.html:52 templates/quiz/progress.html:41
+msgid "Below are the results of exams that you have sat."
+msgstr "Ci-dessous sont présentés les examens que vous avez passé."
+
+#: templates/progress.html:59 templates/quiz/progress.html:47
+msgid "Quiz Title"
+msgstr "Titre du quiz"
+
+#: templates/progress.html:61 templates/quiz/progress.html:49
+msgid "Possible Score"
+msgstr "Score possible"
 
 #: templates/quiz/base.html:7
 msgid "Example Quiz Website"
@@ -249,42 +310,6 @@ msgstr "Ceci est la réponse correcte."
 msgid "This was your answer."
 msgstr "Ceci est votre réponse."
 
-#: templates/quiz/progress.html:6
-msgid "Progress Page"
-msgstr "Page des progrès"
-
-#: templates/quiz/progress.html:7
-msgid "User Progress Page"
-msgstr "Page des progrès de l'utilisateur"
-
-#: templates/quiz/progress.html:12
-msgid "Question Category Scores"
-msgstr "Score par catégorie"
-
-#: templates/quiz/progress.html:18
-msgid "Correctly answererd"
-msgstr "Réponses correctes"
-
-#: templates/quiz/progress.html:19 templates/quiz/sitting_detail.html:38
-msgid "Incorrect"
-msgstr "Incorrecte"
-
-#: templates/quiz/progress.html:39
-msgid "Previous exam papers"
-msgstr "Examen précédent"
-
-#: templates/quiz/progress.html:41
-msgid "Below are the results of exams that you have sat."
-msgstr "Ci-dessous sont présentés les examens que vous avez passé."
-
-#: templates/quiz/progress.html:47
-msgid "Quiz Title"
-msgstr "Titre du quiz"
-
-#: templates/quiz/progress.html:49
-msgid "Possible Score"
-msgstr "Score possible"
-
 #: templates/quiz/question.html:12 templates/quiz/result.html:13
 msgid "The previous question"
 msgstr "Question précédente"
@@ -293,7 +318,15 @@ msgstr "Question précédente"
 msgid "Your answer was"
 msgstr "Votre réponse été"
 
-#: templates/quiz/question.html:39
+#: templates/quiz/question.html:20
+msgid "correct"
+msgstr "correct"
+
+#: templates/quiz/question.html:22
+msgid "incorrect"
+msgstr "incorrecte"
+
+#: templates/quiz/question.html:45
 #, python-format
 msgid ""
 "\n"
@@ -304,11 +337,11 @@ msgstr ""
 "                    Question %(current)s sur %(total)s\n"
 "                "
 
-#: templates/quiz/question.html:46
+#: templates/quiz/question.html:52
 msgid "Question category"
 msgstr "Catégorie de question"
 
-#: templates/quiz/question.html:68
+#: templates/quiz/question.html:74
 msgid "Check"
 msgstr "Check"
 
@@ -357,8 +390,8 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"                Vous avez répondu à %(score)s questions correctement sur un total de"
-"%(max_score)s, ce qui vous fait %(percent)s % correct.\n"
+"                Vous avez répondu à %(score)s questions correctement sur un "
+"total de%(max_score)s, ce qui vous fait %(percent)s % correct.\n"
 "                "
 
 #: templates/quiz/result.html:51
@@ -370,8 +403,8 @@ msgid ""
 "The result of this exam will be stored in your progress section so you can "
 "review and monitor your progression."
 msgstr ""
-"Le résultat du quiz sera enregistré dans votre section sur les progrés et vous pourrez y "
-"revenir pour visualiser votre progression."
+"Le résultat du quiz sera enregistré dans votre section sur les progrés et "
+"vous pourrez y revenir pour visualiser votre progression."
 
 #: templates/quiz/result.html:65
 #, python-format

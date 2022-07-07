@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-quiz-multichoice\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-02 16:35+0000\n"
+"POT-Creation-Date: 2022-07-07 16:34+0200\n"
 "PO-Revision-Date: 2015-08-21 19:39+0500\n"
 "Last-Translator: Eugena Mihailikova <eugena.mihailikova@gmail.com>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -18,54 +18,54 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: models.py:7 models.py:61
+#: models.py:11 models.py:76
 msgid "Content"
 msgstr "Содержание"
 
-#: models.py:8
+#: models.py:12
 msgid "Random"
 msgstr "Случайно"
 
-#: models.py:9
+#: models.py:13
 msgid "None"
 msgstr "Ничего"
 
-#: models.py:17
+#: models.py:27
 msgid "The order in which multichoice answer options are displayed to the user"
 msgstr "Порядок отображения вопросов"
 
-#: models.py:20
+#: models.py:29
 msgid "Answer Order"
 msgstr "Порядок вопросов"
 
-#: models.py:50
+#: models.py:62
 msgid "Multiple Choice Question"
 msgstr "Вопрос с несколькими вариантами ответов"
 
-#: models.py:51
+#: models.py:63
 msgid "Multiple Choice Questions"
 msgstr "Вопросы с несколькими вариантами ответов"
 
-#: models.py:55
+#: models.py:68
 msgid "Question"
 msgstr "Вопрос"
 
-#: models.py:59
+#: models.py:75
 msgid "Enter the answer text that you want displayed"
 msgstr "Введите текст ответа"
 
-#: models.py:65
+#: models.py:83
 msgid "Is this a correct answer?"
 msgstr "Это правильный ответ?"
 
-#: models.py:66
+#: models.py:84
 msgid "Correct"
 msgstr "Правильно"
 
-#: models.py:72
+#: models.py:91
 msgid "Answer"
 msgstr "Вопрос"
 
-#: models.py:73
+#: models.py:92
 msgid "Answers"
 msgstr "Вопросы"

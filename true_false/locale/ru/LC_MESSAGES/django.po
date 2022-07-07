@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-quiz-true-false\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-01 17:56+0000\n"
+"POT-Creation-Date: 2022-07-07 16:34+0200\n"
 "PO-Revision-Date: 2015-08-21 19:40+0500\n"
 "Last-Translator: Eugena Mihailikova <eugena.mihailikova@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,18 +19,26 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: models.py:9
+#: models.py:13
 msgid "Tick this if the question is true. Leave it blank for false."
 msgstr "Отметьте, если ответ на вопрос 'Да'. Оставьте пустым, если ответ 'Нет'"
 
-#: models.py:12
+#: models.py:14
 msgid "Correct"
 msgstr "Правильно"
 
-#: models.py:40
+#: models.py:32 models.py:37
+msgid "True"
+msgstr ""
+
+#: models.py:33 models.py:37
+msgid "False"
+msgstr ""
+
+#: models.py:43
 msgid "True/False Question"
 msgstr "Вопрос с ответом Да/Нет"
 
-#: models.py:41
+#: models.py:44
 msgid "True/False Questions"
 msgstr "Вопросы с ответом Да/Нет"

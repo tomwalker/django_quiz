@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-31 22:44+0000\n"
+"POT-Creation-Date: 2022-07-07 16:34+0200\n"
 "PO-Revision-Date: 2015-10-31 22:19+0000\n"
 "Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,56 +19,56 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.7.6\n"
 
-#: apps/multichoice/models.py:9 apps/multichoice/models.py:65
+#: models.py:11 models.py:76
 msgid "Content"
 msgstr "Contenuto"
 
-#: apps/multichoice/models.py:10
+#: models.py:12
 msgid "Random"
 msgstr "Casuale"
 
-#: apps/multichoice/models.py:11
+#: models.py:13
 msgid "None"
 msgstr "Nessuno"
 
-#: apps/multichoice/models.py:20
+#: models.py:27
 msgid "The order in which multichoice answer options are displayed to the user"
 msgstr ""
 "Ordine in cui le risposte multiple disponibili vengono visualizzate "
 "all'utente"
 
-#: apps/multichoice/models.py:23
+#: models.py:29
 msgid "Answer Order"
 msgstr "Ordine Risposte"
 
-#: apps/multichoice/models.py:53
+#: models.py:62
 msgid "Multiple Choice Question"
 msgstr "Domanda a risposta multipla"
 
-#: apps/multichoice/models.py:54
+#: models.py:63
 msgid "Multiple Choice Questions"
 msgstr "Domande a risposta multipla"
 
-#: apps/multichoice/models.py:59
+#: models.py:68
 msgid "Question"
 msgstr "Domanda"
 
-#: apps/multichoice/models.py:63
+#: models.py:75
 msgid "Enter the answer text that you want displayed"
 msgstr "Inserisci il testo della risposta che vuoi visualizzare"
 
-#: apps/multichoice/models.py:69
+#: models.py:83
 msgid "Is this a correct answer?"
 msgstr "Questa è la risposta corretta?"
 
-#: apps/multichoice/models.py:70
+#: models.py:84
 msgid "Correct"
 msgstr "Corretto"
 
-#: apps/multichoice/models.py:76
+#: models.py:91
 msgid "Answer"
 msgstr "Risposta"
 
-#: apps/multichoice/models.py:77
+#: models.py:92
 msgid "Answers"
 msgstr "Risposte"
