@@ -391,7 +391,7 @@ msgid ""
 msgstr ""
 "\n"
 "                Vous avez répondu à %(score)s questions correctement sur un "
-"total de%(max_score)s, ce qui vous fait %(percent)s % correct.\n"
+"total de %(max_score)s, ce qui vous fait %(percent)s %% correct.\n"
 "                "
 
 #: templates/quiz/result.html:51
