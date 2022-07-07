@@ -2,15 +2,14 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.translation import gettext_lazy as _
-
-from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
+from essay.models import Essay_Question
+from multichoice.models import Answer, MCQuestion
 from parler.admin import TranslatableAdmin, TranslatableTabularInline
 from parler.forms import TranslatableModelForm
-
-from .models import Quiz, Category, SubCategory, Progress, Question
-from multichoice.models import MCQuestion, Answer
+from polymorphic.admin import PolymorphicChildModelAdmin, PolymorphicParentModelAdmin
 from true_false.models import TF_Question
-from essay.models import Essay_Question
+
+from .models import Category, Progress, Question, Quiz, SubCategory
 
 
 class QuizAdminForm(TranslatableModelForm):
@@ -47,6 +46,21 @@ class QuizAdminForm(TranslatableModelForm):
 
 class QuizAdmin(TranslatableAdmin):
     form = QuizAdminForm
+
+    actions = ["reset_ongoing_sittings_for_quizzes", "delete_all_sittings_for_quizzes"]
+
+    def reset_ongoing_sittings_for_quizzes(self, request, queryset):
+        for quiz in queryset.all():
+            sittings = quiz.sitting_set.filter(complete=False)
+            sittings.delete()
+
+    reset_ongoing_sittings_for_quizzes.short_description = _("Reset ongoing sittings")
+
+    def delete_all_sittings_for_quizzes(self, request, queryset):
+        for quiz in queryset.all():
+            quiz.sitting_set.all().delete()
+
+    delete_all_sittings_for_quizzes.short_description = _("Delete all sittings")
 
     list_display = ("title", "category")
     list_filter = ("category",)

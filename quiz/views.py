@@ -4,11 +4,11 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView, ListView, TemplateView, FormView
-
-from .forms import QuestionForm, EssayForm
-from .models import Quiz, Category, Progress, Sitting, Question
+from django.views.generic import DetailView, FormView, ListView, TemplateView
 from essay.models import Essay_Question
+
+from .forms import EssayForm, QuestionForm
+from .models import Category, Progress, Question, Quiz, Sitting
 
 
 class QuizMarkerMixin(object):
