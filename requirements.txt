@@ -4,6 +4,7 @@ django-polymorphic
 Pillow>=4.0.0
 
 django-parler>=2.2,<2.3
+django-jsonfield-backport
 
 # Only needed for running tests.
 tox

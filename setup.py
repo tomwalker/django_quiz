@@ -1,5 +1,6 @@
-from setuptools import find_packages, setup
 from io import open
+
+from setuptools import find_packages, setup
 
 readme = open("README.rst", encoding="utf-8").read()
 
@@ -30,6 +31,7 @@ setup(
         "Django>=2.2",
         "Pillow>=4.0.0",
         "django-parler>=2.2,<2.3",
+        "django-polymorphic",
         "django-jsonfield-backport",
     ],
     test_suite="runtests.runtests",
