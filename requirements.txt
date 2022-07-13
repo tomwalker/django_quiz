@@ -1,6 +1,10 @@
-django>=1.8.19
-django-model-utils>=3.1.1
+django>=2.2
+# django-model-utils>=3.1.1
+django-polymorphic
 Pillow>=4.0.0
+
+django-parler>=2.2,<2.3
+django-jsonfield-backport
 
 # Only needed for running tests.
 tox

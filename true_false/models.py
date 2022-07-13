@@ -1,17 +1,18 @@
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+from parler.managers import TranslatableManager
 from quiz.models import Question
 
 
 class TF_Question(Question):
-    correct = models.BooleanField(blank=False,
-                                  default=False,
-                                  help_text=_("Tick this if the question "
-                                              "is true. Leave it blank for"
-                                              " false."),
-                                  verbose_name=_("Correct"))
+    correct = models.BooleanField(
+        blank=False,
+        default=False,
+        help_text=_("Tick this if the question is true. Leave it blank for false."),
+        verbose_name=_("Correct"),
+    )
 
     def check_if_correct(self, guess):
         if guess == "True":
@@ -27,13 +28,13 @@ class TF_Question(Question):
             return False
 
     def get_answers(self):
-        return [{'correct': self.check_if_correct("True"),
-                 'content': 'True'},
-                {'correct': self.check_if_correct("False"),
-                 'content': 'False'}]
+        return [
+            {"correct": self.check_if_correct("True"), "content": _("True")},
+            {"correct": self.check_if_correct("False"), "content": _("False")},
+        ]
 
     def get_answers_list(self):
-        return [(True, True), (False, False)]
+        return [(True, _("True")), (False, _("False"))]
 
     def answer_choice_to_string(self, guess):
         return str(guess)
@@ -41,4 +42,4 @@ class TF_Question(Question):
     class Meta:
         verbose_name = _("True/False Question")
         verbose_name_plural = _("True/False Questions")
-        ordering = ['category']
+        ordering = ["category"]

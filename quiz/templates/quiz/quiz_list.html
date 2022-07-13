@@ -1,43 +1,41 @@
-{% extends 'base.html' %}
+{% extends "quiz/base.html" %}
 {% load i18n %}
 {% block title %}{% trans "All Quizzes" %}{% endblock %}
 
 {% block content %}
 <h2>{% trans "List of quizzes" %}</h2>
     {% if quiz_list %}
-		<table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped">
 
-		  <thead>
-			<tr>
-			  <th>{% trans "Title" %}</th>
-			  <th>{% trans "Category" %}</th>
-			  <th>{% trans "Exam" %}</th>
-			  <th>{% trans "Single attempt" %}</th>
-			  <th></th>
-			</tr>
-		  </thead>
+        <thead>
+            <tr>
+                <th>{% trans "Title" %}</th>
+                <th>{% trans "Category" %}</th>
+                <th>{% trans "Exam" %}</th>
+                <th>{% trans "Single attempt" %}</th>
+                <th></th>
+            </tr>
+        </thead>
 
-		  <tbody>
+        <tbody>
+            {% for quiz in quiz_list %}
+                <tr>
+                    <td>{{ quiz.title }}</td>
+                    <td>{{ quiz.category }}</td>
+                    <td>{{ quiz.exam_paper }}</td>
+                    <td>{{ quiz.single_attempt }}</td>
+                    <td>
+                        <a href="{% url 'quiz_start_page' slug=quiz.url %}">
+                            {% trans "Start quiz" %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
 
-        {% for quiz in quiz_list %}
+    </table>
 
-  			<tr>
-			  <td>{{ quiz.title }}</td>
-			  <td>{{ quiz.category }}</td>
-			  <td>{{ quiz.exam_paper }}</td>
-			  <td>{{ quiz.single_attempt }}</td>
-			  <td>
-				<a href="{% url 'quiz_start_page' slug=quiz.url %}">
-				  {% trans "View details" %}
-				</a>
-			</tr>
-
-        {% endfor %}
-		  </tbody>
-
-		</table>
-
-	{% else %}
-        <p>{% trans "There are no available quizzes" %}.</p>
+    {% else %}
+        <p>{% trans "There are no available quizzes." %}</p>
     {% endif %}
 {% endblock %}

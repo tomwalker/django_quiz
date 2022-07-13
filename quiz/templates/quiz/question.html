@@ -1,0 +1,81 @@
+{% extends "quiz/base.html" %}
+{% load i18n%}
+
+{% load quiz_tags %}
+
+{% block title %} {{ quiz.title }} {% endblock %}
+{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+
+{% block content %}
+
+    {% if previous.answers %}
+        <p class="muted"><small>{% trans "The previous question" %}:</small></p>
+        <p>{{ previous.previous_question }}</p>
+
+        <div class="alert {% if previous.previous_outcome %}alert-success{% else %}alert-warning{% endif %}">
+            <p>
+                <small>{% trans "Your answer was" %}</small>
+                <strong>
+                  {% if previous.previous_outcome %}
+                    {% trans "correct" %}
+                  {% else %}
+                    {% trans "incorrect" %}
+                  {% endif %}
+                </strong>
+            </p>
+        </div>
+
+        {% include 'quiz/correct_answer.html' %}
+
+        <p><strong>{% trans "Explanation" %}:</strong></p>
+        <div class="well " style="background-color: #fcf8e3;">
+            <p>{{ previous.previous_question.explanation|linebreaksbr }}</p>
+        </div>
+
+        <hr>
+
+    {% endif %}
+
+    <br />
+
+    {% if question %}
+
+        {% if progress %}
+            <div style="float: right;">
+                {% blocktrans with current=progress.0|add:1 total=progress.1%}
+                    Question {{ current }} of {{ total }}
+                {% endblocktrans %}
+            </div>
+        {% endif %}
+
+        <p>
+            <small class="muted">{% trans "Question category" %}:</small>
+            <strong>{{ question.category }}</strong>
+        </p>
+
+        <p class="lead">{{ question.content }}</p>
+
+        {% if question.figure %}
+            <img src="{{ question.figure.url }}" alt="{{ question.content }}" />
+        {% endif %}
+
+        <form action="" method="POST">{% csrf_token %}
+            <input type=hidden name="question_id" value="{{ question.id }}">
+
+            <ul class="list-group">
+
+                {% for answer in form.answers %}
+                    <li class="list-group-item">
+                        {{ answer }}
+                    </li>
+                {% endfor %}
+
+            </ul>
+            <input type="submit" value={% trans "Check" %} class="btn btn-large btn-block btn-warning" >
+        </form>
+
+    {% endif %}
+
+    <hr>
+
+{% endblock %}

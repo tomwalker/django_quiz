@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-31 22:44+0000\n"
+"POT-Creation-Date: 2022-07-07 16:34+0200\n"
 "PO-Revision-Date: 2015-10-31 22:12+0000\n"
 "Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,18 +19,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.7.6\n"
 
-#: apps/true_false/models.py:11
+#: models.py:13
 msgid "Tick this if the question is true. Leave it blank for false."
 msgstr "如果题目为真，勾选此处。不选为假。"
 
-#: apps/true_false/models.py:14
+#: models.py:14
 msgid "Correct"
 msgstr "正确"
 
-#: apps/true_false/models.py:42
+#: models.py:32 models.py:37
+msgid "True"
+msgstr ""
+
+#: models.py:33 models.py:37
+msgid "False"
+msgstr ""
+
+#: models.py:43
 msgid "True/False Question"
 msgstr "判断题"
 
-#: apps/true_false/models.py:43
+#: models.py:44
 msgid "True/False Questions"
 msgstr "判断题"

@@ -29,9 +29,9 @@
 	  {% for cat, value in cat_scores.items %}
 	  <tr>
 		<td>{{ cat }}</td>
-		<td>{{ value.0 }}</td>
-		<td>{{ value.1 }}</td>
-		<td>{{ value.2 }}</td>
+		<td>{{ value.score }}</td>
+		<td>{{ value.possible }}</td>
+		<td>{{ value.percent }}</td>
 	  </tr>
 
 	  {% endfor %}

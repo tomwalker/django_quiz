@@ -1,44 +1,32 @@
-try:
-    from django.conf.urls import url
-except ImportError:
-    from django.urls import re_path as url
+from django.urls import path
 
-from .views import QuizListView, CategoriesListView, \
-    ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList, \
-    QuizMarkingDetail, QuizDetailView, QuizTake
+from .views import (
+    QuizListView,
+    CategoriesListView,
+    ViewQuizListByCategory,
+    QuizUserProgressView,
+    QuizMarkingList,
+    QuizMarkingDetail,
+    QuizDetailView,
+    QuizTake,
+)
 
 urlpatterns = [
-
-    url(r'^$',
-        view=QuizListView.as_view(),
-        name='quiz_index'),
-
-    url(r'^category/$',
-        view=CategoriesListView.as_view(),
-        name='quiz_category_list_all'),
-
-    url(r'^category/(?P<category_name>[\w|\W-]+)/$',
+    path("", view=QuizListView.as_view(), name="quiz_index"),
+    path("category/", view=CategoriesListView.as_view(), name="quiz_category_list_all"),
+    path(
+        "category/<str:category_name>",
         view=ViewQuizListByCategory.as_view(),
-        name='quiz_category_list_matching'),
-
-    url(r'^progress/$',
-        view=QuizUserProgressView.as_view(),
-        name='quiz_progress'),
-
-    url(r'^marking/$',
-        view=QuizMarkingList.as_view(),
-        name='quiz_marking'),
-
-    url(r'^marking/(?P<pk>[\d.]+)/$',
+        name="quiz_category_list_matching",
+    ),
+    path("progress/", view=QuizUserProgressView.as_view(), name="quiz_progress"),
+    path("marking/", view=QuizMarkingList.as_view(), name="quiz_marking"),
+    path(
+        "marking/<int:pk>/",
         view=QuizMarkingDetail.as_view(),
-        name='quiz_marking_detail'),
-
+        name="quiz_marking_detail",
+    ),
     #  passes variable 'quiz_name' to quiz_take view
-    url(r'^(?P<slug>[\w-]+)/$',
-        view=QuizDetailView.as_view(),
-        name='quiz_start_page'),
-
-    url(r'^(?P<quiz_name>[\w-]+)/take/$',
-        view=QuizTake.as_view(),
-        name='quiz_question'),
+    path("<slug:slug>/", view=QuizDetailView.as_view(), name="quiz_start_page"),
+    path("<str:quiz_name>/take/", view=QuizTake.as_view(), name="quiz_question"),
 ]
